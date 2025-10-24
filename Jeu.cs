@@ -7,7 +7,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace TestProjet;
 
-public class Game1 : Game
+public class Jeu : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -18,7 +18,7 @@ public class Game1 : Game
     private int[,] _map; //0:rien, 1:lui de J1, 2:lui de J2
     private KeyboardState _previousKeyboardState;
 
-    public Game1()
+    public Jeu()
     {
         _graphics = new GraphicsDeviceManager(this);
         _graphics.PreferredBackBufferWidth = 512;
