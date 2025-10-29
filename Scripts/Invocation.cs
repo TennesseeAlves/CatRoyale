@@ -7,7 +7,7 @@ public class Invocation
     private string _image;
     
     //constructeur
-    public Carte(int vie, int degat, string image)
+    public Invocation(int vie, int degat, string image)
     {
         setVie(vie);
         setDegat(degat);

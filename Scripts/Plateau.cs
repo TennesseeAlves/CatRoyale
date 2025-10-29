@@ -39,8 +39,8 @@ public class Plateau
         _map[ligne, colonne] = null;
     }
 
-    public void invoke(Carte carte, int ligne, int colonne);
-    public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive);
-    public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive);
+    public void invoke(Carte carte, int ligne, int colonne){}
+    public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive){}
+    public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive){}
     
 }
