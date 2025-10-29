@@ -44,7 +44,7 @@ package OurGame{
     }
     
     class ListeDeCartes {
-        carte : Carte[]
+        cartes : Carte[]
     }
     
     class Carte {
@@ -75,6 +75,7 @@ package OurGame{
     class Invocation {
         vie : int
         degat : int
+        sprite : string
         Invocateur : Joueur
         estJouable : boolean
     }
