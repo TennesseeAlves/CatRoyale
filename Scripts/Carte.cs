@@ -16,14 +16,14 @@ public class Carte
     private TypeRarete _rarete;
     
     //constructeur
-    public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete)
+    public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
     {
         setVie(vie);
         setDegat(degat);
         setCout(cout);
         setNom(nom);
         setImage(image);
-        _invocation = new Invocation(vie, degat, image); //faux
+        _invocation = new Invocation(vie, degat, spriteInvocation);
         setType(type);
         setRarete(rarete);
     }

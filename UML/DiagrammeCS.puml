@@ -77,7 +77,8 @@ package OurGame{
         degat : int
         sprite : string
         Invocateur : Joueur
-        estJouable : boolean
+        peutBouger : boolean
+        peutAttaquer : boolean
     }
     
     Jeu *-- Plateau

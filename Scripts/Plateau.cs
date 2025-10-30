@@ -30,6 +30,11 @@ public class Plateau
         return _map[ligne, colonne];
     }
 
+    public bool isEmpty(int ligne, int colonne)
+    {
+        return (_map[ligne, colonne] == null);
+    }
+
     public void deleteAt(int ligne, int colonne)
     {
         if (ligne >= _map.GetLength(0) || ligne < 0 || colonne >= _map.GetLength(1) || colonne < 0)
@@ -39,8 +44,21 @@ public class Plateau
         _map[ligne, colonne] = null;
     }
 
-    public void invoke(Carte carte, int ligne, int colonne){}
-    public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive){}
-    public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive){}
-    
+    public void invoke(Carte carte, int ligne, int colonne)
+    {
+        _map[ligne, colonne] = carte.getInvocation();
+    }
+
+    public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    {
+            _map[ligneArrive, colonneArrive] = _map[ligneDepart, colonneDepart];
+            _map[ligneDepart, colonneDepart] = null;
+            _map[ligneArrive, colonneArrive].setPeutBouger(false);
+    }
+
+    public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    {
+        _map[ligneArrive, colonneArrive].takeDamage(_map[ligneDepart, colonneDepart].getDegat());
+        _map[ligneDepart,colonneDepart].setPeutAttaquer(false);
+    }
 }

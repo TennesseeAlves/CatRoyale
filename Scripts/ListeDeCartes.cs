@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 
 namespace TestProjet.Scripts;
 
@@ -10,6 +9,11 @@ public class ListeDeCartes
     public ListeDeCartes()
     {
         _cartes = new Carte[0];
+    }
+
+    public int Length()
+    {
+        return _cartes.Length;
     }
 
     public Carte getCarteAt(int i) 
@@ -50,6 +54,21 @@ public class ListeDeCartes
             }
         }
         _cartes = newCartes;
+        return rep;
+    }
+
+    public int getIndexOf(Carte carte) 
+    {
+        int rep = -1;
+        int i = 0;
+        while (rep == -1 && i < _cartes.Length)
+        {
+            if (_cartes[i] == carte)
+            {
+                rep = i;
+            }
+            i++;
+        }
         return rep;
     }
 

@@ -1,3 +1,5 @@
+using System;
+
 namespace TestProjet.Scripts;
 
 public class Joueur
@@ -44,5 +46,72 @@ public class Joueur
     public void setJauge(int jauge)
     {
         _jauge = jauge;
+    }
+    
+    //methodes autres
+    public void remplirJauge(int niveau)
+    {
+        if (_jauge < niveau)
+        {
+            _jauge = niveau;
+        }
+    }
+
+    public void reduireJauge(int usage)
+    {
+        _jauge -=  usage;
+        if (_jauge < 0)
+        {
+            _jauge = 0;
+        }
+    }
+
+    public void addCarteInMain(Carte carte)
+    {
+        _main.appendCarte(carte);
+    }
+
+    public void addCarteInDeck(Carte carte)
+    {
+        _deck.appendCarte(carte);
+    }
+
+    public Carte getCarteInMainAt(int i)
+    {
+        return _main.getCarteAt(i);
+    }
+
+    public Carte getCarteInDeckAt(int i)
+    {
+        return _deck.getCarteAt(i);
+    }
+
+    public void deleteCarteInMain(Carte carte)
+    {
+        int i = _main.getIndexOf(carte);
+        if (i == -1)
+        {
+            throw new ArgumentException();
+        }
+        _main.removeCarteAt(i);
+    }
+
+    public void deleteCarteInDeck(Carte carte)
+    {
+        int i = _deck.getIndexOf(carte);
+        if (i == -1)
+        {
+            throw new ArgumentException();
+        }
+        _deck.removeCarteAt(i);
+    }
+
+    public void pioche()
+    {
+        Random random = new Random();
+        int i = random.Next(0, _deck.Length());
+        Carte cartePioche = _deck.getCarteAt(i);
+        _deck.removeCarteAt(i);
+        _main.appendCarte(cartePioche);
     }
 }
