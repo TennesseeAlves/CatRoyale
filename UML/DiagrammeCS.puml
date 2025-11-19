@@ -1,11 +1,11 @@
  puml 
 @startuml
-'https://plantuml.com/class-diagram
+skinparam classAttributeIconSize 0
 
 package CS {
     class int{}
     class string{}
-    class boolean{}
+    class bool{}
 }
 
 package MonoGame {
@@ -15,47 +15,90 @@ package MonoGame {
 package OurGame{
     
     class Jeu{
-        plateau : Plateau
-        joueur1 : Joueur
-        joueur2 : Joueur
-        Jeu()
-        Initialize()
-        LoadContent()
-        Update()
-        Draw()
-        Transition(int etatActuelAutomate, KeyboardState etatActueClavier) : bool
+        -plateau : Plateau
+        -joueur1 : Joueur
+        -joueur2 : Joueur
+        +Jeu()
+        #Initialize()
+        #LoadContent()
+        #Update()
+        #Draw()
+        -Transition(int etatActuelAutomate, KeyboardState etatActueClavier) : bool
     }
     
     class Plateau { 
-        map :  Invocation[,]
-        getEntityAt(int ligne, int colonne) : Invocation?
-        deleteAt(int ligne, int colonne) : bool
-        invoke(Carte carte, int ligne, int colonne) : bool
-        move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
-        attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        -map :  Invocation[,]
+        +Plateau(int longueur, int largeur)
+        +getLongueur() : int
+        +getLargeur() : int
+        +getEntityAt(int ligne, int colonne) : Invocation?
+        +deleteAt(int ligne, int colonne) : bool
+        +invoke(Carte carte, int ligne, int colonne) : bool
+        +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
     }
     
     class Joueur {
-        pseudo : string
-        winStreak : int
-        jauge : int
-        main : ListeDeCartes
-        deck : ListeDeCartes
+        -pseudo : string
+        -winStreak : int
+        -jauge : int
+        -main : ListeDeCartes
+        -deck : ListeDeCartes
+        +Joueur(string pseudo, int winStreak)
+        +getPseudo() : string
+        +setPseudo(string pseudo) : void
+        +getWinStreak() : int
+        +setWinStreak(int winStreak) : void
+        +getJauge() : int
+        +setJauge(int jauge) : void
+        +remplirJauge(int niveau) : void
+        +reduireJauge(int usage) : void
+        +addCarteInMain(Carte carte) : void
+        +addCarteInDeck(Carte carte) : void
+        +getCarteInMainAt(int i) : Carte
+        +getCarteInDeckAt(int i) : Carte
+        +deleteCarteInMain(Carte carte) : void
+        +deleteCarteInDeck(Carte carte) : void
+        +pioche() : void
     }
     
     class ListeDeCartes {
-        cartes : Carte[]
+        -cartes : Carte[]
+        +ListeDeCartes()
+        +Length() : int
+        +getCarteAt(int i) : Carte
+        +setCarteAt(int i, Carte carte) : void
+        +removeCarteAt(int i) : Carte
+        +getIndexOf(Carte carte) : int
+        +insertCarteAt(int i, Carte carte) : void
+        +appendCarte(Carte carte) : void
     }
     
     class Carte {
-        vie : int
-        degat : int
-        nom : string
-        image : string 
-        cout : int
-        type : TypeDeCarte
-        invocation : Invocation
-        rarete : TypeRarete
+        -vie : int
+        -degat : int
+        -cout : int
+        -nom : string
+        -image : string 
+        -invocation : Invocation
+        -type : TypeDeCarte
+        -rarete : TypeRarete
+        '+Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
+        +getVie() : int
+        +setVie(int vie) : void
+        +getDegat() : int
+        +setDegat(int degat) : void
+        +getCout() : int
+        +setCout(int cout) : void
+        +getNom() : string
+        +setNom(string nom) : void
+        +getImage() : string
+        +setImage(string image) : void
+        +getInvocation() : Invocation
+        +getType() : TypeDeCarte
+        +setType(TypeDeCarte type) : void
+        +getRarete() : TypeRarete
+        +setRarete(TypeRarete rarete) : void
         
     }
     
@@ -73,12 +116,26 @@ package OurGame{
     }
     
     class Invocation {
-        vie : int
-        degat : int
-        sprite : string
-        Invocateur : Joueur
-        peutBouger : boolean
-        peutAttaquer : boolean
+        -vie : int
+        -degat : int
+        -sprite : string
+        -Invocateur : Joueur
+        -peutBouger : bool
+        -peutAttaquer : bool
+        +Invocation(int vie, int degat, string image)
+        +getVie() : int
+        +setVie(int vie) : void
+        +getDegat() : int
+        +setDegat(int degat) : void
+        +getImage() : string
+        +setImage(string image) : void
+        +getPeutBouger() : bool
+        +setPeutBouger(bool peutBouger) : void
+        +getPeutAttaquer() : bool
+        +setPeutAttaquer(bool peutAttaquer) : void
+        +getInvocateur() : Joueur
+        +setInvocateur(Joueur invocateur) : void
+        +takeDamage(int degat) : void
     }
     
     Jeu *-- Plateau

@@ -1,6 +1,5 @@
  puml 
 @startuml
-'https://plantuml.com/class-diagram
 
 package XMLSchema {
     class int{}
@@ -61,7 +60,8 @@ package OurGame{
         vie : int
         degat : int
         pseudoInvocateur : string
-        estJouable : boolean
+        peutBouger : boolean
+        peutAttaquer : boolean
     }
     
     Jeu *-- Plateau
@@ -72,6 +72,8 @@ package OurGame{
     Carte *-- TypeDeCarte
     Carte *-- Invocation
     Carte *-- TypeRarete
-    Invocation *-- Joueur
+    
+    note top of Invocation : pseudoInvocateur doit\nexister dans au moins\nun joueur (dans pseudo)
+    note left of Joueur : pseud doit\nêtre unique
 }
 @enduml
