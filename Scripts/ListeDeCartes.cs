@@ -48,7 +48,7 @@ public class ListeDeCartes
             {
                 newCartes[j - 1] = _cartes[j];
             }
-            else
+            else if (j < i)
             {
                 newCartes[j] = _cartes[j];
             }

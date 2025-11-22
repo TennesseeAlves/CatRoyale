@@ -51,7 +51,6 @@ namespace TestProjet.Scripts;
  *          -reduireJauge(int usage) : void                                             +
  *
  * Problèmes restants:
- *                      -les invoc n'obtienne jamais leur invocateur
  *                      -aucun moyen de savoir/gérer à qui c'est le tour pour l'instant
  *                      -pas fait ni l'IHM ni la partie sauvegarde pour l'instant (ni le XML mais bon)
  *                      -donc voir les instructions de : -début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
@@ -93,7 +92,7 @@ namespace TestProjet.Scripts;
  * MonoGame.Draw() --> pas besoin pour moi
  */
 
-enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
+public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
 
 public class Jeu
 {
@@ -106,12 +105,11 @@ public class Jeu
     private Joueur _joueurActuel; //pour savoir à qui c'est le tour
     private EtatAutomate _phase;
     private int _carteI, _caseI, _caseJ,  _lastCaseI, _lastCaseJ;
-    private bool _finTour;
 
     //paramètres du jeu
     private string defaultSaveFileName = "InitGame.xml";
     private int maxJauge = 10;
-    private int maxCarteMain = 7;
+    private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
 
     
@@ -121,26 +119,36 @@ public class Jeu
         _joueur1 = new Joueur(nom1, 0);
         _joueur2 = new Joueur(nom2, 0);
         _joueurActuel = _joueur1;
-        _carteI = -1;
+        _carteI = 0;
         _caseI = -1;
         _caseJ = -1;
         _lastCaseI = -1;
         _lastCaseJ = -1;
-        _finTour = false;
         InitGame(defaultSaveFileName);
     } 
     
+    //-------------------------accesseur---------------------------//
+    public Plateau plateau() { return _plateau; }
+    public Joueur joueur1() { return _joueur1; }
+    public Joueur joueur2() { return _joueur2; }
+    public Joueur joueurActuel() { return _joueurActuel; }
+    public EtatAutomate phase() { return _phase; }
+    public int carteI() { return _carteI; }
+    public int caseI() { return _caseI; }
+    public int caseJ() { return _caseJ; }
+    public int lastCaseI() { return _lastCaseI; }
+    public int lastCaseJ() { return _lastCaseJ; }
+    public bool victory() { return _plateau.victory(_joueurActuel); }
+    
     //-------------------------turnManager---------------------------//
     //début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
-    private void InitGame(string SaveFileName)
+    public void InitGame(string SaveFileName)
     {
         //load game (soit une en cours qui a été sauvegarder, soit par défaut une partie au tour 1 avec rien de placé et les jauges rempli)
         LoadGame(SaveFileName);
-        //puis on commence le tour (pas besoin de l'init puisqu'on peut pas sauvegarder juste avant un Init)
-        MainTurn();
     }
     //début de tour(remplir jauge, piocher cartes, actualiser les peutBouger et peut Attaquer(mais pas du cristal))
-    private void InitTurn()
+    public void InitTurn()
     {
         //on rempli notre jauge
         _joueurActuel.remplirJauge(maxJauge);
@@ -166,31 +174,17 @@ public class Jeu
             }
         }
         //puis on commence le tour
-        MainTurn();
+        _phase = EtatAutomate.SELECTION_CARTE;
+        _carteI = 0;
+        _caseI = -1;
+        _caseJ = -1;
+        _lastCaseI = -1;
+        _lastCaseJ = -1;
     }
     //verification pendant le tour(mana suffisant pour carte, case contenant une invocation ou non, invocation appartenant au bon joueur, invocation peutJouer ou peutBouger, partie fini/gagné)
-    private void MainTurn()
-    {
-        //tant que pas l'input de fin de tour, ni la victoire du joueur actuel
-        while (!_finTour)
-        {
-            //gérer les inputs pour les actions (en faisant les tests nécéssaires)
-            //transition();
-        }
-        //puis, si victoire
-        if (_plateau.victory(_joueurActuel))
-        {
-            //alors finir la partie
-            EndTurn();
-        }
-        else
-        {
-            //sinon finir le tour
-            EndTurn();
-        }
-    }
+    public void MainTurn(){}
     //fin de tour(passer la main à l'autre joueur)
-    private void EndTurn()
+    public void EndTurn()
     {
         //fonction à garder pour si on ajoute des effets qui s'applique en fin de manche (comme dans l'invocation des 7)
         if (_joueurActuel == _joueur1)
@@ -204,7 +198,7 @@ public class Jeu
         InitTurn();
     }
     //fin de partie(sauvegarder?)
-    private void EndGame()
+    public void EndGame()
     {
         //on augmente la winstreak du gagnant
         _joueurActuel.setWinStreak(_joueurActuel.getWinStreak()+1);
@@ -254,36 +248,48 @@ public class Jeu
         return current.IsKeyDown(Keys.Space) && !last.IsKeyDown(Keys.Space);
     }
     
-    private void transition(KeyboardState current, KeyboardState last)
+    public void transition(KeyboardState current, KeyboardState last)
     {
         //déselectionne = met à -1 (donc pas visible à l'affichage)
         //reset = met à 0 (donc de nouveau visible et pos par défaut)
         
         if (appuieSurFinTour(current,last)){
             //fini le tour
-            _finTour = true;
+            EndTurn();
             //return pour pas faire le switch (un else indenterait trop)
             return;
         }
         switch (_phase)
         {
             case EtatAutomate.SELECTION_CARTE:
-                if (appuieSurGauche(current,last)){
+                if (_joueurActuel.getNbCartesInMain() < 1)
+                {
+                    //si la main est vide, on a pas de carte à selectionner, on passe donc aux mouvements :
+                    //passe phase à SELECTION_CASE_SOURCE
+                    _phase = EtatAutomate.SELECTION_CASE_SOURCE;
+                    //déselectionne carte
+                    _carteI = -1;
+                    //reset case
+                    _caseI = 0;
+                    _caseJ = 0;
+
+                }
+                else if (appuieSurGauche(current,last)){
                     //décrémente carteI
                     _carteI = (_carteI>0) ? _carteI-1 : _carteI;
                 }
-                if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last)){
                     //incrément carteI
                     _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : _carteI;
                 }
-                if (appuieSurValide(current,last)){
+                else if (appuieSurValide(current,last)){
                     //passe phase à SELECTION_CASE_CARTE
-                    _phase = EtatAutomate.SELECTION_CARTE;
+                    _phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
                     _caseI = 0;
                     _caseJ = 0;
                 }
-                if (appuieSurHaut(current,last)){
+                else if ((appuieSurHaut(current,last) && _joueurActuel ==  _joueur1) || (appuieSurBas(current,last) && _joueurActuel ==  _joueur2)){
                     //passe phase à SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
@@ -298,27 +304,29 @@ public class Jeu
                     //décrémente caseI
                     _caseI = (_caseI>0) ? _caseI-1 : _caseI;
                 }
-                if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last)){
                     //incrémente caseI
                     _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
                 }
-                if (appuieSurBas(current,last)){
+                else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
                     _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
                 }
-                if (appuieSurHaut(current,last)){
+                else if (appuieSurBas(current,last)){
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                if (appuieSurValide(current,last) && peutInvoquer(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutInvoquer(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI))
                 {
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
                     //invoque la carte sur la case
-                    _plateau.invoke(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI);
+                    _plateau.invoke(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI, _joueurActuel);
+                    //consomme le mana
+                    _joueurActuel.reduireJauge(_joueurActuel.getCarteInMainAt(_carteI).getCout());
                     //retire la carte de la main et la remet dans le deck
-                    _joueurActuel.addCarteInDeck(_joueurActuel.getCarteInMainAt(_carteI));
-                    _joueurActuel.deleteCarteInMain(_joueurActuel.getCarteInMainAt(_carteI));
+                    _joueurActuel.putCarteInDeckFromMainAt(_carteI);
+                    
                     //déselectionne la case
                     _caseI = -1;
                     _caseJ = -1;
@@ -326,7 +334,7 @@ public class Jeu
                     _carteI = 0;
                 }
 
-                if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last))
                 {
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -335,24 +343,24 @@ public class Jeu
                     _caseJ = -1;
                 }
                 break;
-            case EtatAutomate.SELECTION_CASE_CIBLE:
+            case EtatAutomate.SELECTION_CASE_SOURCE:
                 if (appuieSurGauche(current,last)){
                     //décrémente caseI
                     _caseI = (_caseI>0) ? _caseI-1 : _caseI;
                 }
-                if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last)){
                     //incrémente caseI
                     _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
                 }
-                if (appuieSurBas(current,last)){
+                else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
                     _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
                 }
-                if (appuieSurHaut(current,last)){
+                else if (appuieSurBas(current,last)){
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                if (appuieSurValide(current,last) && !_plateau.isEmpty(_caseJ,_caseI) && _plateau.getEntityAt(_caseJ,_caseI).getInvocateur() == _joueurActuel)
+                else if (appuieSurValide(current,last) && !_plateau.isEmpty(_caseJ,_caseI) && _plateau.getEntityAt(_caseJ,_caseI).getInvocateur() == _joueurActuel)
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     _phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -360,7 +368,7 @@ public class Jeu
                     _lastCaseI = _caseI;
                     _lastCaseJ = _caseJ;
                 }
-                if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last))
                 {
                     //pass phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -368,27 +376,27 @@ public class Jeu
                     _caseI = -1;
                     _caseJ = -1;
                     //reset carte
-                    _carteI = -1;
+                    _carteI = 0;
                 }
                 break;
-            case EtatAutomate.SELECTION_CASE_SOURCE:
+            case EtatAutomate.SELECTION_CASE_CIBLE:
                 if (appuieSurGauche(current,last)){
                     //décrémente caseI
                     _caseI = (_caseI>0) ? _caseI-1 : _caseI;
                 }
-                if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last)){
                     //incrémente caseI
                     _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
                 }
-                if (appuieSurBas(current,last)){
+                else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
                     _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
                 }
-                if (appuieSurHaut(current,last)){
+                else if (appuieSurBas(current,last)){
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                if (appuieSurValide(current,last)&& peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
+                else if (appuieSurValide(current,last)&& peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -399,7 +407,7 @@ public class Jeu
                     _lastCaseJ = -1;
                 }
 
-                if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -415,7 +423,70 @@ public class Jeu
     //TO DO
 
     //-------------------------saveManager---------------------------//
-    private void LoadGame(String FileName){}
+    private void LoadGame(String FileName)
+    {
+        Carte tmpJ1C1 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C2 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C3 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C4 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C5 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C6 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C7 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C8 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C9 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C10 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C11 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C12 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C13 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C14 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ1C15 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        _joueur1.addCarteInDeck(tmpJ1C1);
+        _joueur1.addCarteInDeck(tmpJ1C2);
+        _joueur1.addCarteInDeck(tmpJ1C3);
+        _joueur1.addCarteInDeck(tmpJ1C4);
+        _joueur1.addCarteInDeck(tmpJ1C5);
+        _joueur1.addCarteInDeck(tmpJ1C6);
+        _joueur1.addCarteInDeck(tmpJ1C7);
+        _joueur1.addCarteInDeck(tmpJ1C8);
+        _joueur1.addCarteInDeck(tmpJ1C9);
+        _joueur1.addCarteInDeck(tmpJ1C10);
+        _joueur1.addCarteInDeck(tmpJ1C11);
+        _joueur1.addCarteInDeck(tmpJ1C12);
+        _joueur1.addCarteInDeck(tmpJ1C13);
+        _joueur1.addCarteInDeck(tmpJ1C14);
+        _joueur1.addCarteInDeck(tmpJ1C15);
+        Carte tmpJ2C1 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C2 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C3 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C4 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C5 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C6 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C7 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C8 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C9 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C10 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C11 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C12 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C13 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C14 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        Carte tmpJ2C15 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
+        _joueur2.addCarteInDeck(tmpJ2C1);
+        _joueur2.addCarteInDeck(tmpJ2C2);
+        _joueur2.addCarteInDeck(tmpJ2C3);
+        _joueur2.addCarteInDeck(tmpJ2C4);
+        _joueur2.addCarteInDeck(tmpJ2C5);
+        _joueur2.addCarteInDeck(tmpJ2C6);
+        _joueur2.addCarteInDeck(tmpJ2C7);
+        _joueur2.addCarteInDeck(tmpJ2C8);
+        _joueur2.addCarteInDeck(tmpJ2C9);
+        _joueur2.addCarteInDeck(tmpJ2C10);
+        _joueur2.addCarteInDeck(tmpJ2C11);
+        _joueur2.addCarteInDeck(tmpJ2C12);
+        _joueur2.addCarteInDeck(tmpJ2C13);
+        _joueur2.addCarteInDeck(tmpJ2C14);
+        _joueur2.addCarteInDeck(tmpJ2C15);
+        InitTurn();
+    }
 
     //-------------------------testManager---------------------------//
     private bool peutInvoquer(Carte carte, int lig, int col)
@@ -428,18 +499,15 @@ public class Jeu
         Invocation? cible = _plateau.getEntityAt(lig2, col2);
         return source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
     }
-
     private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = _plateau.getEntityAt(lig1, col1);
         return source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
     }
-
     private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {
         return peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2);
     }
-
     private void AttaqueOuDeplace(int lig1, int col1, int lig2, int col2)
     {
         if (peutDeplacer(lig1, col1, lig2, col2))

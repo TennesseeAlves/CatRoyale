@@ -106,6 +106,15 @@ public class Joueur
         _main.removeCarteAt(i);
     }
 
+    public void deleteCarteInMainAt(int i)
+    {
+        if (i >= _main.Length())
+        {
+            throw new ArgumentException();
+        }
+        _main.removeCarteAt(i);
+    }
+
     public void deleteCarteInDeck(Carte carte)
     {
         int i = _deck.getIndexOf(carte);
@@ -114,6 +123,26 @@ public class Joueur
             throw new ArgumentException();
         }
         _deck.removeCarteAt(i);
+    }
+
+    public void deleteCarteInDeckAt(int i)
+    {
+        if (i >= _deck.Length())
+        {
+            throw new ArgumentException();
+        }
+        _deck.removeCarteAt(i);
+    }
+
+    public void putCarteInDeckFromMainAt(int i)
+    {
+        if (i >= _main.Length())
+        {
+            throw new ArgumentException();
+        }
+        Carte carte = _main.getCarteAt(i);
+        _main.removeCarteAt(i);
+        _deck.appendCarte(carte);
     }
 
     public void pioche()
