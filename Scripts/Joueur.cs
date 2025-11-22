@@ -66,6 +66,16 @@ public class Joueur
         }
     }
 
+    public int getNbCartesInMain()
+    {
+        return _main.Length();
+    }
+    
+    public int getNbCartesInDeck()
+    {
+        return _deck.Length();
+    }
+
     public void addCarteInMain(Carte carte)
     {
         _main.appendCarte(carte);

@@ -81,12 +81,15 @@ public class Invocation
         _invocateur = invocateur;
     }
 
-    public void takeDamage(int degat)
+    public bool takeDamage(int degat)
     {
+        bool mort = false;
         _vie -= degat;
         if (_vie < 0)
         {
-            _vie = 0;//là bah on meurt
+            _vie = 0;
+            mort = true;
         }
+        return mort;
     }
 }

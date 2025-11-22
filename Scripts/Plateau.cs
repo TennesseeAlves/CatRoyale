@@ -47,6 +47,7 @@ public class Plateau
     public void invoke(Carte carte, int ligne, int colonne)
     {
         _map[ligne, colonne] = carte.getInvocation();
+        _map[ligne, colonne].setVie(carte.getVie());
     }
 
     public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
@@ -58,7 +59,16 @@ public class Plateau
 
     public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
-        _map[ligneArrive, colonneArrive].takeDamage(_map[ligneDepart, colonneDepart].getDegat());
+        //effectue l'attaque et vérifie s'il est mort
+        if (_map[ligneArrive, colonneArrive].takeDamage(_map[ligneDepart, colonneDepart].getDegat()))
+        {
+            _map[ligneArrive, colonneArrive] = null;
+        }
         _map[ligneDepart,colonneDepart].setPeutAttaquer(false);
+    }
+
+    public bool victory(Joueur joueur)
+    {
+        return false;
     }
 }

@@ -23,8 +23,7 @@ package OurGame{
         #LoadContent()
         #Update()
         #Draw()
-        -Transition(int etatActuelAutomate, KeyboardState etatActueClavier) : bool
-    }
+   }
     
     class Plateau { 
         -map :  Invocation[,]
@@ -36,6 +35,7 @@ package OurGame{
         +invoke(Carte carte, int ligne, int colonne) : bool
         +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
         +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        +victory(Joueur joueur) : bool
     }
     
     class Joueur {
@@ -53,6 +53,8 @@ package OurGame{
         +setJauge(int jauge) : void
         +remplirJauge(int niveau) : void
         +reduireJauge(int usage) : void
+        +getNbCartesInMain() : int
+        +getNbCartesInDeck() : int
         +addCarteInMain(Carte carte) : void
         +addCarteInDeck(Carte carte) : void
         +getCarteInMainAt(int i) : Carte
@@ -135,7 +137,7 @@ package OurGame{
         +setPeutAttaquer(bool peutAttaquer) : void
         +getInvocateur() : Joueur
         +setInvocateur(Joueur invocateur) : void
-        +takeDamage(int degat) : void
+        +takeDamage(int degat) : bool
     }
     
     Jeu *-- Plateau
