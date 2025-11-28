@@ -79,7 +79,8 @@ package OurGame{
         vie : int
         degat : int
         pseudoInvocateur : string
-        estJouable : boolean
+        peutJouer : boolean
+        peutAttaquer : boolean
     }
     
     

@@ -55,7 +55,8 @@
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
             <element name="pseudoInvocateur" type="string"/>
-            <element name="estJouable" type="boolean"/>
+            <element name="peutJouer" type="boolean"/>
+            <element name="peutAttaquer" type="boolean"/>
         </sequence>
     </complexType>
     
