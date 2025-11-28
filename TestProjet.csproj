@@ -28,8 +28,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="data\html\" />
-      <Folder Include="data\xml\" />
-      <Folder Include="data\xsd\" />
       <Folder Include="data\xslt\" />
     </ItemGroup>
 </Project>

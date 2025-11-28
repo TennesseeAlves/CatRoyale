@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
+        elementFormDefault="qualified">
+
+    <!-- élément racine instanciable-->
+    <element name="carteDuJeu" type="cat:ListeDeCarte"/>
+
+    <!-- 
+       Type ListeDeCarte
+       contenant : une carte de type Carte[] (au moins une carte de type Carte)
+   -->
+    <complexType name="ListeDeCarte">
+        <sequence>
+            <element name="carte" type="cat:Carte" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+      
+    <!-- Type Carte
+       contenant : une vie de type int,
+                   un nombre de dégat de type int,
+                   un nom de type string,
+                   une image de type string,
+                   un cout de type int,
+                   un type de type TypeDeCarte
+                   une invocation de type Invocation,
+                   unr rarete de type TypeRarete
+   -->
+    <complexType name="Carte">
+        <sequence>
+            <element name="vie" type="int"/>
+            <element name="degat" type="int"/>
+            <element name="nom" type="string"/>
+            <element name="image" type="string"/>
+            <element name="cout" type="int"/>
+            <element name="type" type="cat:TypeDeCarte"/>
+            <element name="invocation" type="cat:Invocation"/>
+            <element name="rarete" type="cat:TypeRarete"/>
+        </sequence>
+    </complexType>
+
+    <!-- 
+       Type Invocation
+       contenant : une durée de vie de type int,
+                   un nombre de dégat de type int,
+                   le pseudo de l'invocateur de type string,
+                   un element estJouable de type boolean.
+   -->
+    <complexType name="Invocation">
+        <sequence>
+            <element name="vie" type="int"/>
+            <element name="degat" type="int"/>
+            <element name="pseudoInvocateur" type="string"/>
+            <element name="estJouable" type="boolean"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Type TypeDeCarte
+        n'acceptant que combattant, sort et objet
+     -->
+    <simpleType name="TypeDeCarte">
+        <restriction base="string">
+            <enumeration value="combattant"/>
+            <enumeration value="sort"/>
+            <enumeration value="objet"/>
+        </restriction>
+    </simpleType>
+
+    <!-- Type TypeRarete
+        n'acceptant que commune, rare, épique et légendaire
+     -->
+    <simpleType name="TypeRarete">
+        <restriction base="string">
+            <enumeration value="commune"/>
+            <enumeration value="rare"/>
+            <enumeration value="épique"/>
+            <enumeration value="légendaire"/>
+        </restriction>
+    </simpleType>
+    
+</schema> 
