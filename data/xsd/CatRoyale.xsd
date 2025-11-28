@@ -11,13 +11,15 @@
         type Jeu
         contenant : un plateau de type Plateau,
                     un joueur1 de type Joueur,
-                    un joueur2 de type Joueur.
+                    un joueur2 de type Joueur,
+                    carteDuJeu de type ListeDeCarte
     -->
     <complexType name="Jeu">
         <sequence>
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
+            <element name="carteDuJeu" type="cat:ListeDeCarte"/>
         </sequence>
     </complexType>
 
@@ -70,8 +72,17 @@
             <element name="pseudo" type="int"/>
             <element name="winStreak" type="int"/>
             <element name="jauje" type="int"/>
-            <element name="main" type="cat:ListeDeCarte"/>
-            <element name="deck" type="cat:ListeDeCarte"/>
+            <element name="main" type="cat:ListeIdCarte"/>
+            <element name="deck" type="cat:ListeIdCarte"/>
+        </sequence>
+    </complexType>
+    
+    <!-- Type ListeIdCarte 
+        contenant : listeId de type IdCarte[] (au moins un idCarte de type IdCarte)
+    -->
+    <complexType name="ListeIdCarte">
+        <sequence>
+            <element name="listeId" type="cat:IdCarte" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
     
@@ -86,7 +97,8 @@
     </complexType>
     
     <!-- Type Carte
-        contenant : une vie de type int,
+        contenant : un attribut id de type IdCarte
+                    une vie de type int,
                     un nombre de dégat de type int,
                     un nom de type string,
                     une image de type string,
@@ -96,6 +108,7 @@
                     unr rarete de type TypeRarete
     -->
     <complexType name="Carte">
+        
         <sequence>
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
@@ -106,7 +119,17 @@
             <element name="invocation" type="cat:Invocation"/>
             <element name="rarete" type="cat:TypeRarete"/>
         </sequence>
+        <attribute name="id" type="cat:IdCarte"/>
     </complexType>
+    
+    <!-- Type IdCarte 
+        n'acceptant que les noms des cartes (A COMPLETER)
+    -->
+    <simpleType name="IdCarte">
+        <restriction base="string">
+            <enumeration value="sorcier"/>
+        </restriction>
+    </simpleType>
     
     <!-- Type TypeDeCarte
         n'acceptant que combattant, sort et objet
