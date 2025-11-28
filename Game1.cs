@@ -26,7 +26,7 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        jeu = new Jeu(10, 6, "Alice", "Bob");
+        jeu = new Jeu(10, 5, "Alice", "Bob");
     }
 
     protected override void Initialize()
@@ -81,7 +81,7 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
         _spriteBatch.Draw(_background, Vector2.Zero, Color.White);
-        for (int ligne = 2; ligne < 8; ligne++)
+        for (int ligne = 2; ligne < 7; ligne++)
         {
             for (int colone = 3; colone < 13; colone++)
             {
@@ -90,7 +90,11 @@ public class Game1 : Game
                 {
                     _spriteBatch.Draw(_case,new Vector2(colone*32 + _case.Width*0.25f, ligne*32 + _case.Height*0.25f), null, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.FlipVertically, 0.0f);
                 }
-                if (!jeu.plateau().isEmpty(ligne-2,colone-3) && jeu.plateau().getEntityAt(ligne-2,colone-3).getInvocateur() == jeu.joueur1())
+                if (!jeu.plateau().isEmpty(ligne-2,colone-3) && jeu.plateau().getEntityAt(ligne-2,colone-3).getImage() == "cristal.png")
+                {
+                    _spriteBatch.Draw(_carteBase, new Vector2(colone*32, ligne*32), Color.White);
+                }
+                else if (!jeu.plateau().isEmpty(ligne-2,colone-3) && jeu.plateau().getEntityAt(ligne-2,colone-3).getInvocateur() == jeu.joueur1())
                 {
                     _spriteBatch.Draw(_lui, new Vector2(colone*32, ligne*32), Color.Red);
                 }

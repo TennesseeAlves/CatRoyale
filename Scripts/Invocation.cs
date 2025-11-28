@@ -92,4 +92,10 @@ public class Invocation
         }
         return mort;
     }
+
+    public bool isCristal()
+    {
+        //pas une bonne méthode
+        return _image == "cristal.png";
+    }
 }

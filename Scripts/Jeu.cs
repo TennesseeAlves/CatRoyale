@@ -49,15 +49,18 @@ namespace TestProjet.Scripts;
  *          -getJauge() : int                                                           +
  *          -remplirJauge(int niveau) : void                                            +
  *          -reduireJauge(int usage) : void                                             +
- *
+*/
+/*
  * Problèmes restants:
- *                      -aucun moyen de savoir/gérer à qui c'est le tour pour l'instant
- *                      -pas fait ni l'IHM ni la partie sauvegarde pour l'instant (ni le XML mais bon)
- *                      -donc voir les instructions de : -début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
- *                                                       -début de tour(remplir jauge, piocher cartes, actualiser les peutBouger et peut Attaquer(mais pas du cristal))
- *                                                       -verification pendant le tour(mana suffisant pour carte, case contenant une invocation ou non, invocation appartenant au bon joueur, invocation peutJouer ou peutBouger, partie fini/gagné)
- *                                                       -fin de tour(passer la main à l'autre joueur)
- *                                                       -fin de partie(sauvegarder?)
+ *                      -pas de menu (parties en boucles)
+ *                      -pas fait le controle souris ni la partie sauvegarde pour l'instant (ni le XML mais bon)
+ *                      -pas de deck
+ *                      -deplacement en noclip
+ *                      -peut invoquer partout
+ *                      -critsal indistingable des autres invocs (algoritmiquement)
+ *                      -
+*/
+/*
  * TO DO:
  *          -load and save (donc serialization) --> InitGame et EndGame s'en serviront
  *          -gérer les inputs (clavier & souris) --> MainTurn s'en sert (et peut-être EndGame pour si on veut rejouer, et ptet même InitGame pour si on veut lancer une sauvegarde ou un nouvelle)
@@ -65,8 +68,8 @@ namespace TestProjet.Scripts;
  *          -vérifier victoire (et de manière générale accéder au cristal)
  *          -créer la partie d'init (pour pouvoir tester notamment) --> requiert le XML et le load
  *          -créer un premier deck (et les images associés) --> utile pour XML et affichage, pas pour le code
- *          -changer la logique pour correspondre au système update(time) (faire la fonction qui sera appeler dans le update quoi)
- *
+*/
+/*
  * Première version jouable :
  *                              -pas de menu --> pas de choix (relance des parties en boucles et pas de sauvegarde)
  *                              -deck minimal --> une carte à 5HP 1ATK cout3 et un à 2HP 2ATK cout2
@@ -112,7 +115,7 @@ public class Jeu
     private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
 
-    
+    //longeur doit être pair et strictement supérieur à 2, largeur doit être impair et srtictement supérieur à 1
     public Jeu(int longueur, int largeur, string nom1, string nom2)
     {
         _plateau = new Plateau(longueur, largeur);
@@ -166,7 +169,7 @@ public class Jeu
             for (int j = 0; j < _plateau.getLongueur(); j++)
             {
                 Invocation? invoc = _plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.getInvocateur() == _joueurActuel)// && invoc != cristal)
+                if (invoc != null && invoc.getInvocateur() == _joueurActuel && !invoc.isCristal())
                 {
                     invoc.setPeutAttaquer(true);
                     invoc.setPeutBouger(true);
@@ -282,7 +285,7 @@ public class Jeu
                     //incrément carteI
                     _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : _carteI;
                 }
-                else if (appuieSurValide(current,last)){
+                else if (appuieSurValide(current,last) && peutSelectionnerCarte(_carteI)){
                     //passe phase à SELECTION_CASE_CARTE
                     _phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
@@ -300,7 +303,7 @@ public class Jeu
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CARTE:
-                if (appuieSurGauche(current,last)){
+                if (appuieSurGauche(current,last) && (_joueurActuel == _joueur1 && _caseI < _plateau.getLongueur()/2 || _joueurActuel == _joueur2 && _caseI >= _plateau.getLongueur()/2 )){
                     //décrémente caseI
                     _caseI = (_caseI>0) ? _caseI-1 : _caseI;
                 }
@@ -316,7 +319,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last) && peutInvoquer(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutInvoquer(_carteI,_caseJ,_caseI))
                 {
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -360,7 +363,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last) && !_plateau.isEmpty(_caseJ,_caseI) && _plateau.getEntityAt(_caseJ,_caseI).getInvocateur() == _joueurActuel)
+                else if (appuieSurValide(current,last) && peutSelectionnerInvocation(_caseJ,_caseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     _phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -485,24 +488,45 @@ public class Jeu
         _joueur2.addCarteInDeck(tmpJ2C13);
         _joueur2.addCarteInDeck(tmpJ2C14);
         _joueur2.addCarteInDeck(tmpJ2C15);
+        Carte tmpCristalJ1 = new Carte(20, 0, 0, "Cristal", "cristalCarte.png", TypeDeCarte.OBJET, TypeRarete.LEGENDAIRE, "cristal.png");
+        Carte tmpCristalJ2 = new Carte(20, 0, 0, "Cristal", "cristalCarte.png", TypeDeCarte.OBJET, TypeRarete.LEGENDAIRE, "cristal.png");
+        _plateau.invoke(tmpCristalJ1,_plateau.getLargeur()/2,1, _joueur1);
+        _plateau.invoke(tmpCristalJ2,_plateau.getLargeur()/2,_plateau.getLongueur()-2, _joueur2);
         InitTurn();
     }
 
     //-------------------------testManager---------------------------//
-    private bool peutInvoquer(Carte carte, int lig, int col)
+    //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable
+    private bool peutSelectionnerCarte(int i)
     {
+        Carte carte = _joueurActuel.getCarteInMainAt(i);
+        return _joueurActuel.getJauge() >= carte.getCout();
+    }
+    //pour l'ergonomie, pour éviter qu'on puisse séléctionner une invocation non jouable
+    private bool peutSelectionnerInvocation(int lig, int col)
+    {
+        Invocation? source = _plateau.getEntityAt(lig, col);
+        return source != null && source.getInvocateur() == _joueurActuel && (source.getPeutAttaquer() || source.getPeutBouger());
+    }
+    private bool peutInvoquer(int i, int lig, int col)
+    {
+        Carte carte = _joueurActuel.getCarteInMainAt(i);
         return _plateau.isEmpty(lig,col) && _joueurActuel.getJauge() >= carte.getCout();
     }
     private bool peutAttaquer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = _plateau.getEntityAt(lig1, col1);
         Invocation? cible = _plateau.getEntityAt(lig2, col2);
-        return source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
+        int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
+        int MAXDISTANCE = 2; // pourra être remplacé par la range de l'invoc si on rajoute ça plus tard
+        return distance < MAXDISTANCE &&  source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
     }
     private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = _plateau.getEntityAt(lig1, col1);
-        return source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
+        int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
+        int MAXDISTANCE = 3; // pourra être remplacé par la range de l'invoc si on rajoute ça plus tard
+        return distance < MAXDISTANCE && source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
     }
     private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {
