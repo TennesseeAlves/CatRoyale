@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
+<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale"
         xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
-        elementFormDefault="qualified">
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale"
+        elementFormDefault="qualified"
+>
+    <!-- on choisi le prefix "cat" comme le mot anglais "chat" -->
+    
+    <!-- element racine instanciable -->
+    <element name="jeu" type="cat:Jeu"/>
 
-    <!-- élément racine instanciable-->
-    <element name="Ourgame" type="cat:Jeu"/>
-
-    <!-- 
-        type Jeu
+    <!-- type Jeu
         contenant : un plateau de type Plateau,
                     un joueur1 de type Joueur,
                     un joueur2 de type Joueur,
@@ -29,7 +30,7 @@
     -->
     <complexType name="Plateau">
         <sequence>
-            <element name="colonne" type="cat:TabInvocation" maxOccurs="6"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+            <element name="ligne" type="cat:TabInvocation" minOccurs="6" maxOccurs="6"/>
         </sequence>
     </complexType>
     
@@ -39,7 +40,7 @@
     -->
     <complexType name="TabInvocation">
         <sequence>
-            <element name="ligne" type="cat:Invocation" maxOccurs="10"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+            <element name="invocation" type="cat:Invocation" minOccurs="10" maxOccurs="10"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
         </sequence>
     </complexType>
     

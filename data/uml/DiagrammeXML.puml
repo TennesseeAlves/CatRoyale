@@ -7,7 +7,7 @@ package XMLSchema #DDD {
     class boolean
 }
 
-package OurGame{
+package URICatRoyale {
     
     class Jeu{
         plateau : Plateau
@@ -17,13 +17,17 @@ package OurGame{
     }
     
     class Plateau { 
-        colonne : TabInvocation[]
+        tabDeCases : TabDeCases[]
     }
     
-    class TabInvocation {
-        ligne :  Invocation[]
+    class TabDeCases {
+        tabDeCases : Case[]
     }
     
+    class Case {
+        {attribut} estVide : boolean
+        {optional} invocation : Invocation
+    }
     
     class Joueur {
         pseudo : string
@@ -86,7 +90,10 @@ package OurGame{
     Jeu "1"*--"2" Joueur : < Peu jouer un seul jeux à la fois
     Jeu *--"1" ListeDeCartes
     
-    TabInvocation *--"*" Invocation
+    TabDeCases *--"10" Case
+    
+    Case *--"0..1" Invocation : > contient
+    
     Joueur *--"2" ListeIdCarte
     
     ListeDeCartes *--"*" Carte
@@ -97,10 +104,10 @@ package OurGame{
     
     ListeIdCarte *-- "*" IdCarte
     
-    Plateau *--"*" TabInvocation 
+    Plateau *--"6" TabDeCases
     
-   IdCarte --|> string 
-   TypeDeCarte --|> string 
-   TypeRarete --|> string 
+    IdCarte --|> string 
+    TypeDeCarte --|> string 
+    TypeRarete --|> string 
 }
 @enduml

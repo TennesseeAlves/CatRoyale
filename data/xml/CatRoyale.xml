@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Ourgame xmlns="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
+<jeu xmlns="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/ourGame  ../xsd/CatRoyale.xsd">
-
-</Ourgame>
+            xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale  ../xsd/CatRoyale.xsd"
+>
+    <plateau>
+        <ligne>
+            <invocation>
+                <vie></vie>
+                <degat></degat>
+                <pseudoInvocateur></pseudoInvocateur>
+                <peutJouer></peutJouer>
+                <peutAttaquer></peutAttaquer>
+            </invocation>
+            <invocation>
+                <vie></vie>
+                <degat></degat>
+                <pseudoInvocateur></pseudoInvocateur>
+                <peutJouer></peutJouer>
+                <peutAttaquer></peutAttaquer>
+            </invocation>
+        </ligne>
+    </plateau>
+    
+</jeu>
