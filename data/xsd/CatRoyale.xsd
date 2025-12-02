@@ -12,14 +12,14 @@
         contenant : un plateau de type Plateau,
                     un joueur1 de type Joueur,
                     un joueur2 de type Joueur,
-                    carteDuJeu de type ListeDeCarte
+                    carteDuJeu de type ListeDeCartes
     -->
     <complexType name="Jeu">
         <sequence>
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
-            <element name="carteDuJeu" type="cat:ListeDeCarte"/>
+            <element name="carteDuJeu" type="cat:ListeDeCartes"/>
         </sequence>
     </complexType>
 
@@ -29,7 +29,7 @@
     -->
     <complexType name="Plateau">
         <sequence>
-            <element name="map" type="cat:TabInvocation" maxOccurs="unbounded"/>
+            <element name="colonne" type="cat:TabInvocation" maxOccurs="6"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
         </sequence>
     </complexType>
     
@@ -39,7 +39,7 @@
     -->
     <complexType name="TabInvocation">
         <sequence>
-            <element name="tab" type="cat:Invocation" maxOccurs="unbounded"/>
+            <element name="ligne" type="cat:Invocation" maxOccurs="10"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
         </sequence>
     </complexType>
     
@@ -88,10 +88,10 @@
     </complexType>
     
     <!-- 
-        Type ListeDeCarte
+        Type ListeDeCartes
         contenant : une carte de type Carte[] (au moins une carte de type Carte)
     -->
-    <complexType name="ListeDeCarte">
+    <complexType name="ListeDeCartes">
         <sequence>
             <element name="carte" type="cat:Carte" maxOccurs="unbounded"/>
         </sequence>
@@ -102,10 +102,10 @@
                     une vie de type int,
                     un nombre de dégat de type int,
                     un nom de type string,
-                    une image de type string,
+                    une imageInvocation de type string,
+                    une imageCarte de type string,
                     un cout de type int,
                     un type de type TypeDeCarte
-                    une invocation de type Invocation,
                     unr rarete de type TypeRarete
     -->
     <complexType name="Carte">
@@ -114,13 +114,13 @@
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
             <element name="nom" type="string"/>
-            <element name="image" type="string"/>
+            <element name="imageCarte" type="string"/>
+            <element name="imageInvocation" type="string"/>
             <element name="cout" type="int"/>
             <element name="type" type="cat:TypeDeCarte"/>
-            <element name="invocation" type="cat:Invocation"/>
             <element name="rarete" type="cat:TypeRarete"/>
         </sequence>
-        <attribute name="id" type="cat:IdCarte"/>
+        <attribute name="id" type="cat:IdCarte" use="required"/>
     </complexType>
     
     <!-- Type IdCarte 

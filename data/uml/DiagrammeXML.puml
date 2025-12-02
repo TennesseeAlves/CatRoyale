@@ -17,11 +17,11 @@ package OurGame{
     }
     
     class Plateau { 
-        map : TabInvocation[]
+        colonne : TabInvocation[]
     }
     
     class TabInvocation {
-        tab :  Invocation[]
+        ligne :  Invocation[]
     }
     
     
