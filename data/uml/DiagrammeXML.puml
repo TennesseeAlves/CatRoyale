@@ -90,7 +90,7 @@ package URICatRoyale {
     Jeu "1"*--"2" Joueur : < Peu jouer un seul jeux à la fois
     Jeu *--"1" ListeDeCartes
     
-    TabDeCases *--"10" Case
+    TabDeCases *--"10" Case : doit etre pair
     
     Case *--"0..1" Invocation : > contient
     
@@ -104,7 +104,7 @@ package URICatRoyale {
     
     ListeIdCarte *-- "*" IdCarte
     
-    Plateau *--"6" TabDeCases
+    Plateau *--"5" TabDeCases : doit etre impair
     
     IdCarte --|> string 
     TypeDeCarte --|> string 
