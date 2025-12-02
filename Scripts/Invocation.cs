@@ -119,11 +119,4 @@ public class Invocation
             _vie = _maxvie;
         }
     }
-
-    public bool isCristal()
-    {
-        //pas une bonne méthode
-        return _image == "cristal.png";
-        Console.WriteLine(_vie);
-    }
 }

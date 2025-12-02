@@ -53,18 +53,22 @@ namespace TestProjet.Scripts;
 /*
  * Problèmes restants:
  *                      -pas de menu (parties en boucles)
- *                      -pas fait le controle souris ni la partie sauvegarde pour l'instant (ni le XML mais bon)
+ *                      -doit copier coller controle souris et faire partie sauvegarde
  *                      -pas de deck
  *                      -deplacement en noclip
- *                      -peut invoquer partout
- *                      -critsal indistingable des autres invocs (algoritmiquement)
+ 
+ *                      -peut joueur sur l'autre moitie
+ *                      -quand on invoc, après passez la moitié on peut plus revenir en arriere
+ *                      -peut pas attaquer
+ * 
+ *                      -quand tour adverse nos cartes sont mis en avant
+ *                      -vie des tours sous la case
+ *                      -mana max HARD CODE (donc barre jamais pleine)
  *                      -
 */
 /*
  * TO DO:
  *          -load and save (donc serialization) --> InitGame et EndGame s'en serviront
- *          -gérer les inputs (clavier & souris) --> MainTurn s'en sert (et peut-être EndGame pour si on veut rejouer, et ptet même InitGame pour si on veut lancer une sauvegarde ou un nouvelle)
- *          -afficher le jeu (pour pouvoir tester notamment) --> les inputs souris en dépendront
  *          -vérifier victoire (et de manière générale accéder au cristal)
  *          -créer la partie d'init (pour pouvoir tester notamment) --> requiert le XML et le load
  *          -créer un premier deck (et les images associés) --> utile pour XML et affichage, pas pour le code
@@ -83,16 +87,6 @@ namespace TestProjet.Scripts;
  *              -verif victoire --> à moi
  *              -verif actions  --> à moi
  *              -changer logique--> à moi
- */
-
-
-/* Traduction logique de ce code --> logique MonoGame
- *
- * MonoGame.Constructeur() --> Jeu.Constructeur()
- * MonoGame.Init() --> Jeu.InitGame() mais pas d'appel à MainTurn
- * MonoGame.LoadContent() --> rien à faire pour moi
- * MonoGame.Update() ~~> Jeu.MainTurn(), un if(Victory) then Jeu.EndGame() (donc peut-être un nouveau InitGame derrière) else Jeu.Transition() (qui appelera EndTurn, qui lui même appelera InitTurn)
- * MonoGame.Draw() --> pas besoin pour moi
  */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
@@ -190,7 +184,7 @@ public class Jeu
             for (int j = 0; j < _plateau.getLongueur(); j++)
             {
                 Invocation? invoc = _plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.getInvocateur() == _joueurActuel && !invoc.isCristal())
+                if (invoc != null && invoc.getInvocateur() == _joueurActuel && invoc != TowerJ1 &&  invoc != TowerJ2)
                 {
                     invoc.setPeutAttaquer(true);
                     invoc.setPeutBouger(true);
@@ -345,7 +339,7 @@ public class Jeu
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
                     //invoque la carte sur la case
-                    _plateau.invoke(_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI, _joueurActuel);
+                    _plateau.invoke(_joueurActuel,_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI);
                     //consomme le mana
                     _joueurActuel.reduireJauge(_joueurActuel.getCarteInMainAt(_carteI).getCout());
                     //retire la carte de la main et la remet dans le deck
@@ -449,66 +443,40 @@ public class Jeu
     //-------------------------saveManager---------------------------//
     private void LoadGame(String FileName)
     {
-        Carte tmpJ1C1 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C2 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C3 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C4 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C5 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C6 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C7 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C8 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C9 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C10 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C11 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C12 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C13 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C14 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ1C15 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        _joueur1.addCarteInDeck(tmpJ1C1);
-        _joueur1.addCarteInDeck(tmpJ1C2);
-        _joueur1.addCarteInDeck(tmpJ1C3);
-        _joueur1.addCarteInDeck(tmpJ1C4);
-        _joueur1.addCarteInDeck(tmpJ1C5);
-        _joueur1.addCarteInDeck(tmpJ1C6);
-        _joueur1.addCarteInDeck(tmpJ1C7);
-        _joueur1.addCarteInDeck(tmpJ1C8);
-        _joueur1.addCarteInDeck(tmpJ1C9);
-        _joueur1.addCarteInDeck(tmpJ1C10);
-        _joueur1.addCarteInDeck(tmpJ1C11);
-        _joueur1.addCarteInDeck(tmpJ1C12);
-        _joueur1.addCarteInDeck(tmpJ1C13);
-        _joueur1.addCarteInDeck(tmpJ1C14);
-        _joueur1.addCarteInDeck(tmpJ1C15);
-        Carte tmpJ2C1 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C2 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C3 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C4 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C5 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C6 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C7 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C8 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C9 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C10 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C11 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C12 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C13 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C14 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        Carte tmpJ2C15 = new Carte(5, 3, 2, "LUI", "l'image en .png", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "le sprite en .png");
-        _joueur2.addCarteInDeck(tmpJ2C1);
-        _joueur2.addCarteInDeck(tmpJ2C2);
-        _joueur2.addCarteInDeck(tmpJ2C3);
-        _joueur2.addCarteInDeck(tmpJ2C4);
-        _joueur2.addCarteInDeck(tmpJ2C5);
-        _joueur2.addCarteInDeck(tmpJ2C6);
-        _joueur2.addCarteInDeck(tmpJ2C7);
-        _joueur2.addCarteInDeck(tmpJ2C8);
-        _joueur2.addCarteInDeck(tmpJ2C9);
-        _joueur2.addCarteInDeck(tmpJ2C10);
-        _joueur2.addCarteInDeck(tmpJ2C11);
-        _joueur2.addCarteInDeck(tmpJ2C12);
-        _joueur2.addCarteInDeck(tmpJ2C13);
-        _joueur2.addCarteInDeck(tmpJ2C14);
-        _joueur2.addCarteInDeck(tmpJ2C15);
+        Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
+        Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
+        Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
+        //Carte Soin = new Carte(-1, 5, 5, "Soin", "textures/cards/soin", TypeDeCarte.SORT, TypeRarete.COMMUNE, "textures/mobs/soin");
+        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(Chatiment);
+        _joueur1.addCarteInDeck(Chatiment);
+        _joueur1.addCarteInDeck(Chatiment);
+        _joueur1.addCarteInDeck(Chatiment);
+        _joueur1.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(Chatiment);
         
         TowerJ1 = new Invocation(1000, 0, "textures/mobs/TourJ1");
         TowerJ2 = new Invocation(1000, 0, "textures/mobs/TourJ2");

@@ -21,6 +21,10 @@ public class Plateau
         return _map.GetLength(0);
     }
 
+    public void setEntityAt(Invocation invoc, int ligne, int colonne)
+    {
+        _map[ligne, colonne] = invoc;
+    }
     public Invocation? getEntityAt(int ligne, int colonne)
     {
         if (ligne >= _map.GetLength(0) || ligne < 0 || colonne >= _map.GetLength(1) || colonne < 0)
@@ -51,7 +55,7 @@ public class Plateau
     public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
     {   
         
-        _map[ligne, colonne] = carte.getInvocation();
+        _map[ligne, colonne] = carte.generateInvocation();
         _map[ligne, colonne].setInvocateur(joueur);
     }
 

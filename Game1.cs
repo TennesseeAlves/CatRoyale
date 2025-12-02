@@ -90,7 +90,6 @@ public class Game1 : Game
     
     private void DrawAllCarte(
         Joueur joueur,
-        bool isTour,   // tour du joueur
         int x,          // point de départ en X
         int y,           // Y normal des cartes
         int espaceCarte,     // écart entre les cartes
@@ -104,12 +103,12 @@ public class Game1 : Game
 
             Rectangle dest = new Rectangle(cardX, y, 70, 100);
 
-            if (isTour)
+            if (joueur == jeuChat.joueur1())
             {
                 Carte carteAt = joueur.getCarteInMainAt(cartenum);
                 string image = carteAt.getImage();
 
-                if (_carteI == cartenum)
+                if (jeuChat.carteI() == cartenum)
                 {
                     dest = new Rectangle(cardX, selectionY, 70, 100);
                     _spriteBatch.DrawString(_font, carteAt.ToString(), new Vector2(20, 20), Color.Black);
@@ -137,7 +136,7 @@ public class Game1 : Game
         Rectangle backRect = new Rectangle(x, y-5,largeur,hauteur);
         
         Color c1, c2;
-        if (invocation.getInvocateur()==joueur1)
+        if (invocation.getInvocateur()==jeuChat.joueur1())
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
@@ -166,7 +165,7 @@ public class Game1 : Game
         Rectangle backRect = new Rectangle(x+100, y,largeur,hauteur);
         
         Color c1, c2;
-        if (joueur==joueur1)
+        if (joueur==jeuChat.joueur1())
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
@@ -214,27 +213,27 @@ public class Game1 : Game
             Exit();
         
         
-        Console.WriteLine("joueurActuel : " + ((jeu.joueurActuel() == jeu.joueur1())?"joueur1":"joueur2") + "\n" +
-                          "mana : " + jeu.joueurActuel().getJauge() + "\n" +
-                          "phase : " + jeu.phase() + "\n" +
-                          "main : " + jeu.joueurActuel().getNbCartesInMain() + "\n" +
-                          "carteI : " + jeu.carteI() + "\n" +
-                          "caseI : " + jeu.caseI() + "\n" +
-                          "caseJ : " + jeu.caseJ() + "\n" +
-                          "prevI : " + jeu.lastCaseI() + "\n" +
-                          "prevJ : " + jeu.lastCaseJ() + "\n");
+        Console.WriteLine("joueurActuel : " + ((jeuChat.joueurActuel() == jeuChat.joueur1())?"joueur1":"joueur2") + "\n" +
+                          "mana : " + jeuChat.joueurActuel().getJauge() + "\n" +
+                          "phase : " + jeuChat.phase() + "\n" +
+                          "main : " + jeuChat.joueurActuel().getNbCartesInMain() + "\n" +
+                          "carteI : " + jeuChat.carteI() + "\n" +
+                          "caseI : " + jeuChat.caseI() + "\n" +
+                          "caseJ : " + jeuChat.caseJ() + "\n" +
+                          "prevI : " + jeuChat.lastCaseI() + "\n" +
+                          "prevJ : " + jeuChat.lastCaseJ() + "\n");
         
         //on gère les inputs
-        jeu.transition(keyboardState,previousKeyboardState);
+        jeuChat.transition(keyboardState,_previousKeyboardState);
         //puis, si victoire
-        if (jeu.victory())
+        if (jeuChat.victory())
         {
             //alors finir la partie
-            jeu.EndGame();
+            jeuChat.EndGame();
         }
         
         
-        previousKeyboardState = keyboardState;
+        _previousKeyboardState = keyboardState;
         base.Update(gameTime);
     }
 
@@ -253,16 +252,16 @@ public class Game1 : Game
 
         //draw du plateau
 
-        int taillel  = jeuChat.getLargeur() * taillecase;
-        int tailleh = jeuChat.getLongueur() * taillecase;
+        int taillel  = jeuChat.getLongueur() * taillecase;
+        int tailleh = jeuChat.getLargeur() * taillecase;
 
 
         int plateauX = (GraphicsDevice.Viewport.Width  - taillel)  / 2;
         int plateauY = (GraphicsDevice.Viewport.Height - tailleh) / 2;
 
-        for (int j = 0; j < jeuChat.getLongueur(); j++)     
+        for (int i = 0; i < jeuChat.getLongueur(); i++)     
         {
-            for (int i = 0; i < jeuChat.getLargeur(); i++) 
+            for (int j = 0; j < jeuChat.getLargeur(); j++) 
             {
                 int caseX = plateauX + i * taillecase;
                 int caseY = plateauY + j * taillecase;
@@ -270,27 +269,24 @@ public class Game1 : Game
                 Rectangle destcase = new Rectangle(caseX, caseY, taillecase, taillecase);
                 
                 bool selection =
-                    (i == _caseI && j == _caseJ) ||
-                    (i == _prevI && j == _prevJ);
+                    (i == jeuChat.caseI() && j == jeuChat.caseJ()) ||
+                    (i == jeuChat.lastCaseI() && j == jeuChat.lastCaseJ());
 
                 Color tint = selection ? Color.Cyan : Color.White;
                 if (selection)
                 {
-                    if (_phase == 1)
+                    switch (jeuChat.phase())
                     {
-                        tint = Color.Yellow;
+                        case EtatAutomate.SELECTION_CASE_CARTE:
+                            tint = Color.Yellow;
+                            break;
+                        case EtatAutomate.SELECTION_CASE_SOURCE:
+                            tint = Color.DeepSkyBlue;
+                            break;
+                        case EtatAutomate.SELECTION_CASE_CIBLE:
+                            tint = Color.Cyan;
+                            break;
                     }
-                    else if (_phase == 2)
-                    { 
-                        tint = Color.Cyan;
-                    }else if (_phase == 3)
-                    {
-                        tint = Color.DeepSkyBlue;
-                    }
-                }
-                else
-                {
-                    tint = Color.White;
                 }
                 
                 _spriteBatch.Draw(_case, destcase, tint);
@@ -304,7 +300,7 @@ public class Game1 : Game
                     
                     String ImageEntite= entite.getImage();
                     Color c;
-                    if (jeuChat.getEntityAt(j, i).getInvocateur()==joueur1)
+                    if (jeuChat.getEntityAt(j, i).getInvocateur()==jeuChat.joueur1())
                     {
                         c= Color.LightSkyBlue;
                     }
@@ -323,8 +319,7 @@ public class Game1 : Game
         //afficher cartes joueurs
        
         DrawAllCarte(
-            joueur1,
-            jeuChat.getTour(),                  
+            jeuChat.joueur1(),             
             plateauX,                         
             GraphicsDevice.Viewport.Height - 30, 
             70,                                 
@@ -334,8 +329,7 @@ public class Game1 : Game
 
         
         DrawAllCarte(
-            joueur2,
-            !jeuChat.getTour(),       
+            jeuChat.joueur2(),    
             plateauX + 9 * taillecase, 
             -60,                    
             70,                       
@@ -343,8 +337,8 @@ public class Game1 : Game
             -1                       
         );
         
-        DrawMana(joueur1, GraphicsDevice.Viewport.Width/2-200, GraphicsDevice.Viewport.Height - manaY);
-        DrawMana(joueur2, GraphicsDevice.Viewport.Width/2-200, manaY);
+        DrawMana(jeuChat.joueur1(), GraphicsDevice.Viewport.Width/2-200, GraphicsDevice.Viewport.Height - manaY);
+        DrawMana(jeuChat.joueur2(), GraphicsDevice.Viewport.Width/2-200, manaY);
         
         _spriteBatch.End();
 

@@ -13,10 +13,8 @@ public class Carte
     private int _cout;
     private string _nom;
     private string _image;
-    private Invocation _invocation;
     private TypeDeCarte _type;
     private TypeRarete _rarete;
-
     private string spriteInvocation;
     //constructeur
     public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
@@ -85,11 +83,10 @@ public class Carte
         _image = image;
     }
 
-    public Invocation getInvocation()
+    public Invocation generateInvocation()
     {
         
-        _invocation = new Invocation(getVie(), getDegat(), spriteInvocation);
-        return _invocation;
+        return new Invocation(getVie(), getDegat(), spriteInvocation);
     }
 
     public TypeDeCarte getType()
