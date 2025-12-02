@@ -56,13 +56,11 @@ namespace TestProjet.Scripts;
  *                      -doit copier coller controle souris et faire partie sauvegarde
  *                      -pas de deck
  *                      -deplacement en noclip
- 
- *                      -peut joueur sur l'autre moitie
- *                      -quand on invoc, après passez la moitié on peut plus revenir en arriere
- *                      -peut pas attaquer
  * 
- *                      -quand tour adverse nos cartes sont mis en avant
- *                      -vie des tours sous la case
+ *                      -peut pas attaquer
+ *                      -deplacement dans les carte J2 est inversé (+fait les loop)
+ *                      -debut du tour J2 commence à un endroit interdit
+ * 
  *                      -mana max HARD CODE (donc barre jamais pleine)
  *                      -
 */
@@ -107,7 +105,7 @@ public class Jeu
 
     //paramètres du jeu
     private string defaultSaveFileName = "InitGame.xml";
-    private int maxJauge = 10;
+    private int maxJauge = 15;
     private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
 
@@ -318,11 +316,11 @@ public class Jeu
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CARTE:
-                if (appuieSurGauche(current,last) && (_joueurActuel == _joueur1 && _caseI < _plateau.getLongueur()/2 || _joueurActuel == _joueur2 && _caseI >= _plateau.getLongueur()/2 )){
+                if (appuieSurGauche(current,last) && (_joueurActuel == _joueur1 || _caseI > _plateau.getLongueur()/2)){
                     //décrémente caseI
                     _caseI = (_caseI>0) ? _caseI-1 : _caseI;
                 }
-                else if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last) && (_joueurActuel == _joueur2 || _caseI+1 < _plateau.getLongueur()/2)){
                     //incrémente caseI
                     _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
                 }
@@ -386,7 +384,7 @@ public class Jeu
                     _lastCaseI = _caseI;
                     _lastCaseJ = _caseJ;
                 }
-                else if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last) && _joueurActuel.getNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;

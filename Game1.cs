@@ -29,37 +29,6 @@ public class Game1 : Game
 
     public Game1()
     {
-        /*
-        jeuChat = new Jeu(6, 10, "Joueur1", "Joueur2");
-        joueur1 = jeuChat.GetJoueur1();
-        joueur2 = jeuChat.GetJoueur2();
-
-        Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/carte_lui", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE,
-            "textures/mobs/lui");
-        Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE,
-            "textures/mobs/magichat");
-        
-        Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE,
-            "textures/mobs/chatiment");
-        
-        Carte Soin = new Carte(-1, 5, 5, "Soin", "textures/cards/soin", TypeDeCarte.SORT, TypeRarete.COMMUNE,
-            "textures/cards/soin");
-        
-        joueur1.addCarteInMain(TitouChat);
-        joueur1.addCarteInMain(Soin);
-        joueur1.addCarteInMain(TitouChat);
-        joueur1.addCarteInMain(TitouChat);
-        joueur1.addCarteInMain(MagiChat);
-        joueur1.addCarteInMain(Chatiment);
-        
-        joueur2.addCarteInMain(TitouChat);
-        joueur2.addCarteInMain(TitouChat);
-        joueur2.addCarteInMain(TitouChat);
-        joueur2.addCarteInMain(MagiChat);
-        joueur2.addCarteInMain(Chatiment);
-        */
-    
-        
         _graphics = new GraphicsDeviceManager(this);
         
         _graphics.PreferredBackBufferWidth = 1024;
@@ -103,7 +72,7 @@ public class Game1 : Game
 
             Rectangle dest = new Rectangle(cardX, y, 70, 100);
 
-            if (joueur == jeuChat.joueur1())
+            if (joueur == jeuChat.joueurActuel())
             {
                 Carte carteAt = joueur.getCarteInMainAt(cartenum);
                 string image = carteAt.getImage();
@@ -259,9 +228,9 @@ public class Game1 : Game
         int plateauX = (GraphicsDevice.Viewport.Width  - taillel)  / 2;
         int plateauY = (GraphicsDevice.Viewport.Height - tailleh) / 2;
 
-        for (int i = 0; i < jeuChat.getLongueur(); i++)     
+        for (int j = 0; j < jeuChat.getLargeur(); j++)     
         {
-            for (int j = 0; j < jeuChat.getLargeur(); j++) 
+            for (int i = 0; i < jeuChat.getLongueur(); i++) 
             {
                 int caseX = plateauX + i * taillecase;
                 int caseY = plateauY + j * taillecase;
