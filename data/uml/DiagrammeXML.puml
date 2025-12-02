@@ -1,11 +1,10 @@
- puml 
 @startuml
-'https://plantuml.com/class-diagram
+'skinparam linetype ortho
 
-package XMLSchema {
-    class int{}
-    class string{}
-    class boolean{}
+package XMLSchema #DDD {
+    class string
+    class int
+    class boolean
 }
 
 package OurGame{
@@ -43,12 +42,11 @@ package OurGame{
         vie : int
         degat : int
         nom : string
-        image : string 
+        imageCarte : string 
+        imageInvocation : string 
         cout : int
         type : TypeDeCarte
-        invocation : Invocation
         rarete : TypeRarete
-        
     }
     
     class IdCarte <<enum>> {
@@ -56,6 +54,7 @@ package OurGame{
         ...
         ...
     }
+    note bottom of IdCarte : à redefinr avec les vrais nom de chaque carte
     
     class ListeIdCarte  {
         listeId : IdCarte[] 
@@ -83,21 +82,25 @@ package OurGame{
         peutAttaquer : boolean
     }
     
+    Jeu *--"1" Plateau
+    Jeu "1"*--"2" Joueur : < Peu jouer un seul jeux à la fois
+    Jeu *--"1" ListeDeCartes
     
-    Jeu *-- Plateau
-    Jeu "1"*--"2" Joueur
-    Jeu *-- ListeDeCartes
-    TabInvocation "1"*--"*" Invocation
-    Joueur "1"*--"2" ListeIdCarte
-    ListeDeCartes "1"*--"*" Carte
-    Carte *-- TypeDeCarte
-    Carte *-- Invocation
-    Carte *-- TypeRarete
-    Carte *-- IdCarte
-    ListeIdCarte "1" *-- "*" IdCarte
-    Plateau "1"*--"*" TabInvocation 
+    TabInvocation *--"*" Invocation
+    Joueur *--"2" ListeIdCarte
     
+    ListeDeCartes *--"*" Carte
     
-    note bottom of IdCarte : à redefinr avec les vrais nom de chaque carte
+    Carte *--"1" TypeDeCarte
+    Carte *--"1" TypeRarete
+    Carte *--"1" IdCarte
+    
+    ListeIdCarte *-- "*" IdCarte
+    
+    Plateau *--"*" TabInvocation 
+    
+   IdCarte --|> string 
+   TypeDeCarte --|> string 
+   TypeRarete --|> string 
 }
 @enduml
