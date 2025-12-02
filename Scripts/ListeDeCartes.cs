@@ -42,17 +42,19 @@ public class ListeDeCartes
         }
         Carte rep = _cartes[i];
         Carte[] newCartes = new Carte[_cartes.Length - 1];
+
+        int k = 0;
         for (int j = 0; j < _cartes.Length; j++)
         {
-            if (j > i)
+            if (j == i)
             {
-                newCartes[j - 1] = _cartes[j];
-            }
-            else
-            {
-                newCartes[j] = _cartes[j];
-            }
+                continue;
+            } 
+
+            newCartes[k] = _cartes[j];
+            k++;
         }
+
         _cartes = newCartes;
         return rep;
     }

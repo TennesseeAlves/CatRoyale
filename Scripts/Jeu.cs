@@ -68,12 +68,163 @@ public class Jeu
     private Plateau _plateau;
     private Joueur _joueur1;
     private Joueur _joueur2;
-
+    private Boolean tour;
+    private Invocation TourJ1;
+    private Invocation TourJ2;
     public Jeu(int longueur, int largeur, string nom1, string nom2)
     {
         _plateau = new Plateau(longueur, largeur);
         _joueur1 = new Joueur(nom1, 0);
         _joueur2 = new Joueur(nom2, 0);
+        //true joueur1 false joueur2
+        tour = true;
+
+        InitTours();
+    }
+
+
+    public void InitTours()
+    {
+        TourJ1= new Invocation(1000, 0, "textures/mobs/TourJ1");
+        TourJ2= new Invocation(1000, 0, "textures/mobs/TourJ2");
+        TourJ1.setInvocateur(_joueur1);
+        TourJ2.setInvocateur(_joueur2);
+        TourJ1.setPeutAttaquer(false);
+        TourJ2.setPeutAttaquer(false);
+        
+        TourJ1.setPeutBouger(false);
+        TourJ2.setPeutBouger(false);
+        
+        _plateau.setEntityAt(TourJ1, getLongueur()/2, getLargeur()-1);
+        _plateau.setEntityAt(TourJ2, (getLongueur()/2)-1, 0);
+    
+        _joueur1.setJauge(15);
+        _joueur2.setJauge(15);
+    }
+    public int getLongueur()
+    {
+        return _plateau.getLongueur();
+    }
+    
+    public int getLargeur()
+    {
+        return _plateau.getLargeur();
+    }
+
+    public Invocation getEntityAt(int ligne, int colonne)
+    {
+        return _plateau.getEntityAt(ligne, colonne);
+    }
+
+    public bool isEmpty(int ligne, int colonne)
+    {
+        return _plateau.isEmpty(ligne, colonne);
+    }
+    
+    public Boolean getTour()
+    {
+        return tour;
+    }
+    
+    public Joueur getTourJoueur()
+    {
+        if (tour)
+        {
+            return _joueur1;
+        }
+        return _joueur2;
+    }
+    
+    public Boolean nextTour()
+    {
+        
+        this.tour = !this.tour;
+        return tour;
+    }
+    public Joueur GetJoueur1()
+    {
+        return _joueur1;
+    }
+    
+    public Joueur GetJoueur2()
+    {
+        return _joueur2;
+    }
+
+    public bool move(Joueur joueur, int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    {
+        Invocation invocation = _plateau.getEntityAt(ligneDepart, colonneDepart);
+    
+        if (invocation.getInvocateur() == joueur && invocation.getPeutBouger() && _plateau.isEmpty(ligneArrive, colonneArrive))
+        {
+            _plateau.move(ligneDepart, colonneDepart, ligneArrive, colonneArrive);
+            return true;
+        }
+        else
+        {
+            if (!attack(joueur, ligneDepart, colonneDepart, ligneArrive, colonneArrive))
+            {
+                Console.WriteLine("pas au joueur/ne peut pas bouger/la case darrive est occupe");
+            }
+            else
+            {
+                return true;
+            }
+          
+        }
+        return false;
+    }
+
+    public Plateau getPlateau()
+    {
+        return _plateau;
+    }
+    public bool invoke(Joueur joueur,Carte carte, int ligne, int colonne)
+    {
+        Invocation invocation = _plateau.getEntityAt(ligne, colonne);
+        Console.Write("Oui");
+        if (carte.getType() == TypeDeCarte.SORT)
+        {
+            if (!(_plateau.isEmpty(ligne, colonne)) && invocation.getInvocateur() == joueur)
+            {
+                Console.Write("Oui");
+                invocation.takeVie(carte.getVie());
+                return true;
+            }
+        } else if (_plateau.isEmpty(ligne, colonne) && joueur.getJauge()>= carte.getCout())
+        {
+            _plateau.invoke(joueur, carte, ligne, colonne);
+            joueur.reduireJauge(carte.getCout());
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("mana faible");
+            Console.WriteLine(joueur.getJauge());
+            Console.WriteLine(carte.getCout());
+        }
+        
+        return false;
+    }
+
+    public bool attack(Joueur joueur, int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    {
+        Invocation invocation = _plateau.getEntityAt(ligneDepart, colonneDepart);
+        Invocation invocationVictim = _plateau.getEntityAt(ligneArrive, colonneArrive);
+        if (invocation.getInvocateur() == joueur && invocation.getPeutBouger() &&
+            !(_plateau.isEmpty(ligneArrive, colonneArrive))&&invocationVictim.getInvocateur()!=joueur && invocation.getPeutAttaquer())
+        {
+            _plateau.attack(ligneDepart, colonneDepart, ligneArrive, colonneArrive);
+
+            if (invocationVictim.getVie() == 0)
+            {
+                _plateau.deleteAt(ligneArrive, colonneArrive); 
+            }
+   
+            return true;
+        }
+        Console.WriteLine("n'appartient pas au joueur/ ne peut pas bouger/la case darrive est vide/la victime est le joueur");
+        return false;
     }
 
     private void transition(int etatActuel, KeyboardState etatActuelClavier)

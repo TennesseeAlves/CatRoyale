@@ -1,8 +1,11 @@
+using System;
+
 namespace TestProjet.Scripts;
 
 public class Invocation
 {
     private int _vie;
+    private int _maxvie;
     private int _degat;
     private string _image;
     private bool _peutBouger;
@@ -15,14 +18,21 @@ public class Invocation
         setVie(vie);
         setDegat(degat);
         setImage(image);
-        setPeutBouger(false);
-        setPeutAttaquer(false);
+        setPeutBouger(true);
+        setPeutAttaquer(true);
     }
     
     //getters et setters
     public int getVie()
     {
+        
         return _vie;
+    }
+    
+    public int getMaxVie()
+    {
+        
+        return _maxvie;
     }
     public void setVie(int vie)
     {
@@ -31,7 +41,7 @@ public class Invocation
             _vie = 0;
         }
         else
-        {
+        {   _maxvie=vie;
             _vie = vie;
         }
     }
@@ -83,10 +93,23 @@ public class Invocation
 
     public void takeDamage(int degat)
     {
+        
         _vie -= degat;
+        
         if (_vie < 0)
         {
             _vie = 0;//là bah on meurt
+        }
+        Console.WriteLine(_vie);
+    }
+    
+    public void takeVie(int vie)
+    {
+        Console.WriteLine(_vie);
+        _vie += vie;
+        if (_vie>_maxvie)
+        {
+            _vie = _maxvie;
         }
     }
 }
