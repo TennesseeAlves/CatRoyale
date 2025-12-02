@@ -4,6 +4,8 @@ namespace TestProjet.Scripts;
 
 public class Plateau
 {
+    private Invocation _TowerJ1;
+    private Invocation _TowerJ2;
     private Invocation?[,] _map;
 
     public Plateau(int longueur, int largeur)
@@ -19,6 +21,26 @@ public class Plateau
     public int getLargeur()
     {
         return _map.GetLength(0);
+    }
+
+    public Invocation getTowerJ1()
+    {
+        return _TowerJ1;
+    }
+
+    public void setTowerJ1(Invocation TowerJ1)
+    {
+        _TowerJ1 = TowerJ1;
+    }
+
+    public Invocation getTowerJ2()
+    {
+        return _TowerJ2;
+    }
+
+    public void setTowerJ2(Invocation TowerJ2)
+    {
+        _TowerJ2 = TowerJ2;
     }
 
     public void setEntityAt(Invocation invoc, int ligne, int colonne)
@@ -78,6 +100,11 @@ public class Plateau
 
     public bool victory(Joueur joueur)
     {
-        return false;
+        return _TowerJ1.getInvocateur() == joueur && _TowerJ2.getVie() == 0 || _TowerJ2.getInvocateur() == joueur && _TowerJ1.getVie() == 0;
+    }
+
+    public bool isTower(Invocation invoc)
+    {
+        return invoc == _TowerJ1 || invoc == _TowerJ2;
     }
 }

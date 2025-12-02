@@ -57,11 +57,7 @@ namespace TestProjet.Scripts;
  *                      -pas de deck
  *                      -deplacement en noclip
  * 
- *                      -peut pas attaquer
- *                      -deplacement dans les carte J2 est inversé (+fait les loop)
- *                      -debut du tour J2 commence à un endroit interdit
- * 
- *                      -mana max HARD CODE (donc barre jamais pleine)
+ *                      -mana max écrit en dur dans l'affichage
  *                      -
 */
 /*
@@ -78,13 +74,8 @@ namespace TestProjet.Scripts;
  *                              -pas d'IA --> le joueur controle les 2 joueurs
  *                              -pas d'extra --> ni effet de carte, ni grosse animations, ni deathmatch en endgame...
  * nécéssite:
- *              -XML            --> pas à moi
- *              -load           --> à moi mais nécéssite XML
- *              -affichage      --> pas à moi
- *              -inputs         --> à moi, clavier OK mais souris nécéssite affichage
+ *              -load           --> à moi
  *              -verif victoire --> à moi
- *              -verif actions  --> à moi
- *              -changer logique--> à moi
  */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
@@ -95,8 +86,6 @@ public class Jeu
     private Plateau _plateau;
     private Joueur _joueur1;
     private Joueur _joueur2;
-    private Invocation TowerJ1;
-    private Invocation TowerJ2;
 
     //variables globales aux fonctions
     private Joueur _joueurActuel; //pour savoir à qui c'est le tour
@@ -105,6 +94,9 @@ public class Jeu
 
     //paramètres du jeu
     private string defaultSaveFileName = "InitGame.xml";
+    private int maxDistanceDeplacement = 3;
+    private int maxDistanceAttaque = 2;
+    private int vieTour = 30;
     private int maxJauge = 15;
     private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
@@ -182,7 +174,7 @@ public class Jeu
             for (int j = 0; j < _plateau.getLongueur(); j++)
             {
                 Invocation? invoc = _plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.getInvocateur() == _joueurActuel && invoc != TowerJ1 &&  invoc != TowerJ2)
+                if (invoc != null && invoc.getInvocateur() == _joueurActuel && !_plateau.isTower(invoc))
                 {
                     invoc.setPeutAttaquer(true);
                     invoc.setPeutBouger(true);
@@ -286,24 +278,24 @@ public class Jeu
                     //déselectionne carte
                     _carteI = -1;
                     //reset case
-                    _caseI = 0;
-                    _caseJ = 0;
+                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
+                    _caseJ = _plateau.getLargeur()/2;
 
                 }
-                else if (appuieSurGauche(current,last)){
+                else if (appuieSurGauche(current,last) && _joueurActuel == _joueur1 || appuieSurDroite(current,last) &&  _joueurActuel == _joueur2){
                     //décrémente carteI
-                    _carteI = (_carteI>0) ? _carteI-1 : _carteI;
+                    _carteI = (_carteI>0) ? _carteI-1 : _joueurActuel.getNbCartesInMain()-1;
                 }
-                else if (appuieSurDroite(current,last)){
+                else if (appuieSurDroite(current,last) && _joueurActuel == _joueur1 || appuieSurGauche(current,last) &&  _joueurActuel == _joueur2){
                     //incrément carteI
-                    _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : _carteI;
+                    _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : 0;
                 }
                 else if (appuieSurValide(current,last) && peutSelectionnerCarte(_carteI)){
                     //passe phase à SELECTION_CASE_CARTE
                     _phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
-                    _caseI = 0;
-                    _caseJ = 0;
+                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
+                    _caseJ = _plateau.getLargeur()/2;
                 }
                 else if ((appuieSurHaut(current,last) && _joueurActuel ==  _joueur1) || (appuieSurBas(current,last) && _joueurActuel ==  _joueur2)){
                     //passe phase à SELECTION_CASE_SOURCE
@@ -311,8 +303,8 @@ public class Jeu
                     //déselectionne carte
                     _carteI = -1;
                     //reset case
-                    _caseI = 0;
-                    _caseJ = 0;
+                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
+                    _caseJ = _plateau.getLargeur()/2;
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CARTE:
@@ -412,7 +404,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last)&& peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -441,6 +433,13 @@ public class Jeu
     //-------------------------saveManager---------------------------//
     private void LoadGame(String FileName)
     {
+        //on supprime tout (TEMPORAIRE)
+        _plateau = new Plateau(_plateau.getLongueur(), _plateau.getLargeur());
+        _joueur1 = new Joueur(_joueur1.getPseudo(), _joueur1.getWinStreak());
+        _joueur2 = new Joueur(_joueur2.getPseudo(), _joueur2.getWinStreak());
+        _joueurActuel = _joueur1;
+        
+        //et on recommence
         Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
         Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
         Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
@@ -476,8 +475,8 @@ public class Jeu
         _joueur2.addCarteInDeck(Chatiment);
         _joueur2.addCarteInDeck(Chatiment);
         
-        TowerJ1 = new Invocation(1000, 0, "textures/mobs/TourJ1");
-        TowerJ2 = new Invocation(1000, 0, "textures/mobs/TourJ2");
+        Invocation TowerJ1 = new Invocation(vieTour, 0, "textures/mobs/TourJ1");
+        Invocation TowerJ2 = new Invocation(vieTour, 0, "textures/mobs/TourJ2");
         TowerJ1.setInvocateur(_joueur1);
         TowerJ2.setInvocateur(_joueur2);
         TowerJ1.setPeutAttaquer(false);
@@ -485,6 +484,8 @@ public class Jeu
         TowerJ1.setPeutBouger(false);
         TowerJ2.setPeutBouger(false);
         
+        _plateau.setTowerJ1(TowerJ1);
+        _plateau.setTowerJ2(TowerJ2);
         _plateau.setEntityAt(TowerJ1, _plateau.getLargeur()/2, 1);
         _plateau.setEntityAt(TowerJ2, _plateau.getLargeur()/2, _plateau.getLongueur()-2);
         InitTurn();
@@ -513,15 +514,13 @@ public class Jeu
         Invocation? source = _plateau.getEntityAt(lig1, col1);
         Invocation? cible = _plateau.getEntityAt(lig2, col2);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        int MAXDISTANCE = 2; // pourra être remplacé par la range de l'invoc si on rajoute ça plus tard
-        return distance < MAXDISTANCE &&  source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
+        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
     }
     private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = _plateau.getEntityAt(lig1, col1);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        int MAXDISTANCE = 3; // pourra être remplacé par la range de l'invoc si on rajoute ça plus tard
-        return distance < MAXDISTANCE && source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
+        return distance <= maxDistanceDeplacement && source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
     }
     private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {

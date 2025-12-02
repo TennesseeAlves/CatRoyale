@@ -12,7 +12,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D _background, _case, _carteBase, _carteLui, _lui;
+    private Texture2D _background, _case;
     private KeyboardState _previousKeyboardState;
     private String _carteBaseImage;
     private Texture2D jauge;
@@ -41,7 +41,7 @@ public class Game1 : Game
         jeuChat = new Jeu(10, 5, "Alice", "Bob");
     }
     
-    public void DrawCarte(Rectangle dest, Color tint, String image, int degrees)
+    public void DrawCarte(Rectangle dest, Color tint, String image, int degrees, SpriteEffects spriteEffect)
     {
         
         Texture2D texture = Content.Load<Texture2D>(image);
@@ -52,7 +52,7 @@ public class Game1 : Game
             tint,
             MathHelper.ToRadians(degrees),
             Vector2.Zero,
-            SpriteEffects.None,
+            spriteEffect,
             0f
         );
     }
@@ -83,11 +83,12 @@ public class Game1 : Game
                     _spriteBatch.DrawString(_font, carteAt.ToString(), new Vector2(20, 20), Color.Black);
                 }
 
-                DrawCarte(dest, Color.White, image, 0);
+                SpriteEffects spriteEffects = (joueur == jeuChat.joueur2())?SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically:SpriteEffects.None;
+                DrawCarte(dest, Color.White, image, 0,spriteEffects);
             }
             else
             {
-                DrawCarte(dest, Color.White, _carteBaseImage, 0);
+                DrawCarte(dest, Color.White, _carteBaseImage, 0, SpriteEffects.None);
             }
 
             
@@ -162,10 +163,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _background = Content.Load<Texture2D>("textures/map/background");
         _case = Content.Load<Texture2D>("textures/map/case");
-        _carteBase = Content.Load<Texture2D>("textures/cards/carte_base");
         _carteBaseImage = "textures/cards/carte_base";
-        _carteLui = Content.Load<Texture2D>("textures/cards/carte_lui");
-        _lui = Content.Load<Texture2D>("textures/mobs/lui");
         _font = Content.Load<SpriteFont>("font");
 
         jauge = new Texture2D(GraphicsDevice, 1, 1);
@@ -199,6 +197,7 @@ public class Game1 : Game
         {
             //alors finir la partie
             jeuChat.EndGame();
+            Console.WriteLine("-------------------------GAGNÉ--------------------------------");
         }
         
         
@@ -269,7 +268,7 @@ public class Game1 : Game
                     
                     String ImageEntite= entite.getImage();
                     Color c;
-                    if (jeuChat.getEntityAt(j, i).getInvocateur()==jeuChat.joueur1())
+                    if (entite.getInvocateur()==jeuChat.joueur1())
                     {
                         c= Color.LightSkyBlue;
                     }
@@ -279,7 +278,8 @@ public class Game1 : Game
                     }
 
                     DrawVie(entite, caseX, caseY);
-                    DrawCarte(destpion, c, ImageEntite, 0);
+                    SpriteEffects spriteEffect =(!jeuChat.plateau().isTower(entite) && entite.getInvocateur() == jeuChat.joueur2()) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    DrawCarte(destpion, c, ImageEntite, 0,spriteEffect);
                 }
             }
         }
