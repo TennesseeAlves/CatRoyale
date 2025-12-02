@@ -48,11 +48,11 @@ public class Plateau
         _map[ligne, colonne] = null;
     }
 
-    public void invoke(Carte carte, int ligne, int colonne, Joueur invocateur)
-    {
+    public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
+    {   
+        
         _map[ligne, colonne] = carte.getInvocation();
-        _map[ligne, colonne].setVie(carte.getVie());
-        _map[ligne, colonne].setInvocateur(invocateur);
+        _map[ligne, colonne].setInvocateur(joueur);
     }
 
     public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)

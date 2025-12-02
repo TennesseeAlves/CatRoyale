@@ -9,7 +9,8 @@ public class Joueur
     private int _jauge;
     private ListeDeCartes _main;
     private ListeDeCartes _deck;
-
+    public static int MAXJAUGE = 15;
+    
     //constructeurs
     public Joueur(string pseudo, int winStreak)
     {
@@ -19,6 +20,7 @@ public class Joueur
         _main = new ListeDeCartes();
         _deck = new ListeDeCartes();
     }
+
     
     //getters et setters
     public string getPseudo()
@@ -40,12 +42,16 @@ public class Joueur
     }
 
     public int getJauge()
+    
     {
         return _jauge;
     }
     public void setJauge(int jauge)
     {
-        _jauge = jauge;
+        if (jauge >= 0 && jauge <= MAXJAUGE)
+        {
+            _jauge = jauge;
+        }
     }
     
     //methodes autres
@@ -80,7 +86,11 @@ public class Joueur
     {
         _main.appendCarte(carte);
     }
-
+    
+    public int nbCarteInMain()
+    {
+        return _main.Length();
+    }
     public void addCarteInDeck(Carte carte)
     {
         _deck.appendCarte(carte);

@@ -103,6 +103,8 @@ public class Jeu
     private Plateau _plateau;
     private Joueur _joueur1;
     private Joueur _joueur2;
+    private Invocation TowerJ1;
+    private Invocation TowerJ2;
 
     //variables globales aux fonctions
     private Joueur _joueurActuel; //pour savoir à qui c'est le tour
@@ -143,6 +145,25 @@ public class Jeu
     public int lastCaseJ() { return _lastCaseJ; }
     public bool victory() { return _plateau.victory(_joueurActuel); }
     
+    public int getLongueur()
+    {
+        return _plateau.getLongueur();
+    }
+    
+    public int getLargeur()
+    {
+        return _plateau.getLargeur();
+    }
+
+    public Invocation getEntityAt(int ligne, int colonne)
+    {
+        return _plateau.getEntityAt(ligne, colonne);
+    }
+
+    public bool isEmpty(int ligne, int colonne)
+    {
+        return _plateau.isEmpty(ligne, colonne);
+    }
     //-------------------------turnManager---------------------------//
     //début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
     public void InitGame(string SaveFileName)
@@ -488,10 +509,18 @@ public class Jeu
         _joueur2.addCarteInDeck(tmpJ2C13);
         _joueur2.addCarteInDeck(tmpJ2C14);
         _joueur2.addCarteInDeck(tmpJ2C15);
-        Carte tmpCristalJ1 = new Carte(20, 0, 0, "Cristal", "cristalCarte.png", TypeDeCarte.OBJET, TypeRarete.LEGENDAIRE, "cristal.png");
-        Carte tmpCristalJ2 = new Carte(20, 0, 0, "Cristal", "cristalCarte.png", TypeDeCarte.OBJET, TypeRarete.LEGENDAIRE, "cristal.png");
-        _plateau.invoke(tmpCristalJ1,_plateau.getLargeur()/2,1, _joueur1);
-        _plateau.invoke(tmpCristalJ2,_plateau.getLargeur()/2,_plateau.getLongueur()-2, _joueur2);
+        
+        TowerJ1 = new Invocation(1000, 0, "textures/mobs/TourJ1");
+        TowerJ2 = new Invocation(1000, 0, "textures/mobs/TourJ2");
+        TowerJ1.setInvocateur(_joueur1);
+        TowerJ2.setInvocateur(_joueur2);
+        TowerJ1.setPeutAttaquer(false);
+        TowerJ2.setPeutAttaquer(false);
+        TowerJ1.setPeutBouger(false);
+        TowerJ2.setPeutBouger(false);
+        
+        _plateau.setEntityAt(TowerJ1, _plateau.getLargeur()/2, 1);
+        _plateau.setEntityAt(TowerJ2, _plateau.getLargeur()/2, _plateau.getLongueur()-2);
         InitTurn();
     }
 

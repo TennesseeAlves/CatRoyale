@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework.Graphics;
+
 namespace TestProjet.Scripts;
 
 public enum TypeDeCarte { COMBATTANT, SORT, OBJET }
@@ -14,7 +16,8 @@ public class Carte
     private Invocation _invocation;
     private TypeDeCarte _type;
     private TypeRarete _rarete;
-    
+
+    private string spriteInvocation;
     //constructeur
     public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
     {
@@ -23,9 +26,10 @@ public class Carte
         setCout(cout);
         setNom(nom);
         setImage(image);
-        _invocation = new Invocation(vie, degat, spriteInvocation);
+        this.spriteInvocation = spriteInvocation;
         setType(type);
         setRarete(rarete);
+        
     }
     
     //getters et setters
@@ -83,6 +87,8 @@ public class Carte
 
     public Invocation getInvocation()
     {
+        
+        _invocation = new Invocation(getVie(), getDegat(), spriteInvocation);
         return _invocation;
     }
 
@@ -102,5 +108,16 @@ public class Carte
     public void setRarete(TypeRarete rarete)
     {
         _rarete  = rarete;
+    }
+
+    public override string ToString()
+    {
+        return "Nom: "+getNom()+"\n"+ 
+               "Cout: "+getCout()+"\n"+
+               "Type: "+getType()+"\n"+
+               "Rareté: "+getRarete()+"\n"+
+               "Degat: "+getDegat()+"\n"+ 
+               "Vie: "+getVie()+"\n" ;
+        
     }
 }

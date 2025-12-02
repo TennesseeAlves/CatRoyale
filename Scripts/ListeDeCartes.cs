@@ -42,6 +42,19 @@ public class ListeDeCartes
         }
         Carte rep = _cartes[i];
         Carte[] newCartes = new Carte[_cartes.Length - 1];
+
+        int k = 0;
+        for (int j = 0; j < _cartes.Length; j++)
+        {
+            if (j == i)
+            {
+                continue;
+            } 
+
+            newCartes[k] = _cartes[j];
+            k++;
+        }
+        /* alternative
         for (int j = 0; j < _cartes.Length; j++)
         {
             if (j > i)
@@ -53,6 +66,7 @@ public class ListeDeCartes
                 newCartes[j] = _cartes[j];
             }
         }
+        */
         _cartes = newCartes;
         return rep;
     }

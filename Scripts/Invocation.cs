@@ -3,6 +3,7 @@ namespace TestProjet.Scripts;
 public class Invocation
 {
     private int _vie;
+    private int _maxvie;
     private int _degat;
     private string _image;
     private bool _peutBouger;
@@ -13,6 +14,7 @@ public class Invocation
     public Invocation(int vie, int degat, string image)
     {
         setVie(vie);
+        setMaxVie(vie);
         setDegat(degat);
         setImage(image);
         setPeutBouger(false);
@@ -24,6 +26,11 @@ public class Invocation
     {
         return _vie;
     }
+    
+    public int getMaxVie()
+    {
+        return _maxvie;
+    }
     public void setVie(int vie)
     {
         if (vie < 0)
@@ -33,6 +40,17 @@ public class Invocation
         else
         {
             _vie = vie;
+        }
+    }
+    public void setMaxVie(int maxvie)
+    {
+        if (maxvie < 0)
+        {
+            _maxvie = 0;
+        }
+        else
+        {
+            _maxvie = maxvie;
         }
     }
 
@@ -92,10 +110,20 @@ public class Invocation
         }
         return mort;
     }
+    
+    public void takeVie(int vie)
+    {
+        _vie += vie;
+        if (_vie > _maxvie)
+        {
+            _vie = _maxvie;
+        }
+    }
 
     public bool isCristal()
     {
         //pas une bonne méthode
         return _image == "cristal.png";
+        Console.WriteLine(_vie);
     }
 }
