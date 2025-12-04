@@ -1,5 +1,5 @@
 @startuml
-'skinparam linetype ortho
+skinparam linetype ortho
 
 package XMLSchema #DDD {
     class string
@@ -7,21 +7,25 @@ package XMLSchema #DDD {
     class boolean
 }
 
-package URICatRoyale {
+package URICatRoyaleGame {
     
-    class Jeu{
+    class Jeu {
         plateau : Plateau
         joueur1 : Joueur
         joueur2 : Joueur
-        carteDuJeu : ListeDeCartes
+        pseudoJoueurActuel : string
+        cartesDuJeu : ListeDeCartes
     }
+    note right of Jeu::pseudoJoueurActuel
+        ∈ Joueur/pseudo
+    end note
     
     class Plateau { 
-        tabDeCases : TabDeCases[]
+        ligneDeCases : LigneDeCases[]
     }
     
-    class TabDeCases {
-        tabDeCases : Case[]
+    class LigneDeCases {
+        case : Case[]
     }
     
     class Case {
@@ -30,13 +34,18 @@ package URICatRoyale {
     }
     
     class Joueur {
-        pseudo : string
+        {unique} pseudo : string
         winStreak : int
         jauge : int
-        main : ListeIdCarte
+        hand : ListeIdCarte
         deck : ListeIdCarte
     }
-    
+    note bottom of Joueur
+            Un joueur est identifié par son pseudo
+            cela implique que deux joueurs ne 
+            peuvent pas avoir le meme pseudo
+    end note
+        
     class ListeDeCartes {
         carte : Carte[]
     }
@@ -61,9 +70,8 @@ package URICatRoyale {
     note bottom of IdCarte : à redefinr avec les vrais nom de chaque carte
     
     class ListeIdCarte  {
-        listeId : IdCarte[] 
+        idCarte : IdCarte[] 
     }
-    
     
     class TypeDeCarte <<enum>> {
         combattant
@@ -79,32 +87,33 @@ package URICatRoyale {
     }
     
     class Invocation {
+        pseudoInvocateur : string
         vie : int
         degat : int
-        pseudoInvocateur : string
         peutJouer : boolean
         peutAttaquer : boolean
     }
     
-    Jeu *--"1" Plateau
-    Jeu "1"*--"2" Joueur : < Peu jouer un seul jeux à la fois
-    Jeu *--"1" ListeDeCartes
     
-    TabDeCases *--"10" Case : doit etre pair
+    Jeu *--"1" Plateau
+    Jeu *--"2" Joueur
+    Jeu *--"1" ListeDeCartes : list
+    
+    LigneDeCases *--"4..*(pair)" Case : list
     
     Case *--"0..1" Invocation : > contient
     
     Joueur *--"2" ListeIdCarte
     
-    ListeDeCartes *--"*" Carte
+    ListeDeCartes *--"*" Carte : list
     
     Carte *--"1" TypeDeCarte
     Carte *--"1" TypeRarete
     Carte *--"1" IdCarte
     
-    ListeIdCarte *-- "*" IdCarte
+    ListeIdCarte *-- "*" IdCarte : list
     
-    Plateau *--"5" TabDeCases : doit etre impair
+    Plateau *--"3..*(impair)" LigneDeCases : list
     
     IdCarte --|> string 
     TypeDeCarte --|> string 

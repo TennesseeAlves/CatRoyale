@@ -1,56 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale"
+<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame"
         xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyale"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame"
         elementFormDefault="qualified"
 >
     <!-- on choisi le prefix "cat" comme le mot anglais "chat" -->
     
+    <
+    
     <!-- element racine instanciable -->
     <element name="jeu" type="cat:Jeu"/>
 
-    <!-- type Jeu
-        contenant : un plateau de type Plateau,
-                    un joueur1 de type Joueur,
-                    un joueur2 de type Joueur,
-                    carteDuJeu de type ListeDeCartes
-    -->
+    <!-- Jeu -->
     <complexType name="Jeu">
         <sequence>
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
-            <element name="carteDuJeu" type="cat:ListeDeCartes"/>
+            <element name="cartesDuJeu" type="cat:ListeDeCartes"/>
         </sequence>
     </complexType>
 
-    <!-- 
-        type Plateau
-        contenant : un map de type Invocation[][] (au moins un tabInvocation de type TabInvocation)
-    -->
+    <!-- Plateau -->
     <complexType name="Plateau">
         <sequence>
-            <element name="ligne" type="cat:TabInvocation" minOccurs="6" maxOccurs="6"/>
+            <element name="vecteurDeCases" type="cat:VecteurDeCases" minOccurs="7" maxOccurs="7"/>
         </sequence>
     </complexType>
     
-    <!-- 
-        Type TabInvocation
-        contenant : un tab de type Invocation[] (au moins une invocation de type Invocation)
-    -->
-    <complexType name="TabInvocation">
+    <!-- VecteurDeCases -->
+    <complexType name="VecteurDeCases">
         <sequence>
-            <element name="invocation" type="cat:Invocation" minOccurs="10" maxOccurs="10"/> <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+            <element name="case" type="cat:Case" minOccurs="10" maxOccurs="10"/> 
         </sequence>
     </complexType>
     
-    <!-- 
-        Type Invocation
-        contenant : une durée de vie de type int,
-                    un nombre de dégat de type int,
-                    le pseudo de l'invocateur de type string,
-                    un element estJouable de type boolean.
-    -->
+    <!-- Case -->
+    <complexType name="Case">
+        <sequence>
+            <element name="invocation" type="cat:Invocation" minOccurs="0"/>
+        </sequence>
+        <attribute name="estVide" type="boolean" use="required"/>
+    </complexType>
+    
+    <!-- Invocation -->
     <complexType name="Invocation">
         <sequence>
             <element name="vie" type="int"/>
@@ -61,30 +54,21 @@
         </sequence>
     </complexType>
     
-    <!-- 
-        Type Joueur
-        contenant : un pseudo de type string,
-                    une winSteak de type int,
-                    une jauge de type int,
-                    une main de type ListeDeCarte,
-                    un deck de type ListedeCarte
-    -->
+    <!-- Joueur -->
     <complexType name="Joueur">
         <sequence>
-            <element name="pseudo" type="int"/>
+            <element name="pseudo" type="string"/>
             <element name="winStreak" type="int"/>
-            <element name="jauje" type="int"/>
-            <element name="main" type="cat:ListeIdCarte"/>
+            <element name="jauge" type="int"/>
+            <element name="hand" type="cat:ListeIdCarte"/>
             <element name="deck" type="cat:ListeIdCarte"/>
         </sequence>
     </complexType>
     
-    <!-- Type ListeIdCarte 
-        contenant : listeId de type IdCarte[] (au moins un idCarte de type IdCarte)
-    -->
+    <!-- ListeIdCarte -->
     <complexType name="ListeIdCarte">
         <sequence>
-            <element name="listeId" type="cat:IdCarte" maxOccurs="unbounded"/>
+            <element name="idCarte" type="cat:IdCarte" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
     
