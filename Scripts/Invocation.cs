@@ -1,5 +1,3 @@
-using System;
-
 namespace TestProjet.Scripts;
 
 public class Invocation
@@ -16,22 +14,21 @@ public class Invocation
     public Invocation(int vie, int degat, string image)
     {
         setVie(vie);
+        setMaxVie(vie);
         setDegat(degat);
         setImage(image);
-        setPeutBouger(true);
-        setPeutAttaquer(true);
+        setPeutBouger(false);
+        setPeutAttaquer(false);
     }
     
     //getters et setters
     public int getVie()
     {
-        
         return _vie;
     }
     
     public int getMaxVie()
     {
-        
         return _maxvie;
     }
     public void setVie(int vie)
@@ -41,8 +38,19 @@ public class Invocation
             _vie = 0;
         }
         else
-        {   _maxvie=vie;
+        {
             _vie = vie;
+        }
+    }
+    public void setMaxVie(int maxvie)
+    {
+        if (maxvie < 0)
+        {
+            _maxvie = 0;
+        }
+        else
+        {
+            _maxvie = maxvie;
         }
     }
 
@@ -91,23 +99,22 @@ public class Invocation
         _invocateur = invocateur;
     }
 
-    public void takeDamage(int degat)
+    public bool takeDamage(int degat)
     {
-        
+        bool mort = false;
         _vie -= degat;
-        
         if (_vie < 0)
         {
-            _vie = 0;//là bah on meurt
+            _vie = 0;
+            mort = true;
         }
-        Console.WriteLine(_vie);
+        return mort;
     }
     
     public void takeVie(int vie)
     {
-        Console.WriteLine(_vie);
         _vie += vie;
-        if (_vie>_maxvie)
+        if (_vie > _maxvie)
         {
             _vie = _maxvie;
         }

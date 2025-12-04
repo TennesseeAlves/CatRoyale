@@ -54,7 +54,19 @@ public class ListeDeCartes
             newCartes[k] = _cartes[j];
             k++;
         }
-
+        /* alternative
+        for (int j = 0; j < _cartes.Length; j++)
+        {
+            if (j > i)
+            {
+                newCartes[j - 1] = _cartes[j];
+            }
+            else if (j < i)
+            {
+                newCartes[j] = _cartes[j];
+            }
+        }
+        */
         _cartes = newCartes;
         return rep;
     }

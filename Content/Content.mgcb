@@ -32,18 +32,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/cards/carte_base.png
 
-#begin textures/cards/carte_lui.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/cards/carte_lui.png
-
 #begin textures/cards/chatiment.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -79,6 +67,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/cards/soin.png
+
+#begin textures/cards/titouchat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/cards/titouchat.png
 
 #begin textures/map/background.png
 /importer:TextureImporter
@@ -116,18 +116,6 @@
 /processorParam:TextureFormat=Color
 /build:textures/mobs/chatiment.png
 
-#begin textures/mobs/lui.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:textures/mobs/lui.png
-
 #begin textures/mobs/magichat.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -139,6 +127,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/mobs/magichat.png
+
+#begin textures/mobs/titouchat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:textures/mobs/titouchat.png
 
 #begin textures/mobs/TourJ1.png
 /importer:TextureImporter
@@ -163,10 +163,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:textures/mobs/TourJ2.png
-
-#begin textures/sound/mixkit-little-cat-pain-meow-87.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:textures/sound/mixkit-little-cat-pain-meow-87.wav
 
