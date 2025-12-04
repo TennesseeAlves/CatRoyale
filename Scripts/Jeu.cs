@@ -58,25 +58,8 @@ namespace TestProjet.Scripts;
  *                      -deplacement en noclip
  * 
  *                      -mana max écrit en dur dans l'affichage
- *                      -
+ *                      -sort de vie et de dégats (degat negatif pour vie)
 */
-/*
- * TO DO:
- *          -load and save (donc serialization) --> InitGame et EndGame s'en serviront
- *          -vérifier victoire (et de manière générale accéder au cristal)
- *          -créer la partie d'init (pour pouvoir tester notamment) --> requiert le XML et le load
- *          -créer un premier deck (et les images associés) --> utile pour XML et affichage, pas pour le code
-*/
-/*
- * Première version jouable :
- *                              -pas de menu --> pas de choix (relance des parties en boucles et pas de sauvegarde)
- *                              -deck minimal --> une carte à 5HP 1ATK cout3 et un à 2HP 2ATK cout2
- *                              -pas d'IA --> le joueur controle les 2 joueurs
- *                              -pas d'extra --> ni effet de carte, ni grosse animations, ni deathmatch en endgame...
- * nécéssite:
- *              -load           --> à moi
- *              -verif victoire --> à moi
- */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
 
