@@ -1,0 +1,142 @@
+Index: TestProjet.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\r\n    <PropertyGroup>\r\n        <OutputType>WinExe</OutputType>\r\n        <TargetFramework>net9.0</TargetFramework>\r\n        <RollForward>Major</RollForward>\r\n        <PublishReadyToRun>false</PublishReadyToRun>\r\n        <TieredCompilation>false</TieredCompilation>\r\n    </PropertyGroup>\r\n    <PropertyGroup>\r\n        <ApplicationManifest>app.manifest</ApplicationManifest>\r\n        <ApplicationIcon>Icon.ico</ApplicationIcon>\r\n    </PropertyGroup>\r\n    <ItemGroup>\r\n        <None Remove=\"Icon.ico\"/>\r\n        <None Remove=\"Icon.bmp\"/>\r\n    </ItemGroup>\r\n    <ItemGroup>\r\n        <EmbeddedResource Include=\"Icon.ico\">\r\n            <LogicalName>Icon.ico</LogicalName>\r\n        </EmbeddedResource>\r\n        <EmbeddedResource Include=\"Icon.bmp\">\r\n            <LogicalName>Icon.bmp</LogicalName>\r\n        </EmbeddedResource>\r\n    </ItemGroup>\r\n    <ItemGroup>\r\n        <PackageReference Include=\"MonoGame.Framework.DesktopGL\" Version=\"3.8.*\"/>\r\n        <PackageReference Include=\"MonoGame.Content.Builder.Task\" Version=\"3.8.*\"/>\r\n    </ItemGroup>\r\n    <ItemGroup>\r\n      <Folder Include=\"data\\html\\\" />\r\n      <Folder Include=\"data\\xslt\\\" />\r\n    </ItemGroup>\r\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/TestProjet.csproj b/TestProjet.csproj
+--- a/TestProjet.csproj	(revision 9cbbc0a63a9493e4e86ef1f2812fa1ffb371ed1d)
++++ b/TestProjet.csproj	(date 1764682718063)
+@@ -28,6 +28,5 @@
+     </ItemGroup>
+     <ItemGroup>
+       <Folder Include="data\html\" />
+-      <Folder Include="data\xslt\" />
+     </ItemGroup>
+ </Project>
+\ No newline at end of file
+Index: data/xslt/DeckJoueur.xsl
+===================================================================
+diff --git a/data/xslt/DeckJoueur.xsl b/data/xslt/DeckJoueur.xsl
+new file mode 100644
+--- /dev/null	(date 1764688000176)
++++ b/data/xslt/DeckJoueur.xsl	(date 1764688000176)
+@@ -0,0 +1,1 @@
++<?xml version="1.0" encoding="utf-8"?>
+\ No newline at end of file
+Index: data/xslt/ListeDeCarte.xsl
+===================================================================
+diff --git a/data/xslt/ListeDeCarte.xsl b/data/xslt/ListeDeCarte.xsl
+new file mode 100644
+--- /dev/null	(date 1764688034137)
++++ b/data/xslt/ListeDeCarte.xsl	(date 1764688034137)
+@@ -0,0 +1,1 @@
++<?xml version="1.0" encoding="utf-8"?>
+\ No newline at end of file
+Index: data/xslt/PartieEnCours.xsl
+===================================================================
+diff --git a/data/xslt/PartieEnCours.xsl b/data/xslt/PartieEnCours.xsl
+new file mode 100644
+--- /dev/null	(date 1764688405247)
++++ b/data/xslt/PartieEnCours.xsl	(date 1764688405247)
+@@ -0,0 +1,1 @@
++<?xml version="1.0" encoding="utf-8"?>
+\ No newline at end of file
+Index: data/xslt/PageJoueur.xsl
+===================================================================
+diff --git a/data/xslt/PageJoueur.xsl b/data/xslt/PageJoueur.xsl
+new file mode 100644
+--- /dev/null	(date 1764682718215)
++++ b/data/xslt/PageJoueur.xsl	(date 1764682718215)
+@@ -0,0 +1,1 @@
++<?xml version="1.0" encoding="utf-8"?>
+\ No newline at end of file
+Index: Game1.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using System;\r\nusing System.Numerics;\r\nusing Microsoft.Xna.Framework;\r\nusing Microsoft.Xna.Framework.Graphics;\r\nusing Microsoft.Xna.Framework.Input;\r\nusing Vector2 = Microsoft.Xna.Framework.Vector2;\r\n\r\nnamespace TestProjet;\r\n\r\npublic class Game1 : Game\r\n{\r\n    private GraphicsDeviceManager _graphics;\r\n    private SpriteBatch _spriteBatch;\r\n    private Texture2D _background, _case, _carteBase, _carteLui, _lui;\r\n    private int _carteI, _caseI, _caseJ, _prevI, _prevJ;\r\n    private bool _tour; //true = joueur sud\r\n    private int _phase; //0:choisi carte, 1:choisi case, 2:choisi invoc, 3:choisi cible\r\n    private int[,] _map; //0:rien, 1:lui de J1, 2:lui de J2\r\n    private KeyboardState _previousKeyboardState;\r\n\r\n    public Game1()\r\n    {\r\n        _graphics = new GraphicsDeviceManager(this);\r\n        _graphics.PreferredBackBufferWidth = 512;\r\n        _graphics.PreferredBackBufferHeight = 320;\r\n        _graphics.ApplyChanges();\r\n        Window.Title = \"Card Game\";\r\n        Content.RootDirectory = \"Content\";\r\n        IsMouseVisible = true;\r\n\r\n        _carteI = 0;\r\n        _caseI = -1;\r\n        _caseJ = -1;\r\n        _prevI = -1;\r\n        _prevJ = -1;\r\n        _tour = true;\r\n        _phase = 0;\r\n        _map = new int[10,6];\r\n    }\r\n\r\n    protected override void Initialize()\r\n    {\r\n        base.Initialize();\r\n    }\r\n\r\n    protected override void LoadContent()\r\n    {\r\n        _spriteBatch = new SpriteBatch(GraphicsDevice);\r\n        _background = Content.Load<Texture2D>(\"textures/map/background\");\r\n        _case = Content.Load<Texture2D>(\"textures/map/case\");\r\n        _carteBase = Content.Load<Texture2D>(\"textures/cards/carte_base\");\r\n        _carteLui = Content.Load<Texture2D>(\"textures/cards/carte_lui\");\r\n        _lui = Content.Load<Texture2D>(\"textures/mobs/lui\");\r\n    }\r\n\r\n    protected override void Update(GameTime gameTime)\r\n    {\r\n        KeyboardState _keyboardState = Keyboard.GetState();\r\n        if (_keyboardState.IsKeyDown(Keys.Escape))\r\n            Exit();\r\n\r\n        switch (_phase)\r\n        {\r\n            case 0:\r\n                if (_keyboardState.IsKeyDown(Keys.Q) && !_previousKeyboardState.IsKeyDown(Keys.Q) \r\n                    || _keyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))\r\n                    _carteI = (_carteI > 0) ? _carteI - 1 : _carteI;\r\n                if (_keyboardState.IsKeyDown(Keys.D) && !_previousKeyboardState.IsKeyDown(Keys.D) \r\n                    || _keyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))\r\n                    _carteI = (_carteI < 5) ? _carteI + 1 : _carteI;\r\n                if (_keyboardState.IsKeyDown(Keys.E) && !_previousKeyboardState.IsKeyDown(Keys.E)\r\n                    || _keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter))\r\n                {\r\n                    _phase = 1;\r\n                    _caseI = 0;\r\n                    _caseJ = 0;\r\n                }\r\n                break;\r\n            case 1:\r\n                if (_keyboardState.IsKeyDown(Keys.Q) && !_previousKeyboardState.IsKeyDown(Keys.Q) \r\n                    || _keyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))\r\n                    _caseI = (_caseI > 0) ? _caseI - 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.D) && !_previousKeyboardState.IsKeyDown(Keys.D) \r\n                    || _keyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))\r\n                    _caseI = (_caseI < 9) ? _caseI + 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.S) && !_previousKeyboardState.IsKeyDown(Keys.S) \r\n                    || _keyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))\r\n                    _caseJ = (_caseJ < 5) ? _caseJ + 1 : _caseJ;\r\n                if (_keyboardState.IsKeyDown(Keys.Z) && !_previousKeyboardState.IsKeyDown(Keys.Z) \r\n                    || _keyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))\r\n                    _caseJ = (_caseJ > 0) ? _caseJ - 1 : _caseJ;\r\n                if ((_keyboardState.IsKeyDown(Keys.E) && !_previousKeyboardState.IsKeyDown(Keys.E) \r\n                    || _keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter))\r\n                    && _map[_caseI,_caseJ] == 0)\r\n                {\r\n                    _phase = 2;\r\n                    _map[_caseI, _caseJ] = (_tour) ? 1 : 2;\r\n                    _carteI = -1;\r\n                }\r\n\r\n                if (_keyboardState.IsKeyDown(Keys.A) && !_previousKeyboardState.IsKeyDown(Keys.A)\r\n                    || _keyboardState.IsKeyDown(Keys.Back) && !_previousKeyboardState.IsKeyDown(Keys.Back))\r\n                {\r\n                    _phase = 0;\r\n                    _caseI = -1;\r\n                    _caseJ = -1;\r\n                }\r\n                break;\r\n            case 2:\r\n                if (_keyboardState.IsKeyDown(Keys.Q) && !_previousKeyboardState.IsKeyDown(Keys.Q) \r\n                    || _keyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))\r\n                    _caseI = (_caseI > 0) ? _caseI - 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.D) && !_previousKeyboardState.IsKeyDown(Keys.D) \r\n                    || _keyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))\r\n                    _caseI = (_caseI < 9) ? _caseI + 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.S) && !_previousKeyboardState.IsKeyDown(Keys.S) \r\n                    || _keyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))\r\n                    _caseJ = (_caseJ < 5) ? _caseJ + 1 : _caseJ;\r\n                if (_keyboardState.IsKeyDown(Keys.Z) && !_previousKeyboardState.IsKeyDown(Keys.Z) \r\n                    || _keyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))\r\n                    _caseJ = (_caseJ > 0) ? _caseJ - 1 : _caseJ;\r\n                if ((_keyboardState.IsKeyDown(Keys.E) && !_previousKeyboardState.IsKeyDown(Keys.E)\r\n                    || _keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter))\r\n                    && _map[_caseI,_caseJ] == ((_tour)?1:2))\r\n                {\r\n                    _phase = 3;\r\n                    _prevI = _caseI;\r\n                    _prevJ = _caseJ;\r\n                }\r\n                break;\r\n            case 3:\r\n                if (_keyboardState.IsKeyDown(Keys.Q) && !_previousKeyboardState.IsKeyDown(Keys.Q) \r\n                    || _keyboardState.IsKeyDown(Keys.Left) && !_previousKeyboardState.IsKeyDown(Keys.Left))\r\n                    _caseI = (_caseI > 0) ? _caseI - 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.D) && !_previousKeyboardState.IsKeyDown(Keys.D) \r\n                    || _keyboardState.IsKeyDown(Keys.Right) && !_previousKeyboardState.IsKeyDown(Keys.Right))\r\n                    _caseI = (_caseI < 9) ? _caseI + 1 : _caseI;\r\n                if (_keyboardState.IsKeyDown(Keys.S) && !_previousKeyboardState.IsKeyDown(Keys.S) \r\n                    || _keyboardState.IsKeyDown(Keys.Down) && !_previousKeyboardState.IsKeyDown(Keys.Down))\r\n                    _caseJ = (_caseJ < 5) ? _caseJ + 1 : _caseJ;\r\n                if (_keyboardState.IsKeyDown(Keys.Z) && !_previousKeyboardState.IsKeyDown(Keys.Z) \r\n                    || _keyboardState.IsKeyDown(Keys.Up) && !_previousKeyboardState.IsKeyDown(Keys.Up))\r\n                    _caseJ = (_caseJ > 0) ? _caseJ - 1 : _caseJ;\r\n                if (_keyboardState.IsKeyDown(Keys.E) && !_previousKeyboardState.IsKeyDown(Keys.E) \r\n                    || _keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter))\r\n                {\r\n                    _phase = 0;\r\n                    _map[_caseI, _caseJ] = _map[_prevI, _prevJ];\r\n                    _map[_prevI, _prevJ] = 0;\r\n                    _tour = !_tour;\r\n                    _carteI = 0;\r\n                    _caseI = -1;\r\n                    _caseJ = -1;\r\n                    _prevI = -1;\r\n                    _prevJ = -1;\r\n                }\r\n\r\n                if (_keyboardState.IsKeyDown(Keys.A) && !_previousKeyboardState.IsKeyDown(Keys.A)\r\n                    || _keyboardState.IsKeyDown(Keys.Back) && !_previousKeyboardState.IsKeyDown(Keys.Back))\r\n                {\r\n                    _phase = 2;\r\n                    _prevI = -1;\r\n                    _prevJ = -1;\r\n                }\r\n                break;\r\n        }\r\n        _previousKeyboardState = _keyboardState;\r\n        base.Update(gameTime);\r\n    }\r\n\r\n    protected override void Draw(GameTime gameTime)\r\n    {\r\n        GraphicsDevice.Clear(Color.CornflowerBlue);\r\n\r\n        _spriteBatch.Begin();\r\n        _spriteBatch.Draw(_background, Vector2.Zero, Color.White);\r\n        for (int ligne = 2; ligne < 8; ligne++)\r\n        {\r\n            for (int colone = 3; colone < 13; colone++)\r\n            {\r\n                if (colone == _caseI+3 && ligne == _caseJ+2\r\n                    || colone == _prevI+3 && ligne == _prevJ+2)\r\n                {\r\n                    _spriteBatch.Draw(_case,new Vector2(colone*32 + _case.Width*0.25f, ligne*32 + _case.Height*0.25f), null, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.FlipVertically, 0.0f);\r\n                }\r\n                if (_map[colone-3, ligne-2] == 1)\r\n                {\r\n                    _spriteBatch.Draw(_lui, new Vector2(colone*32, ligne*32), Color.Red);\r\n                }\r\n                else if (_map[colone-3, ligne-2] == 2)\r\n                {\r\n                    _spriteBatch.Draw(_lui,new Vector2(colone*32, ligne*32), null, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0.0f);\r\n                }\r\n                else\r\n                {\r\n                    _spriteBatch.Draw(_case, new Vector2(colone*32, ligne*32), Color.White);\r\n                }\r\n            }\r\n        }\r\n        for (int colone = 5; colone < 11; colone++)\r\n        {\r\n            if (colone == _carteI+5 && !_tour)\r\n            {\r\n                _spriteBatch.Draw(_carteBase,new Vector2(colone*32, 1*32), null, Color.White, MathHelper.ToRadians(180), new Vector2(_carteBase.Width,_carteBase.Height), 1.0f, SpriteEffects.None, 0.0f);\r\n            }\r\n            else\r\n            {\r\n                _spriteBatch.Draw(_carteBase,new Vector2(colone*32, 0*32), null, Color.White, MathHelper.ToRadians(180), new Vector2(_carteBase.Width,_carteBase.Height), 1.0f, SpriteEffects.None, 0.0f);\r\n            }\r\n            if (colone == _carteI+5 && _tour)\r\n            {\r\n                _spriteBatch.Draw(_carteLui, new Vector2(colone*32, 8*32), Color.White);\r\n            }\r\n            else\r\n            {\r\n                _spriteBatch.Draw(_carteLui, new Vector2(colone*32, 9*32), Color.White);\r\n            }\r\n        }\r\n        //tests variables\r\n        /*\r\n        if (_tour)\r\n        {\r\n            _spriteBatch.Draw(_carteLui, new Vector2(0, 0), Color.White);\r\n        }\r\n        else\r\n        {\r\n            _spriteBatch.Draw(_carteLui, new Vector2(0, 0), Color.White);\r\n        }\r\n        _spriteBatch.Draw(_lui, new Vector2(_phase*32, 32), Color.White);\r\n        _spriteBatch.Draw(_lui, new Vector2((_carteI+5)*32, 7*32), Color.White);\r\n        */\r\n        _spriteBatch.End();\r\n\r\n        base.Draw(gameTime);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Game1.cs b/Game1.cs
+--- a/Game1.cs	(revision 9cbbc0a63a9493e4e86ef1f2812fa1ffb371ed1d)
++++ b/Game1.cs	(date 1764673097081)
+@@ -92,7 +92,7 @@
+                 if ((_keyboardState.IsKeyDown(Keys.E) && !_previousKeyboardState.IsKeyDown(Keys.E) 
+                     || _keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter))
+                     && _map[_caseI,_caseJ] == 0)
+-                {
++                {g
+                     _phase = 2;
+                     _map[_caseI, _caseJ] = (_tour) ? 1 : 2;
+                     _carteI = -1;
+Index: data/xml/CatRoyale.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<Ourgame xmlns=\"http://www.univ-grenoble-alpes.fr/l3miage/ourGame\"\r\n            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n            xsi:schemaLocation=\"http://www.univ-grenoble-alpes.fr/l3miage/ourGame  ../xsd/CatRoyale.xsd\">\r\n\r\n</Ourgame>
+===================================================================
+diff --git a/data/xml/CatRoyale.xml b/data/xml/CatRoyale.xml
+--- a/data/xml/CatRoyale.xml	(revision 9cbbc0a63a9493e4e86ef1f2812fa1ffb371ed1d)
++++ b/data/xml/CatRoyale.xml	(date 1764674347014)
+@@ -2,5 +2,58 @@
+ <Ourgame xmlns="http://www.univ-grenoble-alpes.fr/l3miage/ourGame"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/ourGame  ../xsd/CatRoyale.xsd">
+-
++    <joueur1>
++        <pseudo></pseudo>
++        <winStreak></winStreak>
++        <jauje></jauje>
++        <main>
++            <listeId></listeId>
++        </main>
++        <deck>
++            <listeId></listeId>
++        </deck>
++    </joueur1>
++    
++    <joueur2>
++        <pseudo></pseudo>
++        <winStreak></winStreak>
++        <jauje></jauje>
++        <main>
++            <listeId></listeId>
++        </main>
++        <deck>
++            <listeId></listeId>
++        </deck>
++    </joueur2>
++    
++    <carteDuJeu>
++        <carte id="sorcier">
++            <vie></vie>
++            <degat></degat>
++            <nom></nom>
++            <image></image>
++            <cout></cout>
++            <type></type>
++            <invocation>
++                <vie></vie>
++                <degat></degat>
++                <pseudoInvocateur></pseudoInvocateur>
++                <peutJouer></peutJouer>
++                <peutAttaquer></peutAttaquer>
++            </invocation>
++            <rarete></rarete>
++        </carte>
++    </carteDuJeu>
++    <plateau>
++       <colonne>
++           <ligne>
++               <vie>23</vie>
++               <degat>3</degat>
++               <pseudoInvocateur>Gamer</pseudoInvocateur>
++               <peutJouer>1</peutJouer>
++               <peutAttaquer>1</peutAttaquer>
++           </ligne>
++       </colonne>
++    </plateau>
++    
+ </Ourgame>
+\ No newline at end of file
