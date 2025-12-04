@@ -4,9 +4,7 @@
         targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame"
         elementFormDefault="qualified"
 >
-    <!-- on choisi le prefix "cat" comme le mot anglais "chat" -->
-    
-    <
+    <!-- prefix "cat" comme le mot anglais "chat" :P -->
     
     <!-- element racine instanciable -->
     <element name="jeu" type="cat:Jeu"/>
@@ -17,6 +15,7 @@
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
+            <element name="pseudoJoueurActuel" type="string"/> <!-- TODO: clef appartenance -->
             <element name="cartesDuJeu" type="cat:ListeDeCartes"/>
         </sequence>
     </complexType>
@@ -24,12 +23,12 @@
     <!-- Plateau -->
     <complexType name="Plateau">
         <sequence>
-            <element name="vecteurDeCases" type="cat:VecteurDeCases" minOccurs="7" maxOccurs="7"/>
+            <element name="ligneDeCases" type="cat:LigneDeCases" minOccurs="7" maxOccurs="7"/>
         </sequence>
     </complexType>
     
-    <!-- VecteurDeCases -->
-    <complexType name="VecteurDeCases">
+    <!-- LigneDeCases -->
+    <complexType name="LigneDeCases">
         <sequence>
             <element name="case" type="cat:Case" minOccurs="10" maxOccurs="10"/> 
         </sequence>
@@ -46,9 +45,9 @@
     <!-- Invocation -->
     <complexType name="Invocation">
         <sequence>
+            <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef appartenance -->
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
-            <element name="pseudoInvocateur" type="string"/>
             <element name="peutJouer" type="boolean"/>
             <element name="peutAttaquer" type="boolean"/>
         </sequence>
@@ -72,29 +71,15 @@
         </sequence>
     </complexType>
     
-    <!-- 
-        Type ListeDeCartes
-        contenant : une carte de type Carte[] (au moins une carte de type Carte)
-    -->
+    <!-- ListeDeCartes -->
     <complexType name="ListeDeCartes">
         <sequence>
             <element name="carte" type="cat:Carte" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
     
-    <!-- Type Carte
-        contenant : un attribut id de type IdCarte
-                    une vie de type int,
-                    un nombre de dégat de type int,
-                    un nom de type string,
-                    une imageInvocation de type string,
-                    une imageCarte de type string,
-                    un cout de type int,
-                    un type de type TypeDeCarte
-                    unr rarete de type TypeRarete
-    -->
+    <!-- Carte -->
     <complexType name="Carte">
-        
         <sequence>
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
@@ -105,21 +90,23 @@
             <element name="type" type="cat:TypeDeCarte"/>
             <element name="rarete" type="cat:TypeRarete"/>
         </sequence>
-        <attribute name="id" type="cat:IdCarte" use="required"/>
+        <attribute name="id" type="cat:IdCarte" use="required"/> <!-- TODO: unicite id -->
     </complexType>
     
-    <!-- Type IdCarte 
-        n'acceptant que les noms des cartes (A COMPLETER)
-    -->
+    
+    <!-- ### Simple Types Simple Life ### -->
+    
+    
+    <!-- IdCarte -->
     <simpleType name="IdCarte">
         <restriction base="string">
             <enumeration value="sorcier"/>
+            <enumeration value="etudiant"/>
+            <!-- TODO: rajouter des cartes -->
         </restriction>
     </simpleType>
     
-    <!-- Type TypeDeCarte
-        n'acceptant que combattant, sort et objet
-     -->
+    <!-- TypeDeCarte -->
     <simpleType name="TypeDeCarte">
         <restriction base="string">
             <enumeration value="combattant"/>
@@ -128,9 +115,7 @@
         </restriction>
     </simpleType>
     
-    <!-- Type TypeRarete
-        n'acceptant que commune, rare, épique et légendaire
-     -->
+    <!-- typeRarete -->
     <simpleType name="TypeRarete">
         <restriction base="string">
             <enumeration value="commune"/>

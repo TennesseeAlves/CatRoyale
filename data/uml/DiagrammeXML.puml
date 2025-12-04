@@ -34,7 +34,7 @@ package URICatRoyaleGame {
     }
     
     class Joueur {
-        {unique} pseudo : string
+        {unique} {attribute} pseudo : string
         winStreak : int
         jauge : int
         hand : ListeIdCarte
@@ -51,7 +51,7 @@ package URICatRoyaleGame {
     }
     
     class Carte {
-        {attribut} id : IdCarte
+        {unique} {attribut} id : IdCarte
         vie : int
         degat : int
         nom : string
@@ -61,6 +61,9 @@ package URICatRoyaleGame {
         type : TypeDeCarte
         rarete : TypeRarete
     }
+    note left of Carte::cout
+        Cout d'utilisation en mana
+    end note
     
     class IdCarte <<enum>> {
         sorcier 
@@ -93,7 +96,9 @@ package URICatRoyaleGame {
         peutJouer : boolean
         peutAttaquer : boolean
     }
-    
+    note right of Invocation::pseudoInvocateur
+        ∈ Joueur/pseudo
+    end note
     
     Jeu *--"1" Plateau
     Jeu *--"2" Joueur
