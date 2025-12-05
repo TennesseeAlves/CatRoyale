@@ -15,7 +15,7 @@
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
-            <element name="pseudoJoueurActuel" type="string"/> <!-- TODO: clef appartenance -->
+            <element name="pseudoJoueurActuel" type="string"/> <!-- TODO: clef existence -->
             <element name="cartesDuJeu" type="cat:ListeDeCartes"/>
         </sequence>
     </complexType>
@@ -45,7 +45,7 @@
     <!-- Invocation -->
     <complexType name="Invocation">
         <sequence>
-            <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef appartenance -->
+            <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef existence -->
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
             <element name="peutJouer" type="boolean"/>
