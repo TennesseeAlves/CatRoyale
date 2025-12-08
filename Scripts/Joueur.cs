@@ -1,166 +1,139 @@
 using System;
+using System.Xml.Serialization;
 
 namespace TestProjet.Scripts;
 
+[XmlType("Joueur")]
 public class Joueur
 {
-    private string _pseudo;
-    private int _winStreak;
-    private int _jauge;
-    private ListeDeCartes _main;
-    private ListeDeCartes _deck;
-    public static int MAXJAUGE = 15;
+    [XmlElement("pseudo")] public string Pseudo {get; set;}
+    [XmlElement("winStreak")] public int WinStreak {get; set;}
+    [XmlElement("jauge")] public int Jauge {
+        get => _jauge;
+        set => _jauge = (value < 0) ? 0 : ((value > MAXJAUGE) ? MAXJAUGE : value);
+    }
+    [XmlElement("main")] public ListeIdCartes Main {get; set;}
+    [XmlElement("deck")] public ListeIdCartes Deck {get; set;}
+    [XmlIgnore] public static int MAXJAUGE = 15;
+    //champs internes
+    [XmlIgnore] private int _jauge;
     
     //constructeurs
     public Joueur(string pseudo, int winStreak)
     {
-        setPseudo(pseudo);
-        setWinStreak(winStreak);
-        setJauge(0);
-        _main = new ListeDeCartes();
-        _deck = new ListeDeCartes();
+        Pseudo = pseudo;
+        WinStreak = winStreak;
+        Jauge = 0;
+        Main = new ListeIdCartes();
+        Deck = new ListeIdCartes();
     }
-
-    
-    //getters et setters
-    public string getPseudo()
-    {
-        return _pseudo;
-    }
-    public void setPseudo(string pseudo)
-    {
-        _pseudo = pseudo;
-    }
-
-    public int getWinStreak()
-    {
-        return _winStreak;
-    }
-    public void setWinStreak(int winStreak)
-    {
-        _winStreak = winStreak;
-    }
-
-    public int getJauge()
-    
-    {
-        return _jauge;
-    }
-    public void setJauge(int jauge)
-    {
-        if (jauge >= 0 && jauge <= MAXJAUGE)
-        {
-            _jauge = jauge;
-        }
-    }
+    //constructeur vide pour le XMLSerializer
+    public Joueur(){}
     
     //methodes autres
-    public void remplirJauge(int niveau)
+    public void remplirJauge()
     {
-        if (_jauge < niveau)
-        {
-            _jauge = niveau;
-        }
+        Jauge = MAXJAUGE;
     }
 
     public void reduireJauge(int usage)
     {
-        _jauge -=  usage;
-        if (_jauge < 0)
-        {
-            _jauge = 0;
-        }
+        Jauge -= usage;
     }
 
     public int getNbCartesInMain()
     {
-        return _main.Length();
+        return Main.Length();
     }
     
     public int getNbCartesInDeck()
     {
-        return _deck.Length();
-    }
-
-    public void addCarteInMain(Carte carte)
-    {
-        _main.appendCarte(carte);
+        return Deck.Length();
     }
     
-    public int nbCarteInMain()
+    public void addCarteInMain(Carte carte)
     {
-        return _main.Length();
+        Main.appendCarte(carte);
     }
+    public void addCarteInMain(string carte)
+    {
+        Main.appendId(carte);
+    }
+    
     public void addCarteInDeck(Carte carte)
     {
-        _deck.appendCarte(carte);
+        Deck.appendCarte(carte);
+    }
+    public void addCarteInDeck(string carte)
+    {
+        Deck.appendId(carte);
     }
 
-    public Carte getCarteInMainAt(int i)
+    public Carte getCarteInMainAt(int i, ListeDeCartes Cartes)
     {
-        return _main.getCarteAt(i);
+        return Main.getCarteAt(i, Cartes);
     }
 
-    public Carte getCarteInDeckAt(int i)
+    public Carte getCarteInDeckAt(int i, ListeDeCartes Cartes)
     {
-        return _deck.getCarteAt(i);
+        return Deck.getCarteAt(i, Cartes);
     }
 
     public void deleteCarteInMain(Carte carte)
     {
-        int i = _main.getIndexOf(carte);
+        int i = Main.getIndexOf(carte);
         if (i == -1)
         {
             throw new ArgumentException();
         }
-        _main.removeCarteAt(i);
+        Main.removeIdAt(i);
     }
 
     public void deleteCarteInMainAt(int i)
     {
-        if (i >= _main.Length())
+        if (i >= Main.Length())
         {
             throw new ArgumentException();
         }
-        _main.removeCarteAt(i);
+        Main.removeIdAt(i);
     }
 
     public void deleteCarteInDeck(Carte carte)
     {
-        int i = _deck.getIndexOf(carte);
+        int i = Deck.getIndexOf(carte);
         if (i == -1)
         {
             throw new ArgumentException();
         }
-        _deck.removeCarteAt(i);
+        Deck.removeIdAt(i);
     }
 
     public void deleteCarteInDeckAt(int i)
     {
-        if (i >= _deck.Length())
+        if (i >= Deck.Length())
         {
             throw new ArgumentException();
         }
-        _deck.removeCarteAt(i);
+        Deck.removeIdAt(i);
     }
 
     public void putCarteInDeckFromMainAt(int i)
     {
-        if (i >= _main.Length())
+        if (i >= Main.Length())
         {
             throw new ArgumentException();
         }
-        Carte carte = _main.getCarteAt(i);
-        _main.removeCarteAt(i);
-        _deck.appendCarte(carte);
+        string carte = Main.getIdAt(i);
+        Main.removeIdAt(i);
+        Deck.appendId(carte);
     }
 
     public void pioche()
     {
         Random random = new Random();
-        int i = random.Next(0, _deck.Length());
-        Carte cartePioche = _deck.getCarteAt(i);
-        _deck.removeCarteAt(i);
-        _main.appendCarte(cartePioche);
+        int i = random.Next(0, Deck.Length());
+        string cartePioche = Deck.getIdAt(i);
+        Deck.removeIdAt(i);
+        Main.appendId(cartePioche);
     }
 }

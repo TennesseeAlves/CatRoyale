@@ -1,122 +1,60 @@
+using System.Xml.Serialization;
+
 namespace TestProjet.Scripts;
 
+[XmlType("Invocation")]
 public class Invocation
 {
-    private int _vie;
-    private int _maxvie;
-    private int _degat;
-    private string _image;
-    private bool _peutBouger;
-    private bool _peutAttaquer;
-    private Joueur _invocateur;
+    [XmlIgnore] public Joueur Invocateur { get; set; }
+    [XmlElement("pseudoInvocateur")] public string PseudoInvocateur {
+        get => Invocateur.Pseudo;
+        set => Invocateur.Pseudo = value;
+    }
+    [XmlElement("vie")] public int Vie {
+        get => _vie;
+        set => _vie = (value < 0) ? 0 : value;
+    }
+    [XmlElement("maxVie")] public int MaxVie {
+        get => _maxVie;
+        set => _maxVie = (value < 0) ? 0 : value;
+    }
+    [XmlElement("degat")] public int Degat { get; set; }
+    [XmlElement("image")] public string Image { get; set; }
+    [XmlElement("peutBouger")] public bool PeutBouger { get; set; }
+    [XmlElement("peutAttaquer")] public bool PeutAttaquer { get; set; }
+    //champs internes
+    [XmlIgnore] private int _vie;
+    [XmlIgnore] private int _maxVie;
     
     //constructeur
     public Invocation(int vie, int degat, string image)
     {
-        setVie(vie);
-        setMaxVie(vie);
-        setDegat(degat);
-        setImage(image);
-        setPeutBouger(false);
-        setPeutAttaquer(false);
+        Vie = vie;
+        MaxVie = vie;
+        Degat = degat;
+        Image = image;
+        PeutBouger = false;
+        PeutAttaquer = false;
     }
-    
-    //getters et setters
-    public int getVie()
-    {
-        return _vie;
-    }
-    
-    public int getMaxVie()
-    {
-        return _maxvie;
-    }
-    public void setVie(int vie)
-    {
-        if (vie < 0)
-        {
-            _vie = 0;
-        }
-        else
-        {
-            _vie = vie;
-        }
-    }
-    public void setMaxVie(int maxvie)
-    {
-        if (maxvie < 0)
-        {
-            _maxvie = 0;
-        }
-        else
-        {
-            _maxvie = maxvie;
-        }
-    }
-
-    public int getDegat()
-    {
-        return _degat;
-    }
-    public void setDegat(int degat)
-    {
-        _degat =  degat;
-    }
-
-    public string getImage()
-    {
-        return _image;
-    }
-    public void setImage(string image)
-    {
-        _image = image;
-    }
-
-    public bool getPeutBouger()
-    {
-        return _peutBouger;
-    }
-    public void setPeutBouger(bool peutBouger)
-    {
-        _peutBouger = peutBouger;
-    }
-
-    public bool getPeutAttaquer()
-    {
-        return _peutAttaquer;
-    }
-    public void setPeutAttaquer(bool peutAttaquer)
-    {
-        _peutAttaquer = peutAttaquer;
-    }
-
-    public Joueur getInvocateur()
-    {
-        return _invocateur;
-    }
-    public void setInvocateur(Joueur invocateur)
-    {
-        _invocateur = invocateur;
-    }
+    //constructeur vide pour le XMLSerializer
+    public Invocation() { }
 
     public bool takeDamage(int degat)
     {
-        bool mort = false;
-        _vie -= degat;
-        if (_vie < 0)
+        Vie -= degat;
+        if (Vie == 0)
         {
-            _vie = 0;
-            mort = true;
+            return true;
         }
-        return mort;
+        return false;
     }
     
     public void takeVie(int vie)
     {
-        _vie += vie;
-        if (_vie > _maxvie)
+        Vie += vie;
+        if (Vie > MaxVie)
         {
-            _vie = _maxvie;
+            Vie = MaxVie;
         }
     }
 }

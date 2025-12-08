@@ -1,57 +1,59 @@
 using System;
+using System.Xml.Serialization;
 
 namespace TestProjet.Scripts;
 
+[XmlType("ListeDeCartes")]
 public class ListeDeCartes
 {
-    private Carte[] _cartes;
+    [XmlElement("carte")] public Carte[] Cartes {get; set;}
 
     public ListeDeCartes()
     {
-        _cartes = new Carte[0];
+        Cartes = new Carte[0];
     }
 
     public int Length()
     {
-        return _cartes.Length;
+        return Cartes.Length;
     }
 
     public Carte getCarteAt(int i) 
     {
-        if (i >= _cartes.Length || i < 0)
+        if (i >= Cartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        return _cartes[i];
+        return Cartes[i];
     }
 
     public void setCarteAt(int i, Carte carte) 
     {
-        if (i >= _cartes.Length || i < 0)
+        if (i >= Cartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        _cartes[i] =  carte;
+        Cartes[i] =  carte;
     }
 
     public Carte removeCarteAt(int i) 
     {
-        if (i >= _cartes.Length || i < 0)
+        if (i >= Cartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        Carte rep = _cartes[i];
-        Carte[] newCartes = new Carte[_cartes.Length - 1];
+        Carte rep = Cartes[i];
+        Carte[] newCartes = new Carte[Cartes.Length - 1];
 
         int k = 0;
-        for (int j = 0; j < _cartes.Length; j++)
+        for (int j = 0; j < Cartes.Length; j++)
         {
             if (j == i)
             {
                 continue;
             } 
 
-            newCartes[k] = _cartes[j];
+            newCartes[k] = Cartes[j];
             k++;
         }
         /* alternative
@@ -67,7 +69,7 @@ public class ListeDeCartes
             }
         }
         */
-        _cartes = newCartes;
+        Cartes = newCartes;
         return rep;
     }
 
@@ -75,9 +77,9 @@ public class ListeDeCartes
     {
         int rep = -1;
         int i = 0;
-        while (rep == -1 && i < _cartes.Length)
+        while (rep == -1 && i < Cartes.Length)
         {
-            if (_cartes[i] == carte)
+            if (Cartes[i] == carte)
             {
                 rep = i;
             }
@@ -88,39 +90,39 @@ public class ListeDeCartes
 
     public void insertCarteAt(int i, Carte carte) 
     {
-        if (i >= _cartes.Length || i < 0)
+        if (i >= Cartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        Carte[] newCartes = new Carte[_cartes.Length + 1];
-        for (int j = 0; j < _cartes.Length; j++)
+        Carte[] newCartes = new Carte[Cartes.Length + 1];
+        for (int j = 0; j < Cartes.Length; j++)
         {
             if (j > i)
             {
-                newCartes[j + 1] = _cartes[j];
+                newCartes[j + 1] = Cartes[j];
             }
             else if (j == i)
             {
                 newCartes[j] = carte;
-                newCartes[j + 1] = _cartes[j];
+                newCartes[j + 1] = Cartes[j];
             }
             else
             {
-                newCartes[j] = _cartes[j];
+                newCartes[j] = Cartes[j];
             }
         }
-        _cartes = newCartes;
+        Cartes = newCartes;
     }
 
     public void appendCarte(Carte carte) 
     {
-        Carte[] newCartes = new Carte[_cartes.Length + 1];
-        for (int j = 0; j < _cartes.Length; j++)
+        Carte[] newCartes = new Carte[Cartes.Length + 1];
+        for (int j = 0; j < Cartes.Length; j++)
         {
-            newCartes[j] = _cartes[j];
+            newCartes[j] = Cartes[j];
         }
-        newCartes[_cartes.Length] = carte;
+        newCartes[Cartes.Length] = carte;
 
-        _cartes = newCartes;
+        Cartes = newCartes;
     }
 }

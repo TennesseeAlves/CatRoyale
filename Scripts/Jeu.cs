@@ -1,152 +1,99 @@
 using System;
 using Microsoft.Xna.Framework.Input;
+using System.Xml.Serialization;
 
 namespace TestProjet.Scripts;
 
 
 /* Ce qu'on voudrait pouvoir faire:
- *      -commencer son tour             --> piocher(acces main et deck), remplir jauge(acces joueur), rendre invocs jouable(acces plateau.invoc)
- *      -invoquer une carte             --> selection carte(acces main), verification jauge>=cout(acces joueur et carte), verification case vide (acces plateau), spawn entité(acces plateau et carte.invocation), suppression main(acces main), remise dans deck(acces deck)
- *      -deplacer une entité            --> selection invoc(acces plateau), verification invocateur et jouable(acces invoc), verification case vide(acces plateau), deplacer invoc dans tab(acces plateau), mis a jour de "jouable"(acces invoc)
- *      -attaquer avec une entité       --> selection invoc(acces plateau), verification invocateur et jouable(acces invoc), verification cible valide(acces plateau et invoc), actualiser vie(acces invoc(+cible))
- *      -finir son tour                 --> bouton ou touche
- *      -gagner/perdre/finir une partie --> verification reguliere(acces joueur.vie ou plateau.cristaux)
- *      
- *      -sauvegarder/charger un deck depuis un XML
- *      -sauvegarder/charger un joueur(pseudo,winstreak,deck) depuis un XML
- *      -sauvegarder/charger une partie (en cours ou fini, avec un historique des coups) depuis un XML
+ *      -entrer les pseudo et charger le deck par défaut (et mettre winstreak à 0) si on ne charge pas une partie
+ *      -charger/sauvegarder des joueurs (pseudo + winstreak + deck) mais pas une partie (donc pas plateau ni main)
+ *      -charger/sauvegarder une partie (en cours ou fini) depuis/vers un XML
  *      -afficher un tableau des highscores (en winstreak)
- *
- *
- * Donc, IHM (à peu près):
- *          -selection carte                                                   clavier: .   souris: .
- *          -selection case                                                    clavier: .   souris: .
- *          -selection cible                                                   clavier: .   souris: .
- *          -bouton fin tour                                                   clavier: .   souris: .
- * Main:
- *          -addCarte(Carte carte) : void                                               +
- *          -getCarteAt(int i) : Carte                                                  +
- *          -deleteCarte(Carte carte) : void                                            +
- * Deck:
- *          -piocherCarte() : carte                                                     +
- *          -addCarte(Carte carte) : void                                               +
- * Plateau:
- *          -getEntityAt(int x, int y) : Invocation?                                    +
- *          -isEmpty(int x, int y) : bool                                               +
- *          -invoke(Invocation invoc, int x, int y) : void                              +
- *          -move(int x1, int y1, int x2, int y2) : void                                +
- *          -attack(int x1, int y1, int x2, int y2) : void                              +
- *          (-victoire() : bool?(=joueur_gagnant ou null))                              .
- * Invoc:
- *          -getPeutBouger() : bool                                                     +
- *          -setPeutBouger(bool peutBouger) : void                                      +
- *          -getPeutAttaquer() : bool                                                   +
- *          -setPeutAttaquer(bool peutAttaquer) : void                                  +
- *          -getInvocateur() : Joueur                                                   +
- *          -getAttaque() : int                                                         +
- *          -takeDamage(int degat) : void                                               ~
- * Joueur:
- *          -getJauge() : int                                                           +
- *          -remplirJauge(int niveau) : void                                            +
- *          -reduireJauge(int usage) : void                                             +
+ *      -controler à la souris
+ *      -voir les stats de nos cartes et invoc (vie, attaque, si elles sont jouables...)
+ *      -encercler une invoc et qu'elle ne puisse plus bouger
 */
 /*
  * Problèmes restants:
+ *                      -pas de load and save
+ *                      -pas de deck
  *                      -pas de menu (parties en boucles)
  *                      -doit copier coller controle souris et faire partie sauvegarde
- *                      -pas de deck
  *                      -deplacement en noclip
- * 
  *                      -mana max écrit en dur dans l'affichage
- *                      -
+ *                      -pas de bot en face?
 */
-/*
- * TO DO:
- *          -load and save (donc serialization) --> InitGame et EndGame s'en serviront
- *          -vérifier victoire (et de manière générale accéder au cristal)
- *          -créer la partie d'init (pour pouvoir tester notamment) --> requiert le XML et le load
- *          -créer un premier deck (et les images associés) --> utile pour XML et affichage, pas pour le code
-*/
-/*
- * Première version jouable :
- *                              -pas de menu --> pas de choix (relance des parties en boucles et pas de sauvegarde)
- *                              -deck minimal --> une carte à 5HP 1ATK cout3 et un à 2HP 2ATK cout2
- *                              -pas d'IA --> le joueur controle les 2 joueurs
- *                              -pas d'extra --> ni effet de carte, ni grosse animations, ni deathmatch en endgame...
- * nécéssite:
- *              -load           --> à moi
- *              -verif victoire --> à moi
- */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
 
+[Serializable]
+[XmlRoot("jeu", Namespace = "http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame")]
 public class Jeu
 {
     //données du jeu
-    private Plateau _plateau;
-    private Joueur _joueur1;
-    private Joueur _joueur2;
+    [XmlElement("plateau")] public Plateau Plateau { get; set; }
+    [XmlElement("joueur1")] public Joueur Joueur1 { get; set; }
+    [XmlElement("joueur2")] public Joueur Joueur2 { get; set; }
+    [XmlElement("pseudoJoueurActuel")] public string PseudoJoueurActuel
+    {
+        get => JoueurActuel.Pseudo;
+        set => JoueurActuel = (Joueur1.Pseudo == value)?Joueur1:Joueur2;
+    }
+    [XmlElement("cartesDuJeu")] public ListeDeCartes CartesExistantes { get; set; }
 
     //variables globales aux fonctions
-    private Joueur _joueurActuel; //pour savoir à qui c'est le tour
-    private EtatAutomate _phase;
-    private int _carteI, _caseI, _caseJ,  _lastCaseI, _lastCaseJ;
+    [XmlIgnore] public Joueur JoueurActuel; //pour savoir à qui c'est le tour
+    [XmlIgnore] public EtatAutomate Phase;
+    [XmlIgnore] public int CarteI, CaseI, CaseJ, LastCaseI, LastCaseJ;
 
     //paramètres du jeu
-    private string defaultSaveFileName = "InitGame.xml";
+    private string defaultSaveFileName = "defaultSave.xml";
     private int maxDistanceDeplacement = 3;
     private int maxDistanceAttaque = 2;
     private int vieTour = 30;
-    private int maxJauge = 15;
     private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
 
     //longeur doit être pair et strictement supérieur à 2, largeur doit être impair et srtictement supérieur à 1
     public Jeu(int longueur, int largeur, string nom1, string nom2)
     {
-        _plateau = new Plateau(longueur, largeur);
-        _joueur1 = new Joueur(nom1, 0);
-        _joueur2 = new Joueur(nom2, 0);
-        _joueurActuel = _joueur1;
-        _carteI = 0;
-        _caseI = -1;
-        _caseJ = -1;
-        _lastCaseI = -1;
-        _lastCaseJ = -1;
+        Plateau = new Plateau(longueur, largeur);
+        Joueur1 = new Joueur(nom1, 0);
+        Joueur2 = new Joueur(nom2, 0);
+        CartesExistantes = new ListeDeCartes();
+        JoueurActuel = Joueur1;
+        CarteI = 0;
+        CaseI = -1;
+        CaseJ = -1;
+        LastCaseI = -1;
+        LastCaseJ = -1;
         InitGame(defaultSaveFileName);
-    } 
+    }
+    //sinon si on créer un jeu depuis une sauvegarde
+    public Jeu(string saveFileName)
+    {
+        LoadGame(saveFileName);
+        CarteI = 0;
+        CaseI = -1;
+        CaseJ = -1;
+        LastCaseI = -1;
+        LastCaseJ = -1;
+    }
+    //et le contructeur vide pour le XMLSerializer
+    public Jeu(){}
     
     //-------------------------accesseur---------------------------//
-    public Plateau plateau() { return _plateau; }
-    public Joueur joueur1() { return _joueur1; }
-    public Joueur joueur2() { return _joueur2; }
-    public Joueur joueurActuel() { return _joueurActuel; }
-    public EtatAutomate phase() { return _phase; }
-    public int carteI() { return _carteI; }
-    public int caseI() { return _caseI; }
-    public int caseJ() { return _caseJ; }
-    public int lastCaseI() { return _lastCaseI; }
-    public int lastCaseJ() { return _lastCaseJ; }
-    public bool victory() { return _plateau.victory(_joueurActuel); }
+    public bool victory() { return Plateau.victory(JoueurActuel); }
     
-    public int getLongueur()
+    public int Longueur()
     {
-        return _plateau.getLongueur();
+        return Plateau.Longueur();
     }
     
-    public int getLargeur()
+    public int Largeur()
     {
-        return _plateau.getLargeur();
-    }
-
-    public Invocation getEntityAt(int ligne, int colonne)
-    {
-        return _plateau.getEntityAt(ligne, colonne);
-    }
-
-    public bool isEmpty(int ligne, int colonne)
-    {
-        return _plateau.isEmpty(ligne, colonne);
+        return Plateau.Largeur();
     }
     //-------------------------turnManager---------------------------//
     //début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
@@ -154,54 +101,61 @@ public class Jeu
     {
         //load game (soit une en cours qui a été sauvegarder, soit par défaut une partie au tour 1 avec rien de placé et les jauges rempli)
         LoadGame(SaveFileName);
+        InitTurn();
     }
     //début de tour(remplir jauge, piocher cartes, actualiser les peutBouger et peut Attaquer(mais pas du cristal))
     public void InitTurn()
     {
         //on rempli notre jauge
-        _joueurActuel.remplirJauge(maxJauge);
+        JoueurActuel.remplirJauge();
         int n = 0;
         //tant qu'on a pas pioché trop de carte, qu'on a pas la main pleine, et qu'il nous reste des cartes à piocher dans le deck
-        while (n < nbCartesPiochees && _joueurActuel.getNbCartesInMain() < maxCarteMain && _joueurActuel.getNbCartesInDeck() > 0)
+        while (n < nbCartesPiochees && JoueurActuel.getNbCartesInMain() < maxCarteMain && JoueurActuel.getNbCartesInDeck() > 0)
         {
             //on pioche
-            _joueurActuel.pioche();
+            JoueurActuel.pioche();
             n++;
         }
         //toutes nos invocs sont de nouveau jouables
-        for (int i = 0; i < _plateau.getLargeur(); i++)
+        for (int i = 0; i < Plateau.Largeur(); i++)
         {
-            for (int j = 0; j < _plateau.getLongueur(); j++)
+            for (int j = 0; j < Plateau.Longueur(); j++)
             {
-                Invocation? invoc = _plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.getInvocateur() == _joueurActuel && !_plateau.isTower(invoc))
+                Invocation? invoc = Plateau.getEntityAt(i, j);
+                if (invoc != null && invoc.Invocateur == JoueurActuel && !Plateau.isTower(invoc))
                 {
-                    invoc.setPeutAttaquer(true);
-                    invoc.setPeutBouger(true);
+                    invoc.PeutAttaquer = true;
+                    invoc.PeutBouger = true;
                 }
             }
         }
         //puis on commence le tour
-        _phase = EtatAutomate.SELECTION_CARTE;
-        _carteI = 0;
-        _caseI = -1;
-        _caseJ = -1;
-        _lastCaseI = -1;
-        _lastCaseJ = -1;
+        Phase = EtatAutomate.SELECTION_CARTE;
+        CarteI = 0;
+        CaseI = -1;
+        CaseJ = -1;
+        LastCaseI = -1;
+        LastCaseJ = -1;
     }
     //verification pendant le tour(mana suffisant pour carte, case contenant une invocation ou non, invocation appartenant au bon joueur, invocation peutJouer ou peutBouger, partie fini/gagné)
     public void MainTurn(){}
     //fin de tour(passer la main à l'autre joueur)
     public void EndTurn()
     {
+        
+        //on sauvegarde pour tester
+        XMLManager<Jeu> manager = new XMLManager<Jeu>();
+        string path = "../../../data/xml/autosave.xml";
+        manager.Save(path, this);
+        
         //fonction à garder pour si on ajoute des effets qui s'applique en fin de manche (comme dans l'invocation des 7)
-        if (_joueurActuel == _joueur1)
+        if (JoueurActuel == Joueur1)
         {
-            _joueurActuel = _joueur2;
+            JoueurActuel = Joueur2;
         }
         else
         {
-            _joueurActuel = _joueur1;
+            JoueurActuel = Joueur1;
         }
         InitTurn();
     }
@@ -209,7 +163,7 @@ public class Jeu
     public void EndGame()
     {
         //on augmente la winstreak du gagnant
-        _joueurActuel.setWinStreak(_joueurActuel.getWinStreak()+1);
+        JoueurActuel.WinStreak += 1;
         //on actualise le fichier des highscore
         //si le joueur veut encore jouer
             //alors on relance une nouvelle game de 0
@@ -267,161 +221,161 @@ public class Jeu
             //return pour pas faire le switch (un else indenterait trop)
             return;
         }
-        switch (_phase)
+        switch (Phase)
         {
             case EtatAutomate.SELECTION_CARTE:
-                if (_joueurActuel.getNbCartesInMain() < 1)
+                if (JoueurActuel.getNbCartesInMain() < 1)
                 {
                     //si la main est vide, on a pas de carte à selectionner, on passe donc aux mouvements :
                     //passe phase à SELECTION_CASE_SOURCE
-                    _phase = EtatAutomate.SELECTION_CASE_SOURCE;
+                    Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
-                    _carteI = -1;
+                    CarteI = -1;
                     //reset case
-                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
-                    _caseJ = _plateau.getLargeur()/2;
+                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
+                    CaseJ = Plateau.Largeur()/2;
 
                 }
-                else if (appuieSurGauche(current,last) && _joueurActuel == _joueur1 || appuieSurDroite(current,last) &&  _joueurActuel == _joueur2){
+                else if (appuieSurGauche(current,last) && JoueurActuel == Joueur1 || appuieSurDroite(current,last) &&  JoueurActuel == Joueur2){
                     //décrémente carteI
-                    _carteI = (_carteI>0) ? _carteI-1 : _joueurActuel.getNbCartesInMain()-1;
+                    CarteI = (CarteI>0) ? CarteI-1 : JoueurActuel.getNbCartesInMain()-1;
                 }
-                else if (appuieSurDroite(current,last) && _joueurActuel == _joueur1 || appuieSurGauche(current,last) &&  _joueurActuel == _joueur2){
+                else if (appuieSurDroite(current,last) && JoueurActuel == Joueur1 || appuieSurGauche(current,last) &&  JoueurActuel == Joueur2){
                     //incrément carteI
-                    _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : 0;
+                    CarteI = (CarteI<JoueurActuel.getNbCartesInMain()-1) ? CarteI+1 : 0;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerCarte(_carteI)){
+                else if (appuieSurValide(current,last) && peutSelectionnerCarte(CarteI)){
                     //passe phase à SELECTION_CASE_CARTE
-                    _phase = EtatAutomate.SELECTION_CASE_CARTE;
+                    Phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
-                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
-                    _caseJ = _plateau.getLargeur()/2;
+                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
+                    CaseJ = Plateau.Largeur()/2;
                 }
-                else if ((appuieSurHaut(current,last) && _joueurActuel ==  _joueur1) || (appuieSurBas(current,last) && _joueurActuel ==  _joueur2)){
+                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2)){
                     //passe phase à SELECTION_CASE_SOURCE
-                    _phase = EtatAutomate.SELECTION_CASE_SOURCE;
+                    Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
-                    _carteI = -1;
+                    CarteI = -1;
                     //reset case
-                    _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
-                    _caseJ = _plateau.getLargeur()/2;
+                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
+                    CaseJ = Plateau.Largeur()/2;
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CARTE:
-                if (appuieSurGauche(current,last) && (_joueurActuel == _joueur1 || _caseI > _plateau.getLongueur()/2)){
+                if (appuieSurGauche(current,last) && (JoueurActuel == Joueur1 || CaseI > Plateau.Longueur()/2)){
                     //décrémente caseI
-                    _caseI = (_caseI>0) ? _caseI-1 : _caseI;
+                    CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
-                else if (appuieSurDroite(current,last) && (_joueurActuel == _joueur2 || _caseI+1 < _plateau.getLongueur()/2)){
+                else if (appuieSurDroite(current,last) && (JoueurActuel == Joueur2 || CaseI+1 < Plateau.Longueur()/2)){
                     //incrémente caseI
-                    _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
+                    CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
                 else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
-                    _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
+                    CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
                 else if (appuieSurBas(current,last)){
                     //incrémente caseJ
-                    _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
+                    CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutInvoquer(_carteI,_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutInvoquer(CarteI,CaseJ,CaseI))
                 {
                     //passe phase à SELECTION_CARTE
-                    _phase = EtatAutomate.SELECTION_CARTE;
+                    Phase = EtatAutomate.SELECTION_CARTE;
                     //invoque la carte sur la case
-                    _plateau.invoke(_joueurActuel,_joueurActuel.getCarteInMainAt(_carteI),_caseJ,_caseI);
+                    Plateau.invoke(JoueurActuel,JoueurActuel.getCarteInMainAt(CarteI,CartesExistantes),CaseJ,CaseI);
                     //consomme le mana
-                    _joueurActuel.reduireJauge(_joueurActuel.getCarteInMainAt(_carteI).getCout());
+                    JoueurActuel.reduireJauge(JoueurActuel.getCarteInMainAt(CarteI,CartesExistantes).Cout);
                     //retire la carte de la main et la remet dans le deck
-                    _joueurActuel.putCarteInDeckFromMainAt(_carteI);
+                    JoueurActuel.putCarteInDeckFromMainAt(CarteI);
                     
                     //déselectionne la case
-                    _caseI = -1;
-                    _caseJ = -1;
+                    CaseI = -1;
+                    CaseJ = -1;
                     //reset carte
-                    _carteI = 0;
+                    CarteI = 0;
                 }
 
                 else if (appuieSurRetour(current,last))
                 {
                     //passe phase à SELECTION_CARTE
-                    _phase = EtatAutomate.SELECTION_CARTE;
+                    Phase = EtatAutomate.SELECTION_CARTE;
                     //déselectionne la case
-                    _caseI = -1;
-                    _caseJ = -1;
+                    CaseI = -1;
+                    CaseJ = -1;
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_SOURCE:
                 if (appuieSurGauche(current,last)){
                     //décrémente caseI
-                    _caseI = (_caseI>0) ? _caseI-1 : _caseI;
+                    CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
                 else if (appuieSurDroite(current,last)){
                     //incrémente caseI
-                    _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
+                    CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
                 else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
-                    _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
+                    CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
                 else if (appuieSurBas(current,last)){
                     //incrémente caseJ
-                    _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
+                    CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerInvocation(_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutSelectionnerInvocation(CaseJ,CaseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
-                    _phase = EtatAutomate.SELECTION_CASE_CIBLE;
+                    Phase = EtatAutomate.SELECTION_CASE_CIBLE;
                     //positionne lastCase à case
-                    _lastCaseI = _caseI;
-                    _lastCaseJ = _caseJ;
+                    LastCaseI = CaseI;
+                    LastCaseJ = CaseJ;
                 }
-                else if (appuieSurRetour(current,last) && _joueurActuel.getNbCartesInMain() > 0)
+                else if (appuieSurRetour(current,last) && JoueurActuel.getNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
-                    _phase = EtatAutomate.SELECTION_CARTE;
+                    Phase = EtatAutomate.SELECTION_CARTE;
                     //déselectionne case
-                    _caseI = -1;
-                    _caseJ = -1;
+                    CaseI = -1;
+                    CaseJ = -1;
                     //reset carte
-                    _carteI = 0;
+                    CarteI = 0;
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CIBLE:
                 if (appuieSurGauche(current,last)){
                     //décrémente caseI
-                    _caseI = (_caseI>0) ? _caseI-1 : _caseI;
+                    CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
                 else if (appuieSurDroite(current,last)){
                     //incrémente caseI
-                    _caseI = (_caseI<_plateau.getLongueur()-1) ? _caseI+1 : _caseI;
+                    CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
                 else if (appuieSurHaut(current,last)){
                     //décrémente caseJ
-                    _caseJ = (_caseJ>0) ? _caseJ-1 : _caseJ;
+                    CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
                 else if (appuieSurBas(current,last)){
                     //incrémente caseJ
-                    _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
+                    CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
+                else if (appuieSurValide(current,last) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
-                    _phase = EtatAutomate.SELECTION_CASE_SOURCE;
+                    Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //attaque ou déplace l'invoc en prevCase vers case
-                    AttaqueOuDeplace(_lastCaseJ, _lastCaseI,_caseJ,_caseI);
+                    AttaqueOuDeplace(LastCaseJ, LastCaseI,CaseJ,CaseI);
                     //déselectionne prevCase
-                    _lastCaseI = -1;
-                    _lastCaseJ = -1;
+                    LastCaseI = -1;
+                    LastCaseJ = -1;
                 }
 
                 else if (appuieSurRetour(current,last))
                 {
                     //passe phase SELECTION_CASE_SOURCE
-                    _phase = EtatAutomate.SELECTION_CASE_SOURCE;
+                    Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne prevCase
-                    _lastCaseI = -1;
-                    _lastCaseJ = -1;
+                    LastCaseI = -1;
+                    LastCaseJ = -1;
                 }
                 break;
         }
@@ -432,95 +386,107 @@ public class Jeu
 
     //-------------------------saveManager---------------------------//
     private void LoadGame(String FileName)
-    {
-        //on supprime tout (TEMPORAIRE)
-        _plateau = new Plateau(_plateau.getLongueur(), _plateau.getLargeur());
-        _joueur1 = new Joueur(_joueur1.getPseudo(), _joueur1.getWinStreak());
-        _joueur2 = new Joueur(_joueur2.getPseudo(), _joueur2.getWinStreak());
-        _joueurActuel = _joueur1;
+    {/*
+        //on charge la partie
+        XMLManager<Jeu> manager = new XMLManager<Jeu>();
+        string path = "../../../data/xml/";
+        Jeu tmp = manager.Load(path+FileName);
+        Plateau = tmp.Plateau;
+        Joueur1 = tmp.Joueur1;
+        Joueur1 = tmp.Joueur2;
+        JoueurActuel = tmp.JoueurActuel;
+        CartesExistantes = tmp.CartesExistantes;*/
         
+        //on supprime tout (TEMPORAIRE)
+        Plateau = new Plateau(Plateau.Longueur(), Plateau.Largeur());
+        Joueur1 = new Joueur(Joueur1.Pseudo, Joueur1.WinStreak);
+        Joueur2 = new Joueur(Joueur2.Pseudo, Joueur2.WinStreak);
+        JoueurActuel = Joueur1;
+
         //et on recommence
         Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
         Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
         Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
+        CartesExistantes.appendCarte(TitouChat);
+        CartesExistantes.appendCarte(MagiChat);
+        CartesExistantes.appendCarte(Chatiment);
         //Carte Soin = new Carte(-1, 5, 5, "Soin", "textures/cards/soin", TypeDeCarte.SORT, TypeRarete.COMMUNE, "textures/mobs/soin");
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        
+        Joueur1.addCarteInDeck("TitouChat");
+        Joueur1.addCarteInDeck("TitouChat");
+        Joueur1.addCarteInDeck("TitouChat");
+        Joueur1.addCarteInDeck("TitouChat");
+        Joueur1.addCarteInDeck("TitouChat");
+        Joueur1.addCarteInDeck("MagiChat");
+        Joueur1.addCarteInDeck("MagiChat");
+        Joueur1.addCarteInDeck("MagiChat");
+        Joueur1.addCarteInDeck("MagiChat");
+        Joueur1.addCarteInDeck("MagiChat");
+        Joueur1.addCarteInDeck("Chatiment");
+        Joueur1.addCarteInDeck("Chatiment");
+        Joueur1.addCarteInDeck("Chatiment");
+        Joueur1.addCarteInDeck("Chatiment");
+        Joueur1.addCarteInDeck("Chatiment");
+        Joueur2.addCarteInDeck("TitouChat");
+        Joueur2.addCarteInDeck("TitouChat");
+        Joueur2.addCarteInDeck("TitouChat");
+        Joueur2.addCarteInDeck("TitouChat");
+        Joueur2.addCarteInDeck("TitouChat");
+        Joueur2.addCarteInDeck("MagiChat");
+        Joueur2.addCarteInDeck("MagiChat");
+        Joueur2.addCarteInDeck("MagiChat");
+        Joueur2.addCarteInDeck("MagiChat");
+        Joueur2.addCarteInDeck("MagiChat");
+        Joueur2.addCarteInDeck("Chatiment");
+        Joueur2.addCarteInDeck("Chatiment");
+        Joueur2.addCarteInDeck("Chatiment");
+        Joueur2.addCarteInDeck("Chatiment");
+        Joueur2.addCarteInDeck("Chatiment");
+
         Invocation TowerJ1 = new Invocation(vieTour, 0, "textures/mobs/TourJ1");
         Invocation TowerJ2 = new Invocation(vieTour, 0, "textures/mobs/TourJ2");
-        TowerJ1.setInvocateur(_joueur1);
-        TowerJ2.setInvocateur(_joueur2);
-        TowerJ1.setPeutAttaquer(false);
-        TowerJ2.setPeutAttaquer(false);
-        TowerJ1.setPeutBouger(false);
-        TowerJ2.setPeutBouger(false);
-        
-        _plateau.setTowerJ1(TowerJ1);
-        _plateau.setTowerJ2(TowerJ2);
-        _plateau.setEntityAt(TowerJ1, _plateau.getLargeur()/2, 1);
-        _plateau.setEntityAt(TowerJ2, _plateau.getLargeur()/2, _plateau.getLongueur()-2);
-        InitTurn();
+        TowerJ1.Invocateur = Joueur1;
+        TowerJ2.Invocateur = Joueur2;
+        TowerJ1.PeutAttaquer = false;
+        TowerJ2.PeutAttaquer = false;
+        TowerJ1.PeutBouger = false;
+        TowerJ2.PeutBouger = false;
+
+        Plateau.TowerJ1 = TowerJ1;
+        Plateau.TowerJ2 = TowerJ2;
+        Plateau.setEntityAt(TowerJ1, Plateau.Largeur()/2, 1);
+        Plateau.setEntityAt(TowerJ2, Plateau.Largeur()/2, Plateau.Longueur()-2);
     }
 
     //-------------------------testManager---------------------------//
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable
     private bool peutSelectionnerCarte(int i)
     {
-        Carte carte = _joueurActuel.getCarteInMainAt(i);
-        return _joueurActuel.getJauge() >= carte.getCout();
+        Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
+        return JoueurActuel.Jauge >= carte.Cout;
     }
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une invocation non jouable
     private bool peutSelectionnerInvocation(int lig, int col)
     {
-        Invocation? source = _plateau.getEntityAt(lig, col);
-        return source != null && source.getInvocateur() == _joueurActuel && (source.getPeutAttaquer() || source.getPeutBouger());
+        Invocation? source = Plateau.getEntityAt(lig, col);
+        return source != null && source.Invocateur == JoueurActuel && (source.PeutAttaquer || source.PeutBouger);
     }
     private bool peutInvoquer(int i, int lig, int col)
     {
-        Carte carte = _joueurActuel.getCarteInMainAt(i);
-        return _plateau.isEmpty(lig,col) && _joueurActuel.getJauge() >= carte.getCout();
+        Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
+        return Plateau.isEmpty(lig,col) && JoueurActuel.Jauge >= carte.Cout;
     }
     private bool peutAttaquer(int lig1, int col1, int lig2, int col2)
     {
-        Invocation? source = _plateau.getEntityAt(lig1, col1);
-        Invocation? cible = _plateau.getEntityAt(lig2, col2);
+        Invocation? source = Plateau.getEntityAt(lig1, col1);
+        Invocation? cible = Plateau.getEntityAt(lig2, col2);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
+        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.Invocateur==JoueurActuel && cible.Invocateur != JoueurActuel && source.PeutAttaquer;
     }
     private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
-        Invocation? source = _plateau.getEntityAt(lig1, col1);
+        Invocation? source = Plateau.getEntityAt(lig1, col1);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceDeplacement && source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
+        return distance <= maxDistanceDeplacement && source != null && Plateau.isEmpty(lig2,col2) && source.Invocateur==JoueurActuel && source.PeutBouger;
     }
     private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {
@@ -530,11 +496,11 @@ public class Jeu
     {
         if (peutDeplacer(lig1, col1, lig2, col2))
         {
-            _plateau.move(lig1, col1, lig2, col2);
+            Plateau.move(lig1, col1, lig2, col2);
         }
         else
         {
-            _plateau.attack(lig1, col1, lig2, col2);
+            Plateau.attack(lig1, col1, lig2, col2);
         }
     }
     

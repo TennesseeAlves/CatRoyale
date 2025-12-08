@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jeu xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame">
+    <plateau>
+        <ligneDeCases>
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+        </ligneDeCases>
+        <ligneDeCases>
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+        </ligneDeCases>
+        <ligneDeCases>
+            <case estVide="true" />
+            <case estVide="false">
+                <invocation>
+                    <pseudoInvocateur>Alice</pseudoInvocateur>
+                    <vie>30</vie>
+                    <maxVie>30</maxVie>
+                    <degat>0</degat>
+                    <image>textures/mobs/TourJ1</image>
+                    <peutBouger>false</peutBouger>
+                    <peutAttaquer>false</peutAttaquer>
+                </invocation>
+            </case>
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="false">
+                <invocation>
+                    <pseudoInvocateur>Bob</pseudoInvocateur>
+                    <vie>30</vie>
+                    <maxVie>30</maxVie>
+                    <degat>0</degat>
+                    <image>textures/mobs/TourJ2</image>
+                    <peutBouger>false</peutBouger>
+                    <peutAttaquer>false</peutAttaquer>
+                </invocation>
+            </case>
+            <case estVide="true" />
+        </ligneDeCases>
+        <ligneDeCases>
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+        </ligneDeCases>
+        <ligneDeCases>
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+            <case estVide="true" />
+        </ligneDeCases>
+    </plateau>
+    <joueur1>
+        <pseudo>Alice</pseudo>
+        <winStreak>0</winStreak>
+        <jauge>15</jauge>
+        <main>
+        </main>
+        <deck>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+        </deck>
+    </joueur1>
+    <joueur2>
+        <pseudo>Bob</pseudo>
+        <winStreak>0</winStreak>
+        <jauge>15</jauge>
+        <main />
+        <deck>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>TitouChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>MagiChat</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+            <idCarte>Chatiment</idCarte>
+        </deck>
+    </joueur2>
+    <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
+    <cartesDuJeu>
+        <carte>
+            <vie>10</vie>
+            <degat>5</degat>
+            <nom>TitouChat</nom>
+            <imageCarte>textures/cards/titouchat</imageCarte>
+            <imageInvocation>textures/mobs/titouchat</imageInvocation>
+            <cout>2</cout>
+            <type>combattant</type>
+            <rarete>commune</rarete>
+        </carte>
+        <carte>
+            <vie>25</vie>
+            <degat>8</degat>
+            <nom>MagiChat</nom>
+            <imageCarte>textures/cards/magichat</imageCarte>
+            <imageInvocation>textures/mobs/magichat</imageInvocation>
+            <cout>4</cout>
+            <type>combattant</type>
+            <rarete>rare</rarete>
+        </carte>
+        <carte>
+            <vie>35</vie>
+            <degat>13</degat>
+            <nom>Chatiment</nom>
+            <imageCarte>textures/cards/chatiment</imageCarte>
+            <imageInvocation>textures/mobs/chatiment</imageInvocation>
+            <cout>6</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+    </cartesDuJeu>
+</jeu>

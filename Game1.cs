@@ -66,24 +66,24 @@ public class Game1 : Game
         int direction        // 1 = vers la droite, -1 = vers la gauche
     )
     {
-        for (int cartenum = 0; cartenum < joueur.nbCarteInMain(); cartenum++)
+        for (int cartenum = 0; cartenum < joueur.getNbCartesInMain(); cartenum++)
         {
             int cardX = x + direction * cartenum * espaceCarte;
 
             Rectangle dest = new Rectangle(cardX, y, 70, 100);
 
-            if (joueur == jeuChat.joueurActuel())
+            if (joueur == jeuChat.JoueurActuel)
             {
-                Carte carteAt = joueur.getCarteInMainAt(cartenum);
-                string image = carteAt.getImage();
+                Carte carteAt = joueur.getCarteInMainAt(cartenum,jeuChat.CartesExistantes);
+                string image = carteAt.Image;
 
-                if (jeuChat.carteI() == cartenum)
+                if (jeuChat.CarteI == cartenum)
                 {
                     dest = new Rectangle(cardX, selectionY, 70, 100);
                     _spriteBatch.DrawString(_font, carteAt.ToString(), new Vector2(20, 20), Color.Black);
                 }
 
-                SpriteEffects spriteEffects = (joueur == jeuChat.joueur2())?SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically:SpriteEffects.None;
+                SpriteEffects spriteEffects = (joueur == jeuChat.Joueur2)?SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically:SpriteEffects.None;
                 DrawCarte(dest, Color.White, image, 0,spriteEffects);
             }
             else
@@ -97,8 +97,8 @@ public class Game1 : Game
     
     public void DrawVie(Invocation invocation, int x, int y)
     {
-        int vie = invocation.getVie();
-        int maxVie = invocation.getMaxVie();
+        int vie = invocation.Vie;
+        int maxVie = invocation.MaxVie;
 
         int largeur= 30;
         int hauteur= 5;
@@ -106,7 +106,7 @@ public class Game1 : Game
         Rectangle backRect = new Rectangle(x, y-5,largeur,hauteur);
         
         Color c1, c2;
-        if (invocation.getInvocateur()==jeuChat.joueur1())
+        if (invocation.Invocateur==jeuChat.Joueur1)
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
@@ -116,7 +116,7 @@ public class Game1 : Game
             c1 = Color.Red;
             c2 = Color.LightSalmon;
         }
-        _spriteBatch.DrawString(_font, invocation.getVie()+"/"+invocation.getMaxVie(), new Vector2(x-25, y-35), Color.Black);
+        _spriteBatch.DrawString(_font, invocation.Vie+"/"+invocation.MaxVie, new Vector2(x-25, y-35), Color.Black);
         _spriteBatch.Draw(jauge, backRect, c1);
         
         int manaH = (int)(largeur * ((float)vie/maxVie));
@@ -126,7 +126,7 @@ public class Game1 : Game
     
     public void DrawMana(Joueur joueur, int x, int y)
     {
-        int mana = joueur.getJauge();
+        int mana = joueur.Jauge;
         int maxMana = Joueur.MAXJAUGE;
 
         int largeur= 200;
@@ -135,7 +135,7 @@ public class Game1 : Game
         Rectangle backRect = new Rectangle(x+100, y,largeur,hauteur);
         
         Color c1, c2;
-        if (joueur==jeuChat.joueur1())
+        if (joueur==jeuChat.Joueur1)
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
@@ -180,15 +180,15 @@ public class Game1 : Game
             Exit();
         
         
-        Console.WriteLine("joueurActuel : " + ((jeuChat.joueurActuel() == jeuChat.joueur1())?"joueur1":"joueur2") + "\n" +
-                          "mana : " + jeuChat.joueurActuel().getJauge() + "\n" +
-                          "phase : " + jeuChat.phase() + "\n" +
-                          "main : " + jeuChat.joueurActuel().getNbCartesInMain() + "\n" +
-                          "carteI : " + jeuChat.carteI() + "\n" +
-                          "caseI : " + jeuChat.caseI() + "\n" +
-                          "caseJ : " + jeuChat.caseJ() + "\n" +
-                          "prevI : " + jeuChat.lastCaseI() + "\n" +
-                          "prevJ : " + jeuChat.lastCaseJ() + "\n");
+        Console.WriteLine("joueurActuel : " + ((jeuChat.JoueurActuel == jeuChat.Joueur1)?"joueur1":"joueur2") + "\n" +
+                          "mana : " + jeuChat.JoueurActuel.Jauge + "\n" +
+                          "phase : " + jeuChat.Phase + "\n" +
+                          "main : " + jeuChat.JoueurActuel.getNbCartesInMain() + "\n" +
+                          "carteI : " + jeuChat.CarteI + "\n" +
+                          "caseI : " + jeuChat.CaseI + "\n" +
+                          "caseJ : " + jeuChat.CaseJ + "\n" +
+                          "prevI : " + jeuChat.LastCaseI + "\n" +
+                          "prevJ : " + jeuChat.LastCaseJ + "\n");
         
         //on gère les inputs
         jeuChat.transition(keyboardState,_previousKeyboardState);
@@ -220,16 +220,16 @@ public class Game1 : Game
 
         //draw du plateau
 
-        int taillel  = jeuChat.getLongueur() * taillecase;
-        int tailleh = jeuChat.getLargeur() * taillecase;
+        int taillel  = jeuChat.Longueur() * taillecase;
+        int tailleh = jeuChat.Largeur() * taillecase;
 
 
         int plateauX = (GraphicsDevice.Viewport.Width  - taillel)  / 2;
         int plateauY = (GraphicsDevice.Viewport.Height - tailleh) / 2;
 
-        for (int j = 0; j < jeuChat.getLargeur(); j++)     
+        for (int j = 0; j < jeuChat.Largeur(); j++)     
         {
-            for (int i = 0; i < jeuChat.getLongueur(); i++) 
+            for (int i = 0; i < jeuChat.Longueur(); i++) 
             {
                 int caseX = plateauX + i * taillecase;
                 int caseY = plateauY + j * taillecase;
@@ -237,13 +237,13 @@ public class Game1 : Game
                 Rectangle destcase = new Rectangle(caseX, caseY, taillecase, taillecase);
                 
                 bool selection =
-                    (i == jeuChat.caseI() && j == jeuChat.caseJ()) ||
-                    (i == jeuChat.lastCaseI() && j == jeuChat.lastCaseJ());
+                    (i == jeuChat.CaseI && j == jeuChat.CaseJ) ||
+                    (i == jeuChat.LastCaseI && j == jeuChat.LastCaseJ);
 
                 Color tint = selection ? Color.Cyan : Color.White;
                 if (selection)
                 {
-                    switch (jeuChat.phase())
+                    switch (jeuChat.Phase)
                     {
                         case EtatAutomate.SELECTION_CASE_CARTE:
                             tint = Color.Yellow;
@@ -262,13 +262,13 @@ public class Game1 : Game
                 // draw du pion
                 Rectangle destpion = new Rectangle(caseX+2, caseY-20, 50, 70);
 
-                if (!jeuChat.isEmpty(j, i))
+                if (!jeuChat.Plateau.isEmpty(j, i))
                 {
-                    Invocation entite= jeuChat.getEntityAt(j, i);
+                    Invocation entite= jeuChat.Plateau.getEntityAt(j, i);
                     
-                    String ImageEntite= entite.getImage();
+                    String ImageEntite= entite.Image;
                     Color c;
-                    if (entite.getInvocateur()==jeuChat.joueur1())
+                    if (entite.Invocateur==jeuChat.Joueur1)
                     {
                         c= Color.LightSkyBlue;
                     }
@@ -278,7 +278,7 @@ public class Game1 : Game
                     }
 
                     DrawVie(entite, caseX, caseY);
-                    SpriteEffects spriteEffect =(!jeuChat.plateau().isTower(entite) && entite.getInvocateur() == jeuChat.joueur2()) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    SpriteEffects spriteEffect =(!jeuChat.Plateau.isTower(entite) && entite.Invocateur == jeuChat.Joueur2) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                     DrawCarte(destpion, c, ImageEntite, 0,spriteEffect);
                 }
             }
@@ -288,7 +288,7 @@ public class Game1 : Game
         //afficher cartes joueurs
        
         DrawAllCarte(
-            jeuChat.joueur1(),             
+            jeuChat.Joueur1,             
             plateauX,                         
             GraphicsDevice.Viewport.Height - 30, 
             70,                                 
@@ -298,7 +298,7 @@ public class Game1 : Game
 
         
         DrawAllCarte(
-            jeuChat.joueur2(),    
+            jeuChat.Joueur2,    
             plateauX + 9 * taillecase, 
             -60,                    
             70,                       
@@ -306,8 +306,8 @@ public class Game1 : Game
             -1                       
         );
         
-        DrawMana(jeuChat.joueur1(), GraphicsDevice.Viewport.Width/2-200, GraphicsDevice.Viewport.Height - manaY);
-        DrawMana(jeuChat.joueur2(), GraphicsDevice.Viewport.Width/2-200, manaY);
+        DrawMana(jeuChat.Joueur1, GraphicsDevice.Viewport.Width/2-200, GraphicsDevice.Viewport.Height - manaY);
+        DrawMana(jeuChat.Joueur2, GraphicsDevice.Viewport.Width/2-200, manaY);
         
         _spriteBatch.End();
 

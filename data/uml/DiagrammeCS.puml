@@ -1,0 +1,226 @@
+ puml 
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package CS {
+    class int{}
+    class string{}
+    class bool{}
+}
+
+package MonoGame {
+    class KeyboardState{}
+}
+
+package CatRoyale{
+    
+    class Game1{}
+    
+    class Jeu{
+        +Plateau : Plateau
+        +Joueur1 : Joueur
+        +Joueur2 : Joueur
+        +CartesExistantes : ListeDeCartes
+        +JouerActuel : Joueur
+        +Phase : EtatAutomate
+        +CarteI, CaseI, CaseJ, LastCaseI, LasteCaseJ : int
+        +Jeu(int longueur, int largeur, string nom1, string nom2)
+        +Jeu(string FileName)
+        +Jeu()
+        +victory() : bool
+        +Longueur() : int
+        +Largeur() : int
+        +InitGame() : void
+        +InitTurn() : void
+        +MainTurn() : void
+        +EndTurn() : void
+        +EndGame() : void
+        +transition(KeyboardState current, KeyboardState last) : void
+   }
+    note left of Jeu::JouerActuel
+        JouerActuel toujours égal soit à Joueur1 soit à Joueur2
+    end note
+   
+   enum EtatAutomate {
+        SELECTION_CARTE
+        SELECTION_CASE_CARTE
+        SELECTION_CASE_SOURCE
+        SELECTION_CASE_CIBLE
+   }
+    
+    class Plateau {
+        +TowerJ1 : Invocation
+        +TowerJ2 : Invocation
+        +Map :  ListeDeCases[]
+        +Plateau(int longueur, int largeur)
+        +Plateau()
+        +Longueur() : int
+        +Largeur() : int
+        +setEntityAt(Invocation invoc, int ligne, int colonne) : void
+        +getEntityAt(int ligne, int colonne) : Invocation?
+        +isEmpty(int ligne, int colonne) : bool
+        +deleteAt(int ligne, int colonne) : bool
+        +invoke(Carte carte, int ligne, int colonne Joueur invocateur) : bool
+        +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        +victory(Joueur joueur) : bool
+        +isTower(Invocation invoc) : bool
+    }
+    note right of Plateau::TowerJ1
+        TowerJ1 est juste une référence vers la tour du joueur1
+        pour avoir un accès direct sans la chercher
+    end note
+    note right of Plateau::TowerJ2
+        TowerJ2 est juste une référence vers la tour du joueur2
+        pour avoir un accès direct sans la chercher
+    end note
+    
+    class ListeDeCases{
+        +Cases : CasePlateau
+        +LigneDeCases()
+    }
+    
+    class CasePlateau{
+        +EstVide : bool
+        +Invoc : Invocation?
+        +CasePlateau(bool estVide, Invocation? invocation)
+        +CasePlateau()
+    }
+    note left of CasePlateau::Invoc
+        Invoc vaut null si EstVide est à true
+    end note
+    
+    class Joueur {
+        +Pseudo : string
+        +WinStreak : int
+        +Jauge : int
+        +Main : ListeIdCartes
+        +Deck : ListeIdCartes
+        +MAX_JAUGE = 15
+        +Joueur(string pseudo, int winStreak)
+        +Joueur()
+        +remplirJauge(int niveau) : void
+        +reduireJauge(int usage) : void
+        +getNbCartesInMain() : int
+        +getNbCartesInDeck() : int
+        +addCarteInMain(Carte carte) : void
+        +addCarteInMain(string carte) : void
+        +addCarteInDeck(Carte carte) : void
+        +addCarteInDeck(string carte) : void
+        +getCarteInMainAt(int i, ListeDeCartes Cartes) : Carte
+        +getCarteInDeckAt(int i, ListeDeCartes Cartes) : Carte
+        +deleteCarteInMain(Carte carte) : void
+        +deleteCarteInMainAt(int i) : void
+        +deleteCarteInDeck(Carte carte) : void
+        +deleteCarteInDeckAt(int i) : void
+        +putCarteInDeckFromMainAt(int i) : void
+        +pioche() : void
+    }
+    note right of Joueur::Pseudo
+        Le pseudo est considéré comme unique
+    end note
+    
+    class ListeIdCartes {
+        +IdCartes : string[]
+        +ListeIdCartes()
+        +Length() : int
+        +getCarteAt(int i, ListeDeCartes Cartes) : Carte
+        +getIdAt(int i) : string
+        +setCarteAt(int i, Carte carte) : void
+        +setIdAt(int i, string carte) : void
+        +removeCarteAt(int i, ListeDeCartes Cartes) : Carte
+        +removeIdAt(int i) : string
+        +getIndexOf(Carte carte) : int
+        +getIndexOf(string carte) : int
+        +insertCarteAt(int i, Carte carte) : void
+        +insertIdAt(int i, string carte) : void
+        +appendCarte(Carte carte) : void
+        +appendId(string carte) : void
+    }
+    note right of ListeIdCartes::IdCartes
+        Les string représentent le nom de la carte
+        (supposé unique et existante dans Jeu.CartesExistantes)
+    end note
+    
+    class ListeDeCartes {
+        +Cartes : Carte[]
+        +ListeDeCartes()
+        +Length() : int
+        +getCarteAt(int i) : Carte
+        +setCarteAt(int i, Carte carte) : void
+        +removeCarteAt(int i) : Carte
+        +getIndexOf(Carte carte) : int
+        +insertCarteAt(int i, Carte carte) : void
+        +appendCarte(Carte carte) : void
+    }
+    
+    class Carte {
+        +Vie : int
+        +Degat : int
+        +Nom : string
+        +Image : string 
+        +SpriteInvocation : string
+        +Cout : int
+        +Type : TypeDeCarte
+        +Rarete : TypeRarete
+        '+Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
+        +Carte()
+        +generateInvocation() : Invocation
+        +toString() : string        
+    }
+    
+    class TypeDeCarte <<enum>> {
+        COMBATTANT
+        SORT
+        OBJET
+    }
+    
+    class TypeRarete <<enum>> {
+        COMMUNE
+        RARE
+        EPIQUE
+        LEGENDAIRE
+    }
+    
+    class Invocation {
+        +Vie : int
+        +MaxVie : int
+        +Degat : int
+        +Image : string
+        +PeutBouger : bool
+        +PeutAttaquer : bool
+        +Invocateur : Joueur
+        +PseudoInvocateur : string
+        +Invocation(int vie, int degat, string image)
+        +Invocation()
+        +getVie() : int
+        +takeDamage(int degat) : bool
+        +takeVie(int vie) : bool
+    }
+    note left of Invocation::Invocateur
+        Invocateur est juste une référence vers la joueur qui
+        l'a invoqué, pour avoir un accès direct sans le chercher
+    end note
+    note left of Invocation::PseudoInvocateur
+        PseudoInvocateur est utilisé pour la serialization
+        et contient précisément le pseudo de Invocateur
+    end note
+    
+    Game1 *-- Jeu
+    Jeu *-- Plateau
+    Jeu "1"*--"3" Joueur
+    Jeu *-- ListeDeCartes
+    Jeu *-- EtatAutomate
+    Plateau "1"*--"2" Invocation
+    Plateau "1"*--"*" ListeDeCases
+    ListeDeCases "1"*--"*" CasePlateau
+    CasePlateau "1"*--"0..1" Invocation
+    Joueur "1"*--"2" ListeIdCartes
+    ListeDeCartes "1"*--"*" Carte
+    Carte *-- TypeDeCarte
+    Carte *-- Invocation
+    Carte *-- TypeRarete
+    Invocation *-- Joueur
+}
+@enduml

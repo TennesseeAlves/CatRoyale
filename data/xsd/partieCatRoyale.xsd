@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns:cat="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/CatRoyaleGame"
+        elementFormDefault="qualified"
+>
+    <!-- prefix "cat" comme le mot anglais "chat" :P -->
+
+    <!-- element racine instanciable -->
+    <element name="jeu" type="cat:Jeu"/>
+
+    <!-- Jeu -->
+    <complexType name="Jeu">
+        <sequence>
+            <element name="plateau" type="cat:Plateau"/>
+            <element name="joueur1" type="cat:Joueur"/>
+            <element name="joueur2" type="cat:Joueur"/>
+            <element name="pseudoJoueurActuel" type="string"/> <!-- TODO: clef existence -->
+            <element name="cartesDuJeu" type="cat:ListeDeCartes"/>
+        </sequence>
+    </complexType>
+
+    <!-- Plateau -->
+    <complexType name="Plateau">
+        <sequence>
+            <element name="ligneDeCases" type="cat:LigneDeCases" minOccurs="5" maxOccurs="5"/>
+        </sequence>
+    </complexType>
+
+    <!-- LigneDeCases -->
+    <complexType name="LigneDeCases">
+        <sequence>
+            <element name="case" type="cat:Case" minOccurs="10" maxOccurs="10"/>
+        </sequence>
+    </complexType>
+
+    <!-- Case -->
+    <complexType name="Case">
+        <sequence>
+            <element name="invocation" type="cat:Invocation" minOccurs="0"/>
+        </sequence>
+        <attribute name="estVide" type="boolean" use="required"/>
+    </complexType>
+
+    <!-- Invocation -->
+    <complexType name="Invocation">
+        <sequence>
+            <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef existence -->
+            <element name="vie" type="int"/>
+            <element name="maxVie" type="int"/>
+            <element name="degat" type="int"/>
+            <element name="image" type="string"/>
+            <element name="peutBouger" type="boolean"/>
+            <element name="peutAttaquer" type="boolean"/>
+        </sequence>
+    </complexType>
+
+    <!-- Joueur -->
+    <complexType name="Joueur">
+        <sequence>
+            <element name="pseudo" type="string"/>
+            <element name="winStreak" type="int"/>
+            <element name="jauge" type="int"/>
+            <element name="main" type="cat:ListeIdCarte"/>
+            <element name="deck" type="cat:ListeIdCarte"/>
+        </sequence>
+    </complexType>
+
+    <!-- ListeIdCarte -->
+    <complexType name="ListeIdCarte">
+        <sequence>
+            <element name="idCarte" type="string" minOccurs="0" maxOccurs="unbounded"/> <!-- TODO: clef existence -->
+        </sequence>
+    </complexType>
+
+    <!-- ListeDeCartes -->
+    <complexType name="ListeDeCartes">
+        <sequence>
+            <element name="carte" type="cat:Carte" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <!-- Carte -->
+    <complexType name="Carte">
+        <sequence>
+            <element name="vie" type="int"/>
+            <element name="degat" type="int"/>
+            <element name="nom" type="string"/> <!-- TODO: unicite id -->
+            <element name="imageCarte" type="string"/>
+            <element name="imageInvocation" type="string"/>
+            <element name="cout" type="int"/>
+            <element name="type" type="cat:TypeDeCarte"/>
+            <element name="rarete" type="cat:TypeRarete"/>
+        </sequence>
+    </complexType>
+
+
+    <!-- ### Simple Types Simple Life ### -->
+
+    <!-- TypeDeCarte -->
+    <simpleType name="TypeDeCarte">
+        <restriction base="string">
+            <enumeration value="combattant"/>
+            <enumeration value="sort"/>
+            <enumeration value="objet"/>
+        </restriction>
+    </simpleType>
+
+    <!-- typeRarete -->
+    <simpleType name="TypeRarete">
+        <restriction base="string">
+            <enumeration value="commune"/>
+            <enumeration value="rare"/>
+            <enumeration value="épique"/>
+            <enumeration value="légendaire"/>
+        </restriction>
+    </simpleType>
+
+</schema>    

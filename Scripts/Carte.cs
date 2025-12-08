@@ -1,120 +1,71 @@
+using System;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TestProjet.Scripts;
 
-public enum TypeDeCarte { COMBATTANT, SORT, OBJET }
+public enum TypeDeCarte
+{
+    [XmlEnum("combattant")] COMBATTANT,
+    [XmlEnum("sort")] SORT,
+    [XmlEnum("objet")] OBJET
+}
 
-public enum TypeRarete { COMMUNE, RARE, EPIQUE, LEGENDAIRE }
+public enum TypeRarete
+{
+    [XmlEnum("commune")] COMMUNE,
+    [XmlEnum("rare")] RARE,
+    [XmlEnum("épique")] EPIQUE,
+    [XmlEnum("légendaire")] LEGENDAIRE
+}
 
+[XmlType("Carte")]
 public class Carte
 {
-    private int _vie;
-    private int _degat;
-    private int _cout;
-    private string _nom;
-    private string _image;
-    private TypeDeCarte _type;
-    private TypeRarete _rarete;
-    private string spriteInvocation;
-    //constructeur
+    [XmlElement("vie")] public int Vie {
+        get => _vie;
+        set => _vie = (value < 0) ? 0 : value;
+    }
+    [XmlElement("degat")] public int Degat { get; set; }
+    [XmlElement("nom")] public string Nom { get; set; }
+    [XmlElement("imageCarte")] public string Image { get; set; }
+    [XmlElement("imageInvocation")] public string SpriteInvocation { get; set; }
+    [XmlElement("cout")] public int Cout { get; set; }
+    [XmlElement("type")] public TypeDeCarte Type { get; set; }
+    [XmlElement("rarete")] public TypeRarete Rarete { get; set; }
+    //champs internes
+    [XmlIgnore] private int _vie;
+    
+    //constructeurs
     public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
     {
-        setVie(vie);
-        setDegat(degat);
-        setCout(cout);
-        setNom(nom);
-        setImage(image);
-        this.spriteInvocation = spriteInvocation;
-        setType(type);
-        setRarete(rarete);
+        Vie = vie;
+        Degat = degat;
+        Nom = nom;
+        Image = image;
+        SpriteInvocation = spriteInvocation;
+        Cout = cout;
+        Type = type;
+        Rarete = rarete;
         
     }
-    
-    //getters et setters
-    public int getVie()
-    {
-        return _vie;
-    }
-    public void setVie(int vie)
-    {
-        if (vie < 0)
-        {
-            _vie = 0;
-        }
-        else
-        {
-            _vie = vie;
-        }
-    }
-
-    public int getDegat()
-    {
-        return _degat;
-    }
-    public void setDegat(int degat)
-    {
-        _degat =  degat;
-    }
-
-    public int getCout()
-    {
-        return _cout;
-    }
-    public void setCout(int cout)
-    {
-        _cout = cout;
-    }
-
-    public string getNom()
-    {
-        return _nom;
-    }
-    public void setNom(string nom)
-    {
-        _nom = nom;
-    }
-
-    public string getImage()
-    {
-        return _image;
-    }
-    public void setImage(string image)
-    {
-        _image = image;
-    }
+    //constructeur vide pour le XMLSerializer
+    public Carte() { }
 
     public Invocation generateInvocation()
     {
         
-        return new Invocation(getVie(), getDegat(), spriteInvocation);
-    }
-
-    public TypeDeCarte getType()
-    {
-        return _type;
-    }
-    public void setType(TypeDeCarte type)
-    {
-        _type  = type;
-    }
-
-    public TypeRarete getRarete()
-    {
-        return _rarete;
-    }
-    public void setRarete(TypeRarete rarete)
-    {
-        _rarete  = rarete;
+        return new Invocation(Vie, Degat, SpriteInvocation);
     }
 
     public override string ToString()
     {
-        return "Nom: "+getNom()+"\n"+ 
-               "Cout: "+getCout()+"\n"+
-               "Type: "+getType()+"\n"+
-               "Rareté: "+getRarete()+"\n"+
-               "Degat: "+getDegat()+"\n"+ 
-               "Vie: "+getVie()+"\n" ;
+        return "Nom: "+Nom+"\n"+ 
+               "Cout: "+Cout+"\n"+
+               "Type: "+Type+"\n"+
+               "Rareté: "+Rarete+"\n"+
+               "Degat: "+Degat+"\n"+ 
+               "Vie: "+Vie+"\n" ;
         
     }
 }
