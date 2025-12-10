@@ -5,11 +5,7 @@ namespace TestProjet.Scripts;
 [XmlType("Invocation")]
 public class Invocation
 {
-    [XmlIgnore] public Joueur Invocateur { get; set; }
-    [XmlElement("pseudoInvocateur")] public string PseudoInvocateur {
-        get => Invocateur.Pseudo;
-        set => Invocateur.Pseudo = value;
-    }
+    [XmlElement("pseudoInvocateur")] public string PseudoInvocateur { get; set; }
     [XmlElement("vie")] public int Vie {
         get => _vie;
         set => _vie = (value < 0) ? 0 : value;

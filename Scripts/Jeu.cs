@@ -47,7 +47,7 @@ public class Jeu
     [XmlIgnore] public EtatAutomate Phase;
     [XmlIgnore] public int CarteI, CaseI, CaseJ, LastCaseI, LastCaseJ;
 
-    //paramètres du jeu
+    //paramètres du jeu (à voir ce qu'on a fait)
     private string defaultSaveFileName = "defaultSave.xml";
     private int maxDistanceDeplacement = 3;
     private int maxDistanceAttaque = 2;
@@ -74,6 +74,7 @@ public class Jeu
     public Jeu(string saveFileName)
     {
         LoadGame(saveFileName);
+        Phase = EtatAutomate.SELECTION_CARTE;
         CarteI = 0;
         CaseI = -1;
         CaseJ = -1;
@@ -122,7 +123,7 @@ public class Jeu
             for (int j = 0; j < Plateau.Longueur(); j++)
             {
                 Invocation? invoc = Plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.Invocateur == JoueurActuel && !Plateau.isTower(invoc))
+                if (invoc != null && invoc.PseudoInvocateur == JoueurActuel.Pseudo && !Plateau.isTower(invoc))
                 {
                     invoc.PeutAttaquer = true;
                     invoc.PeutBouger = true;
@@ -142,11 +143,8 @@ public class Jeu
     //fin de tour(passer la main à l'autre joueur)
     public void EndTurn()
     {
-        
-        //on sauvegarde pour tester
-        XMLManager<Jeu> manager = new XMLManager<Jeu>();
-        string path = "../../../data/xml/autosave.xml";
-        manager.Save(path, this);
+
+        SaveGame("autosave.xml");
         
         //fonction à garder pour si on ajoute des effets qui s'applique en fin de manche (comme dans l'invocation des 7)
         if (JoueurActuel == Joueur1)
@@ -385,76 +383,24 @@ public class Jeu
     //TO DO
 
     //-------------------------saveManager---------------------------//
-    private void LoadGame(String FileName)
-    {/*
+    public void SaveGame(String FileName)
+    {
+        XMLManager<Jeu> manager = new XMLManager<Jeu>();
+        string path = "../../../data/xml/";
+        manager.Save(path+FileName, this);
+    }
+    public void LoadGame(String FileName)
+    {
         //on charge la partie
         XMLManager<Jeu> manager = new XMLManager<Jeu>();
         string path = "../../../data/xml/";
-        Jeu tmp = manager.Load(path+FileName);
+        Jeu tmp = (Jeu)manager.Load(path+FileName);
         Plateau = tmp.Plateau;
+        Plateau.InitAfterLoad();
         Joueur1 = tmp.Joueur1;
-        Joueur1 = tmp.Joueur2;
+        Joueur2 = tmp.Joueur2;
         JoueurActuel = tmp.JoueurActuel;
-        CartesExistantes = tmp.CartesExistantes;*/
-        
-        //on supprime tout (TEMPORAIRE)
-        Plateau = new Plateau(Plateau.Longueur(), Plateau.Largeur());
-        Joueur1 = new Joueur(Joueur1.Pseudo, Joueur1.WinStreak);
-        Joueur2 = new Joueur(Joueur2.Pseudo, Joueur2.WinStreak);
-        JoueurActuel = Joueur1;
-
-        //et on recommence
-        Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
-        Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
-        Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
-        CartesExistantes.appendCarte(TitouChat);
-        CartesExistantes.appendCarte(MagiChat);
-        CartesExistantes.appendCarte(Chatiment);
-        //Carte Soin = new Carte(-1, 5, 5, "Soin", "textures/cards/soin", TypeDeCarte.SORT, TypeRarete.COMMUNE, "textures/mobs/soin");
-        Joueur1.addCarteInDeck("TitouChat");
-        Joueur1.addCarteInDeck("TitouChat");
-        Joueur1.addCarteInDeck("TitouChat");
-        Joueur1.addCarteInDeck("TitouChat");
-        Joueur1.addCarteInDeck("TitouChat");
-        Joueur1.addCarteInDeck("MagiChat");
-        Joueur1.addCarteInDeck("MagiChat");
-        Joueur1.addCarteInDeck("MagiChat");
-        Joueur1.addCarteInDeck("MagiChat");
-        Joueur1.addCarteInDeck("MagiChat");
-        Joueur1.addCarteInDeck("Chatiment");
-        Joueur1.addCarteInDeck("Chatiment");
-        Joueur1.addCarteInDeck("Chatiment");
-        Joueur1.addCarteInDeck("Chatiment");
-        Joueur1.addCarteInDeck("Chatiment");
-        Joueur2.addCarteInDeck("TitouChat");
-        Joueur2.addCarteInDeck("TitouChat");
-        Joueur2.addCarteInDeck("TitouChat");
-        Joueur2.addCarteInDeck("TitouChat");
-        Joueur2.addCarteInDeck("TitouChat");
-        Joueur2.addCarteInDeck("MagiChat");
-        Joueur2.addCarteInDeck("MagiChat");
-        Joueur2.addCarteInDeck("MagiChat");
-        Joueur2.addCarteInDeck("MagiChat");
-        Joueur2.addCarteInDeck("MagiChat");
-        Joueur2.addCarteInDeck("Chatiment");
-        Joueur2.addCarteInDeck("Chatiment");
-        Joueur2.addCarteInDeck("Chatiment");
-        Joueur2.addCarteInDeck("Chatiment");
-        Joueur2.addCarteInDeck("Chatiment");
-
-        Invocation TowerJ1 = new Invocation(vieTour, 0, "textures/mobs/TourJ1");
-        Invocation TowerJ2 = new Invocation(vieTour, 0, "textures/mobs/TourJ2");
-        TowerJ1.Invocateur = Joueur1;
-        TowerJ2.Invocateur = Joueur2;
-        TowerJ1.PeutAttaquer = false;
-        TowerJ2.PeutAttaquer = false;
-        TowerJ1.PeutBouger = false;
-        TowerJ2.PeutBouger = false;
-
-        Plateau.TowerJ1 = TowerJ1;
-        Plateau.TowerJ2 = TowerJ2;
-        Plateau.setEntityAt(TowerJ1, Plateau.Largeur()/2, 1);
-        Plateau.setEntityAt(TowerJ2, Plateau.Largeur()/2, Plateau.Longueur()-2);
+        CartesExistantes = tmp.CartesExistantes;
     }
 
     //-------------------------testManager---------------------------//
@@ -468,7 +414,7 @@ public class Jeu
     private bool peutSelectionnerInvocation(int lig, int col)
     {
         Invocation? source = Plateau.getEntityAt(lig, col);
-        return source != null && source.Invocateur == JoueurActuel && (source.PeutAttaquer || source.PeutBouger);
+        return source != null && source.PseudoInvocateur == JoueurActuel.Pseudo && (source.PeutAttaquer || source.PeutBouger);
     }
     private bool peutInvoquer(int i, int lig, int col)
     {
@@ -480,13 +426,13 @@ public class Jeu
         Invocation? source = Plateau.getEntityAt(lig1, col1);
         Invocation? cible = Plateau.getEntityAt(lig2, col2);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.Invocateur==JoueurActuel && cible.Invocateur != JoueurActuel && source.PeutAttaquer;
+        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.PseudoInvocateur==JoueurActuel.Pseudo && cible.PseudoInvocateur != JoueurActuel.Pseudo && source.PeutAttaquer;
     }
     private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = Plateau.getEntityAt(lig1, col1);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceDeplacement && source != null && Plateau.isEmpty(lig2,col2) && source.Invocateur==JoueurActuel && source.PeutBouger;
+        return distance <= maxDistanceDeplacement && source != null && Plateau.isEmpty(lig2,col2) && source.PseudoInvocateur==JoueurActuel.Pseudo && source.PeutBouger;
     }
     private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {
@@ -503,11 +449,4 @@ public class Jeu
             Plateau.attack(lig1, col1, lig2, col2);
         }
     }
-    
-    /* MONOGAME FUNCTIONS
-     * protected override void Initialize();
-     * protected override void LoadContent();
-     * protected override void Update(GameTime gameTime);
-     * protected override void Draw(GameTime gameTime);
-     */
 }

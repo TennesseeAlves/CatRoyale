@@ -15,6 +15,7 @@ public class ListeIdCartes
 
     public int Length()
     {
+        if (IdCartes == null) IdCartes = new string[0]; //--------------------------------------------------------------
         return IdCartes.Length;
     }
 

@@ -38,7 +38,8 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        jeuChat = new Jeu(10, 5, "Alice", "Bob");
+        //jeuChat = new Jeu(10, 5, "Alice", "Bob");
+        jeuChat= new Jeu("autosave.xml");
     }
     
     public void DrawCarte(Rectangle dest, Color tint, String image, int degrees, SpriteEffects spriteEffect)
@@ -106,7 +107,7 @@ public class Game1 : Game
         Rectangle backRect = new Rectangle(x, y-5,largeur,hauteur);
         
         Color c1, c2;
-        if (invocation.Invocateur==jeuChat.Joueur1)
+        if (invocation.PseudoInvocateur==jeuChat.Joueur1.Pseudo)
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
@@ -177,7 +178,10 @@ public class Game1 : Game
     {
         KeyboardState keyboardState = Keyboard.GetState();
         if (keyboardState.IsKeyDown(Keys.Escape))
+        {
+            jeuChat.SaveGame("autosave.xml");
             Exit();
+        }
         
         
         Console.WriteLine("joueurActuel : " + ((jeuChat.JoueurActuel == jeuChat.Joueur1)?"joueur1":"joueur2") + "\n" +
@@ -268,7 +272,7 @@ public class Game1 : Game
                     
                     String ImageEntite= entite.Image;
                     Color c;
-                    if (entite.Invocateur==jeuChat.Joueur1)
+                    if (entite.PseudoInvocateur==jeuChat.Joueur1.Pseudo)
                     {
                         c= Color.LightSkyBlue;
                     }
@@ -278,7 +282,7 @@ public class Game1 : Game
                     }
 
                     DrawVie(entite, caseX, caseY);
-                    SpriteEffects spriteEffect =(!jeuChat.Plateau.isTower(entite) && entite.Invocateur == jeuChat.Joueur2) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    SpriteEffects spriteEffect =(!jeuChat.Plateau.isTower(entite) && entite.PseudoInvocateur == jeuChat.Joueur2.Pseudo) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                     DrawCarte(destpion, c, ImageEntite, 0,spriteEffect);
                 }
             }

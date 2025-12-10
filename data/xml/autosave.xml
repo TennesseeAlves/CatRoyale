@@ -21,10 +21,10 @@
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <vie>35</vie>
-          <maxVie>35</maxVie>
-          <degat>13</degat>
-          <image>textures/mobs/chatiment</image>
+          <vie>10</vie>
+          <maxVie>10</maxVie>
+          <degat>5</degat>
+          <image>textures/mobs/titouchat</image>
           <peutBouger>true</peutBouger>
           <peutAttaquer>true</peutAttaquer>
         </invocation>
@@ -33,13 +33,13 @@
       <case estVide="true" />
       <case estVide="false">
         <invocation>
-          <pseudoInvocateur>Bob</pseudoInvocateur>
+          <pseudoInvocateur>Alice</pseudoInvocateur>
           <vie>35</vie>
           <maxVie>35</maxVie>
           <degat>13</degat>
           <image>textures/mobs/chatiment</image>
           <peutBouger>true</peutBouger>
-          <peutAttaquer>false</peutAttaquer>
+          <peutAttaquer>true</peutAttaquer>
         </invocation>
       </case>
       <case estVide="true" />
@@ -62,11 +62,11 @@
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <vie>25</vie>
-          <maxVie>25</maxVie>
-          <degat>8</degat>
-          <image>textures/mobs/magichat</image>
-          <peutBouger>true</peutBouger>
+          <vie>10</vie>
+          <maxVie>10</maxVie>
+          <degat>5</degat>
+          <image>textures/mobs/titouchat</image>
+          <peutBouger>false</peutBouger>
           <peutAttaquer>true</peutAttaquer>
         </invocation>
       </case>
@@ -75,7 +75,7 @@
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <vie>22</vie>
+          <vie>35</vie>
           <maxVie>35</maxVie>
           <degat>13</degat>
           <image>textures/mobs/chatiment</image>
@@ -87,7 +87,7 @@
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Bob</pseudoInvocateur>
-          <vie>17</vie>
+          <vie>4</vie>
           <maxVie>30</maxVie>
           <degat>0</degat>
           <image>textures/mobs/TourJ2</image>
@@ -109,13 +109,23 @@
           <maxVie>10</maxVie>
           <degat>5</degat>
           <image>textures/mobs/titouchat</image>
-          <peutBouger>true</peutBouger>
+          <peutBouger>false</peutBouger>
           <peutAttaquer>true</peutAttaquer>
         </invocation>
       </case>
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="true" />
+      <case estVide="false">
+        <invocation>
+          <pseudoInvocateur>Alice</pseudoInvocateur>
+          <vie>35</vie>
+          <maxVie>35</maxVie>
+          <degat>13</degat>
+          <image>textures/mobs/chatiment</image>
+          <peutBouger>true</peutBouger>
+          <peutAttaquer>true</peutAttaquer>
+        </invocation>
+      </case>
       <case estVide="true" />
       <case estVide="true" />
     </ligneDeCases>
@@ -137,23 +147,23 @@
     <winStreak>0</winStreak>
     <jauge>15</jauge>
     <main>
-      <idCarte>Chatiment</idCarte>
+      <idCarte>TitouChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>TitouChat</idCarte>
-      <idCarte>Chatiment</idCarte>
       <idCarte>MagiChat</idCarte>
-      <idCarte>TitouChat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>Chatiment</idCarte>
     </main>
     <deck>
       <idCarte>TitouChat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>Chatiment</idCarte>
+      <idCarte>Chatiment</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>MagiChat</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Chatiment</idCarte>
-      <idCarte>Chatiment</idCarte>
-      <idCarte>MagiChat</idCarte>
     </deck>
   </joueur1>
   <joueur2>
@@ -161,17 +171,17 @@
     <winStreak>0</winStreak>
     <jauge>15</jauge>
     <main>
+      <idCarte>TitouChat</idCarte>
       <idCarte>MagiChat</idCarte>
+      <idCarte>TitouChat</idCarte>
       <idCarte>Chatiment</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>TitouChat</idCarte>
+      <idCarte>MagiChat</idCarte>
       <idCarte>Chatiment</idCarte>
     </main>
     <deck>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
-      <idCarte>MagiChat</idCarte>
+      <idCarte>TitouChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>

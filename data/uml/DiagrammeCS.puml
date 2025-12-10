@@ -37,6 +37,8 @@ package CatRoyale{
         +EndTurn() : void
         +EndGame() : void
         +transition(KeyboardState current, KeyboardState last) : void
+        +SaveGame(string FileName): void
+        +LoadGame(string FileName): void
    }
     note left of Jeu::JouerActuel
         JouerActuel toujours égal soit à Joueur1 soit à Joueur2

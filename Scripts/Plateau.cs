@@ -46,27 +46,7 @@ public class Plateau
     [XmlIgnore] public Invocation TowerJ2 { get; set; }
 
     [XmlElement("ligneDeCases")]
-    public List<LigneDeCases> Map
-    {
-        get => _map;
-        set
-        {
-            int largeur = value.Count;
-            int longueur = value[0].Cases.Count;
-
-            for (int y = 0; y < largeur; y++)
-            {
-                for (int x = 0; x < longueur; x++)
-                {
-                    _map[y].Cases[x] = value[y].Cases[x];
-                }
-            }
-            TowerJ1 = _map[largeur/2].Cases[1].Invoc;
-            TowerJ1 = _map[largeur/2].Cases[longueur-2].Invoc;
-        }
-    }
-    //champs internes
-    [XmlIgnore] private List<LigneDeCases> _map;
+    public List<LigneDeCases> Map {get; set;}
 
     public Plateau(int longueur, int largeur)
     {
@@ -80,14 +60,30 @@ public class Plateau
             }
             lignes.Add(ligne);
         }
-        _map = lignes;
+        Map = lignes;
     }
     
     //contructeur vide pour le XMLSerializer
-    public Plateau() { }
+    public Plateau()
+    {
+        Map = new List<LigneDeCases>();
+    }
+
+    public void InitAfterLoad()
+    {
+        int largeur = Map.Count;
+        int longueur = Map[0].Cases.Count;
+
+        TowerJ1 = Map[largeur/2].Cases[1].Invoc;
+        TowerJ2 = Map[largeur/2].Cases[longueur-2].Invoc;
+    }
 
     public int Longueur()
     {
+        if (Largeur() == 0)
+        {
+            return 0;
+        }
         return Map[0].Cases.Count;
     }
 
@@ -133,7 +129,7 @@ public class Plateau
     {   
         Map[ligne].Cases[colonne].EstVide = false;
         Map[ligne].Cases[colonne].Invoc = carte.generateInvocation();
-        Map[ligne].Cases[colonne].Invoc.Invocateur = joueur;
+        Map[ligne].Cases[colonne].Invoc.PseudoInvocateur = joueur.Pseudo;
     }
 
     public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
@@ -158,7 +154,7 @@ public class Plateau
 
     public bool victory(Joueur joueur)
     {
-        return TowerJ1.Invocateur == joueur && TowerJ2.Vie == 0 || TowerJ2.Invocateur == joueur && TowerJ1.Vie == 0;
+        return TowerJ1.PseudoInvocateur == joueur.Pseudo && TowerJ2.Vie == 0 || TowerJ2.PseudoInvocateur == joueur.Pseudo && TowerJ1.Vie == 0;
     }
 
     public bool isTower(Invocation invoc)
