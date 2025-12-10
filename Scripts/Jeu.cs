@@ -83,6 +83,7 @@ public class Jeu
     private int maxJauge = 15;
     private int maxCarteMain = 6;
     private int nbCartesPiochees = 2;
+    private bool invoquer=false;
 
     //longeur doit être pair et strictement supérieur à 2, largeur doit être impair et srtictement supérieur à 1
     public Jeu(int longueur, int largeur, string nom1, string nom2)
@@ -239,7 +240,7 @@ public class Jeu
         return current.IsKeyDown(Keys.Space) && !last.IsKeyDown(Keys.Space);
     }
     
-    public void transition(KeyboardState current, KeyboardState last)
+    public void transition(KeyboardState current, KeyboardState last, int phase)
     {
         //déselectionne = met à -1 (donc pas visible à l'affichage)
         //reset = met à 0 (donc de nouveau visible et pos par défaut)
@@ -273,14 +274,14 @@ public class Jeu
                     //incrément carteI
                     _carteI = (_carteI<_joueurActuel.getNbCartesInMain()-1) ? _carteI+1 : 0;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerCarte(_carteI)){
+                else if ((appuieSurValide(current,last) || phase == 0) && peutSelectionnerCarte(_carteI) ){
                     //passe phase à SELECTION_CASE_CARTE
                     _phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
                     _caseI = (_joueurActuel==_joueur1)?1:_plateau.getLongueur()-2;
                     _caseJ = _plateau.getLargeur()/2;
                 }
-                else if ((appuieSurHaut(current,last) && _joueurActuel ==  _joueur1) || (appuieSurBas(current,last) && _joueurActuel ==  _joueur2)){
+                else if ((appuieSurHaut(current,last) && _joueurActuel ==  _joueur1) || (appuieSurBas(current,last) && _joueurActuel ==  _joueur2) || phase == 1){
                     //passe phase à SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
@@ -307,7 +308,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last) && peutInvoquer(_carteI,_caseJ,_caseI))
+                else if ((appuieSurValide(current,last) || phase == 2) && peutInvoquer(_carteI,_caseJ,_caseI))
                 {
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -323,9 +324,10 @@ public class Jeu
                     _caseJ = -1;
                     //reset carte
                     _carteI = 0;
+              
                 }
 
-                else if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last)||phase == -1)
                 {
                     //passe phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -351,7 +353,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerInvocation(_caseJ,_caseI))
+                else if ((appuieSurValide(current,last) || phase == 3)  && peutSelectionnerInvocation(_caseJ,_caseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     _phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -359,7 +361,7 @@ public class Jeu
                     _lastCaseI = _caseI;
                     _lastCaseJ = _caseJ;
                 }
-                else if (appuieSurRetour(current,last) && _joueurActuel.getNbCartesInMain() > 0)
+                else if (appuieSurRetour(current,last)|| phase == -1 && _joueurActuel.getNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
                     _phase = EtatAutomate.SELECTION_CARTE;
@@ -387,7 +389,7 @@ public class Jeu
                     //incrémente caseJ
                     _caseJ = (_caseJ<_plateau.getLargeur()-1) ? _caseJ+1 : _caseJ;
                 }
-                else if (appuieSurValide(current,last) && peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
+                else if ((appuieSurValide(current,last) || phase == 4) && peutAttaquerOuDeplacer(_lastCaseJ,_lastCaseI,_caseJ,_caseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -398,7 +400,7 @@ public class Jeu
                     _lastCaseJ = -1;
                 }
 
-                else if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last)|| phase == -1)
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     _phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -413,6 +415,36 @@ public class Jeu
     //---SOURIS---//
     //TO DO
 
+    public void setCarteI(int carteI)
+    {
+        this._carteI = carteI;
+    }
+    
+    public void setCaseIJ(int caseI, int caseJ)
+    {
+        this._caseI = caseI;
+        this._caseJ = caseJ;
+    }
+    
+    public void setPhase(EtatAutomate phase)
+    {
+        this._phase = phase;
+    }
+    
+    public EtatAutomate getPhase()
+    {
+        return this._phase;
+    }
+
+    public int getLastCaseI()
+    {
+        return _lastCaseI;
+    }
+    public int getLastCaseJ()
+    {
+        return _lastCaseJ;
+    }
+    
     //-------------------------saveManager---------------------------//
     private void LoadGame(String FileName)
     {
@@ -423,40 +455,57 @@ public class Jeu
         _joueurActuel = _joueur1;
         
         //et on recommence
-        Carte TitouChat = new Carte(10, 5, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
-        Carte MagiChat = new Carte(25, 8, 4, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
-        Carte Chatiment = new Carte(35, 13, 6, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
-        //Carte Soin = new Carte(-1, 5, 5, "Soin", "textures/cards/soin", TypeDeCarte.SORT, TypeRarete.COMMUNE, "textures/mobs/soin");
+        
+        Carte KidCat = new Carte(8, 3, 1, "KidCat", "textures/cards/kidcat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/kidcat");
+        Carte TitouChat = new Carte(20, 4, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
+        Carte Archeron = new Carte(12, 8, 3, "Archeron", "textures/cards/archeron", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/archeron");
+        Carte MagiChat = new Carte(14, 7, 3, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
+        Carte Catboom = new Carte(6, 22, 4, "Catboom", "textures/cards/catboom", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/catboom");
+        Carte Persianator = new Carte(28, 6, 4, "Persianator", "textures/cards/persianator", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/persianator");
+        Carte Tactix = new Carte(45, 8, 5, "Tactix", "textures/cards/tactix", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/tactix");
+        Carte Blackcat = new Carte(25, 15, 5, "Blackcat", "textures/cards/blackcat", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/blackcat");
+        Carte Wrench = new Carte(35, 12, 6, "Wrench", "textures/cards/wrench", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/wrench");
+        Carte Chatiment = new Carte(40, 14, 7, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
+        Carte Vortrex = new Carte(32, 20, 7, "Vortrex", "textures/cards/vortrex", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/vortrex");
+        Carte Neochrom = new Carte(55, 16, 8, "Neochrom", "textures/cards/neochrom", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/neochrom");
+        Carte Tigris = new Carte(70, 10, 8, "Tigris", "textures/cards/tigris", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tigris");
+        Carte Tyranis = new Carte(65, 25, 9, "Tyranis", "textures/cards/tyranis", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tyranis");
+        Carte Arcanemao = new Carte(45, 30, 9, "Arcanemao", "textures/cards/arcanemao", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/arcanemao");
+        Carte Chronos = new Carte(80, 15, 10, "Chronos", "textures/cards/chronos", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/chronos");
+
+        _joueur1.addCarteInDeck(KidCat);
         _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
-        _joueur1.addCarteInDeck(TitouChat);
+        _joueur1.addCarteInDeck(Archeron);
         _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
-        _joueur1.addCarteInDeck(MagiChat);
+        _joueur1.addCarteInDeck(Catboom);
+        _joueur1.addCarteInDeck(Persianator);
+        _joueur1.addCarteInDeck(Tactix);
+        _joueur1.addCarteInDeck(Blackcat);
+        _joueur1.addCarteInDeck(Wrench);
         _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
-        _joueur1.addCarteInDeck(Chatiment);
+        _joueur1.addCarteInDeck(Vortrex);
+        _joueur1.addCarteInDeck(Neochrom);
+        _joueur1.addCarteInDeck(Tigris);
+        _joueur1.addCarteInDeck(Tyranis);
+        _joueur1.addCarteInDeck(Arcanemao);
+        _joueur1.addCarteInDeck(Chronos);
+
+        _joueur2.addCarteInDeck(KidCat);
         _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
-        _joueur2.addCarteInDeck(TitouChat);
+        _joueur2.addCarteInDeck(Archeron);
         _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
-        _joueur2.addCarteInDeck(MagiChat);
+        _joueur2.addCarteInDeck(Catboom);
+        _joueur2.addCarteInDeck(Persianator);
+        _joueur2.addCarteInDeck(Tactix);
+        _joueur2.addCarteInDeck(Blackcat);
+        _joueur2.addCarteInDeck(Wrench);
         _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
-        _joueur2.addCarteInDeck(Chatiment);
+        _joueur2.addCarteInDeck(Vortrex);
+        _joueur2.addCarteInDeck(Neochrom);
+        _joueur2.addCarteInDeck(Tigris);
+        _joueur2.addCarteInDeck(Tyranis);
+        _joueur2.addCarteInDeck(Arcanemao);
+        _joueur2.addCarteInDeck(Chronos);
         
         Invocation TowerJ1 = new Invocation(vieTour, 0, "textures/mobs/TourJ1");
         Invocation TowerJ2 = new Invocation(vieTour, 0, "textures/mobs/TourJ2");
@@ -476,7 +525,7 @@ public class Jeu
 
     //-------------------------testManager---------------------------//
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable
-    private bool peutSelectionnerCarte(int i)
+    public bool peutSelectionnerCarte(int i)
     {
         Carte carte = _joueurActuel.getCarteInMainAt(i);
         return _joueurActuel.getJauge() >= carte.getCout();
@@ -487,7 +536,7 @@ public class Jeu
         Invocation? source = _plateau.getEntityAt(lig, col);
         return source != null && source.getInvocateur() == _joueurActuel && (source.getPeutAttaquer() || source.getPeutBouger());
     }
-    private bool peutInvoquer(int i, int lig, int col)
+    public bool peutInvoquer(int i, int lig, int col)
     {
         Carte carte = _joueurActuel.getCarteInMainAt(i);
         return _plateau.isEmpty(lig,col) && _joueurActuel.getJauge() >= carte.getCout();
@@ -499,25 +548,32 @@ public class Jeu
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
         return distance <= maxDistanceAttaque &&  source != null && cible != null && source.getInvocateur()==_joueurActuel && cible.getInvocateur() != _joueurActuel && source.getPeutAttaquer();
     }
-    private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
+    public bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = _plateau.getEntityAt(lig1, col1);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
         return distance <= maxDistanceDeplacement && source != null && _plateau.isEmpty(lig2,col2) && source.getInvocateur()==_joueurActuel && source.getPeutBouger();
     }
-    private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
+    public bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
+    
     {
-        return peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2);
+     
+        return (peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2));
     }
+
     private void AttaqueOuDeplace(int lig1, int col1, int lig2, int col2)
     {
-        if (peutDeplacer(lig1, col1, lig2, col2))
+        bool surMoiMeme = lig1 == lig2 && col1 == col2;
+        if (!surMoiMeme)
         {
-            _plateau.move(lig1, col1, lig2, col2);
-        }
-        else
-        {
-            _plateau.attack(lig1, col1, lig2, col2);
+            if (peutDeplacer(lig1, col1, lig2, col2))
+            {
+                _plateau.move(lig1, col1, lig2, col2);
+            }
+            else
+            {
+                _plateau.attack(lig1, col1, lig2, col2);
+            }
         }
     }
     

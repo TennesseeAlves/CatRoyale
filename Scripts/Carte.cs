@@ -86,7 +86,7 @@ public class Carte
     public Invocation generateInvocation()
     {
         
-        return new Invocation(getVie(), getDegat(), spriteInvocation);
+        return new Invocation(getVie(), getDegat(), spriteInvocation, this);
     }
 
     public TypeDeCarte getType()

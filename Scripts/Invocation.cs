@@ -9,6 +9,14 @@ public class Invocation
     private bool _peutBouger;
     private bool _peutAttaquer;
     private Joueur _invocateur;
+    private Carte carte;
+    
+    public Invocation(int vie, int degat, string image, Carte carte)
+        : this(vie, degat, image)
+    {
+        this.carte = carte;
+        
+    }
     
     //constructeur
     public Invocation(int vie, int degat, string image)
@@ -19,6 +27,7 @@ public class Invocation
         setImage(image);
         setPeutBouger(false);
         setPeutAttaquer(false);
+        this.carte = null;
     }
     
     //getters et setters
@@ -118,5 +127,10 @@ public class Invocation
         {
             _vie = _maxvie;
         }
+    }
+
+    public Carte getCarte()
+    {
+        return carte;
     }
 }
