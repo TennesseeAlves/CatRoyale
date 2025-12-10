@@ -23,6 +23,7 @@ namespace TestProjet.Scripts;
  *                      -deplacement en noclip
  *                      -mana max écrit en dur dans l'affichage
  *                      -pas de bot en face?
+ *                      -sort de vie et de dégats (degat negatif pour vie)
 */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
@@ -208,7 +209,7 @@ public class Jeu
         return current.IsKeyDown(Keys.Space) && !last.IsKeyDown(Keys.Space);
     }
     
-    public void transition(KeyboardState current, KeyboardState last)
+    public void transition(KeyboardState current, KeyboardState last, int phase)
     {
         //déselectionne = met à -1 (donc pas visible à l'affichage)
         //reset = met à 0 (donc de nouveau visible et pos par défaut)
@@ -242,14 +243,14 @@ public class Jeu
                     //incrément carteI
                     CarteI = (CarteI<JoueurActuel.getNbCartesInMain()-1) ? CarteI+1 : 0;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerCarte(CarteI)){
+                else if ((appuieSurValide(current,last) || phase == 0) && peutSelectionnerCarte(CarteI)){
                     //passe phase à SELECTION_CASE_CARTE
                     Phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
                     CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
                     CaseJ = Plateau.Largeur()/2;
                 }
-                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2)){
+                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2) || phase == 1){
                     //passe phase à SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
@@ -276,7 +277,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutInvoquer(CarteI,CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phase == 2) && peutInvoquer(CarteI,CaseJ,CaseI))
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -294,7 +295,7 @@ public class Jeu
                     CarteI = 0;
                 }
 
-                else if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last)||phase == -1)
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -320,7 +321,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutSelectionnerInvocation(CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phase == 3) && peutSelectionnerInvocation(CaseJ,CaseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     Phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -328,7 +329,7 @@ public class Jeu
                     LastCaseI = CaseI;
                     LastCaseJ = CaseJ;
                 }
-                else if (appuieSurRetour(current,last) && JoueurActuel.getNbCartesInMain() > 0)
+                else if (appuieSurRetour(current,last)|| phase == -1 && JoueurActuel.getNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -356,7 +357,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if (appuieSurValide(current,last) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phase == 4) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -367,7 +368,7 @@ public class Jeu
                     LastCaseJ = -1;
                 }
 
-                else if (appuieSurRetour(current,last))
+                else if (appuieSurRetour(current,last)|| phase == -1)
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -401,11 +402,30 @@ public class Jeu
         Joueur2 = tmp.Joueur2;
         JoueurActuel = tmp.JoueurActuel;
         CartesExistantes = tmp.CartesExistantes;
+        
+        /*
+        Carte KidCat = new Carte(8, 3, 1, "KidCat", "textures/cards/kidcat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/kidcat");
+        Carte TitouChat = new Carte(20, 4, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
+        Carte Archeron = new Carte(12, 8, 3, "Archeron", "textures/cards/archeron", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/archeron");
+        Carte MagiChat = new Carte(14, 7, 3, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
+        Carte Catboom = new Carte(6, 22, 4, "Catboom", "textures/cards/catboom", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/catboom");
+        Carte Persianator = new Carte(28, 6, 4, "Persianator", "textures/cards/persianator", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/persianator");
+        Carte Tactix = new Carte(45, 8, 5, "Tactix", "textures/cards/tactix", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/tactix");
+        Carte Blackcat = new Carte(25, 15, 5, "Blackcat", "textures/cards/blackcat", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/blackcat");
+        Carte Wrench = new Carte(35, 12, 6, "Wrench", "textures/cards/wrench", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/wrench");
+        Carte Chatiment = new Carte(40, 14, 7, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
+        Carte Vortrex = new Carte(32, 20, 7, "Vortrex", "textures/cards/vortrex", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/vortrex");
+        Carte Neochrom = new Carte(55, 16, 8, "Neochrom", "textures/cards/neochrom", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/neochrom");
+        Carte Tigris = new Carte(70, 10, 8, "Tigris", "textures/cards/tigris", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tigris");
+        Carte Tyranis = new Carte(65, 25, 9, "Tyranis", "textures/cards/tyranis", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tyranis");
+        Carte Arcanemao = new Carte(45, 30, 9, "Arcanemao", "textures/cards/arcanemao", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/arcanemao");
+        Carte Chronos = new Carte(80, 15, 10, "Chronos", "textures/cards/chronos", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/chronos");
+        */
     }
 
     //-------------------------testManager---------------------------//
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable
-    private bool peutSelectionnerCarte(int i)
+    public bool peutSelectionnerCarte(int i)
     {
         Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
         return JoueurActuel.Jauge >= carte.Cout;
@@ -416,7 +436,7 @@ public class Jeu
         Invocation? source = Plateau.getEntityAt(lig, col);
         return source != null && source.PseudoInvocateur == JoueurActuel.Pseudo && (source.PeutAttaquer || source.PeutBouger);
     }
-    private bool peutInvoquer(int i, int lig, int col)
+    public bool peutInvoquer(int i, int lig, int col)
     {
         Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
         return Plateau.isEmpty(lig,col) && JoueurActuel.Jauge >= carte.Cout;
@@ -428,16 +448,19 @@ public class Jeu
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
         return distance <= maxDistanceAttaque &&  source != null && cible != null && source.PseudoInvocateur==JoueurActuel.Pseudo && cible.PseudoInvocateur != JoueurActuel.Pseudo && source.PeutAttaquer;
     }
-    private bool peutDeplacer(int lig1, int col1, int lig2, int col2)
+    public bool peutDeplacer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = Plateau.getEntityAt(lig1, col1);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
         return distance <= maxDistanceDeplacement && source != null && Plateau.isEmpty(lig2,col2) && source.PseudoInvocateur==JoueurActuel.Pseudo && source.PeutBouger;
     }
-    private bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
+    public bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
+    
     {
-        return peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2);
+     
+        return (peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2));
     }
+
     private void AttaqueOuDeplace(int lig1, int col1, int lig2, int col2)
     {
         if (peutDeplacer(lig1, col1, lig2, col2))
