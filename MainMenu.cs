@@ -20,10 +20,11 @@ public class MainMenu
     private static int boutonHauteur = 160;
     private static int x = (1024  - boutonLargeur) / 2;
     private static int y = (640 - boutonHauteur) / 2;
-    private static int ecart = 5;
-    Rectangle boutonStart = new Rectangle(x, y-(boutonHauteur+ecart), boutonLargeur, boutonHauteur);
-    Rectangle boutonCharger = new Rectangle(x, y, boutonLargeur, boutonHauteur);
-    Rectangle boutonQuitter = new Rectangle(x+115, y+boutonHauteur+ecart, 160, boutonHauteur);
+    private static int ecart = 4;
+    private static int offsety = 55;
+    Rectangle boutonStart = new Rectangle(x, y+offsety-(boutonHauteur+ecart), boutonLargeur, boutonHauteur);
+    Rectangle boutonCharger = new Rectangle(x, y+offsety, boutonLargeur, boutonHauteur);
+    Rectangle boutonQuitter = new Rectangle(x+115, y+boutonHauteur+ecart+offsety, 160, boutonHauteur);
     
     
     static MouseState EtatActuelSouris;
@@ -61,25 +62,17 @@ public class MainMenu
                 case 0:
                     Console.WriteLine("START");
                     CatRoyal.setMenu(EtatMenu.INGAME);
+                    
                     break;
                 case 1:
                     Console.WriteLine("CHARGER");
                     break;
                 case 2:
                     Console.WriteLine("Quitter");
-                    //CatRoyal.quitter();
+                    CatRoyal.Quitter();
                     break;
             }
         }
-        else
-        {
-           
-      
-        }
-        
-
-
-
 
     }
 

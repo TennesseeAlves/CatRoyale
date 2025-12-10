@@ -10,7 +10,7 @@ public enum EtatMenu { MENUMAIN,INGAME, ENDGAME }
 public class CatRoyal : Game
 {
     
-        
+    
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D _background, _case;
@@ -19,10 +19,10 @@ public class CatRoyal : Game
     private Texture2D jauge;
 
     private static EtatMenu _menu= EtatMenu.MENUMAIN;
-    private Jeu jeuChat;
     
     private MainMenu menuMain;
     private InGame menuInGame;
+    private MenuEnd menuEnd;
     
     private SpriteFont _font;
     private MouseState _previousMouseState;
@@ -30,6 +30,7 @@ public class CatRoyal : Game
     private static int taillecase = 55;
 
     private static int manaY = 130;  
+    private static Boolean quitter = false;
 
     public CatRoyal()
     {
@@ -45,7 +46,6 @@ public class CatRoyal : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         
-        //jeuChat = new Jeu(10, 5, "Alice", "Bob");
     }
     
     
@@ -53,6 +53,7 @@ public class CatRoyal : Game
     {
         menuMain = new MainMenu();
         menuInGame = new InGame();
+        menuEnd= new MenuEnd();
         base.Initialize();
     }
 
@@ -61,11 +62,16 @@ public class CatRoyal : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         menuMain.LoadContent(Content);
         menuInGame.LoadContent(Content, GraphicsDevice);
+        menuEnd.LoadContent(Content);
   
     }
 
     protected override void Update(GameTime gameTime)
     {
+        if (quitter)
+        {
+            Exit();
+        }
         switch (_menu)
         {
             case EtatMenu.MENUMAIN:
@@ -73,6 +79,9 @@ public class CatRoyal : Game
                 break;
             case EtatMenu.INGAME:
                 menuInGame.Update(gameTime, _graphics);
+                break;
+            case EtatMenu.ENDGAME:
+                menuEnd.Update(gameTime);
                 break;
                 
         }
@@ -87,10 +96,16 @@ public class CatRoyal : Game
         switch (_menu)
         {
             case EtatMenu.MENUMAIN:
+                menuInGame.jeuChat.EndGame();
                 menuMain.Draw(gameTime, GraphicsDevice, _spriteBatch);
                 break;
             case EtatMenu.INGAME:
                 menuInGame.Draw(gameTime,  GraphicsDevice, Content,_spriteBatch);
+                break;
+            case EtatMenu.ENDGAME:
+                Joueur joueur = menuInGame.joueurWin;
+                String texte = joueur.getPseudo();
+                menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, texte);
                 break;
                 
         }
@@ -103,8 +118,8 @@ public class CatRoyal : Game
         _menu = menu;
     }
 
-    public void Quitter()
+    public static void Quitter()
     {
-        //Instance.Exit();
+        quitter = true;
     }
 }
