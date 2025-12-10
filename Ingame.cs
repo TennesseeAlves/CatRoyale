@@ -146,7 +146,10 @@ public class InGame
             }
             else
             {
-                DrawCarte(dest, Color.White, _carteBaseImage, 0, SpriteEffects.None, content, spriteBatch);
+                SpriteEffects spriteEffects = (joueur == jeuChat.joueur2())
+                    ? SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically
+                    : SpriteEffects.None;
+                DrawCarte(dest, Color.White, _carteBaseImage, 0, SpriteEffects, content, spriteBatch);
             }
 
 
@@ -219,8 +222,8 @@ public class InGame
         }
         else
         {
-            c1 = Color.Red;
-            c2 = Color.LightSalmon;
+            c1 = Color.Maroon;
+            c2 = Color.Red;
         }
         
         
@@ -297,8 +300,8 @@ public class InGame
         if (jeuChat.victory())
         {
             //alors finir la partie
-            jeuChat.EndGame();
             joueurWin = jeuChat.joueurActuel();
+            jeuChat.EndGame();
             
             CatRoyal.setMenu(EtatMenu.ENDGAME);
             Console.WriteLine("-------------------------GAGNÉ--------------------------------");
@@ -463,8 +466,8 @@ public class InGame
         DrawAllCarte(
             jeuChat.joueur1(),
             plateauX,
-            graphics.Viewport.Height - 40,
-            90,
+            graphics.Viewport.Height - 100,
+            50,
             450,
             1,
             content,
@@ -475,8 +478,8 @@ public class InGame
         DrawAllCarte(
             jeuChat.joueur2(),
             plateauX + 9 * taillecase,
-            -100,
-            90,
+            -50,
+            50,
             50,
             -1,
             content,

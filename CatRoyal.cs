@@ -6,7 +6,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 using TestProjet.Scripts;
 
 namespace TestProjet;
-public enum EtatMenu { MENUMAIN,INGAME, ENDGAME }
+public enum EtatMenu { MENUMAIN, INGAME, ENDGAME }
 public class CatRoyal : Game
 {
     
