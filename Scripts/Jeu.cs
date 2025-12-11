@@ -535,6 +535,9 @@ public class Jeu
         else
         {
             _plateau.attack(lig1, col1, lig2, col2);
+            //sound effect de attaquer
+            
+            
         }
     }
     

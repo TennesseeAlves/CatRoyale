@@ -16,6 +16,12 @@ public class Game1 : Game
     private KeyboardState _previousKeyboardState;
     private String _carteBaseImage;
     private Texture2D jauge;
+    
+    private SoundEffect _soundEffect;
+    private Song _song;
+        
+        
+    
 
     
     private Jeu jeuChat;
@@ -165,6 +171,11 @@ public class Game1 : Game
         _case = Content.Load<Texture2D>("textures/map/case");
         _carteBaseImage = "textures/cards/carte_base";
         _font = Content.Load<SpriteFont>("font");
+        
+        _soundEffect = Content.Load<SoundEffect>("textures/sound/attack");
+        _song = Content.Load<Song>("song");
+        
+        
 
         jauge = new Texture2D(GraphicsDevice, 1, 1);
         jauge.SetData(new[]
@@ -175,6 +186,8 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        
+        
         KeyboardState keyboardState = Keyboard.GetState();
         if (keyboardState.IsKeyDown(Keys.Escape))
             Exit();

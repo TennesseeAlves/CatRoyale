@@ -7,7 +7,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ec71d613-2dfc-4514-80e2-695e4dee864a" name="Changes" comment="" />
+    <list default="true" id="ec71d613-2dfc-4514-80e2-695e4dee864a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Scripts/MediaPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Content.mgcb" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Content.mgcb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Game1.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Game1.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/Jeu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Jeu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/Plateau.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Plateau.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/Song.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Song.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/SoundEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/SoundEffect.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="burha" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -45,6 +54,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Scripts/MediaPlayer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Scripts/Song.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Scripts/SoundEffect.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -68,6 +78,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;soundBurha&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -126,6 +137,7 @@
       <workItem from="1764796373101" duration="2166000" />
       <workItem from="1764838210350" duration="626000" />
       <workItem from="1764852162047" duration="3431000" />
+      <workItem from="1764856805843" duration="6621000" />
     </task>
     <task id="LOCAL-00001" summary="modif (modifica) : xsd et uml (Partie xml)">
       <option name="closed" value="true" />
@@ -135,7 +147,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764685089670</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fich rider interne">
+      <option name="closed" value="true" />
+      <created>1764856871420</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1764856871420</updated>
+    </task>
+    <task id="LOCAL-00003" summary="&quot;fich interne rider&quot;">
+      <option name="closed" value="true" />
+      <created>1764856936149</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1764856936149</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,7 +174,9 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="modif (modifica) : xsd et uml (Partie xml)" />
-    <option name="LAST_COMMIT_MESSAGE" value="modif (modifica) : xsd et uml (Partie xml)" />
+    <MESSAGE value="fich rider interne" />
+    <MESSAGE value="&quot;fich interne rider&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;fich interne rider&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

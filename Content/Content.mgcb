@@ -164,3 +164,15 @@
 /processorParam:TextureFormat=Color
 /build:textures/mobs/TourJ2.png
 
+#begin textures/sound/fantaisy-land-289934.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:textures/sound/fantaisy-land-289934.mp3;textures/sound/musiqueDeFond.mp3
+
+#begin textures/sound/mixkit-little-cat-pain-meow-87.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:textures/sound/mixkit-little-cat-pain-meow-87.wav;textures/sound/attack.wav
+

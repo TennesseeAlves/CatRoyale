@@ -93,9 +93,16 @@ public class Plateau
         //effectue l'attaque et vérifie s'il est mort
         if (_map[ligneArrive, colonneArrive].takeDamage(_map[ligneDepart, colonneDepart].getDegat()))
         {
+           
             _map[ligneArrive, colonneArrive] = null;
         }
         _map[ligneDepart,colonneDepart].setPeutAttaquer(false);
+        
+    }
+
+    public void effetSonore(string nomEffet)
+    {
+        
     }
 
     public bool victory(Joueur joueur)

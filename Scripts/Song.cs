@@ -1,4 +1,4 @@
-namespace TestProjet.Scripts;
+﻿namespace TestProjet.Scripts;
 
 public class Song
 {
