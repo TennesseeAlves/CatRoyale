@@ -497,8 +497,13 @@ public class InGame
         EtatAutomate phaseCourante = CatRoyal.jeuChat.Phase;
 
         // ici on gere le clique sur carte
-        foreach (CarteCliquable r in _zonesCartes)
+        //Console.WriteLine("");
+        
+        //gerer le chevauchement en partant du haut
+        int i;
+        for (i = _zonesCartes.Count - 1; i >= 0; i--)
         {
+            CarteCliquable r = _zonesCartes[i];
             if (r.zone.Contains(ms.Position))
             {
                 int oldCarte = CatRoyal.jeuChat.CarteI;
@@ -508,8 +513,10 @@ public class InGame
                 if (phaseCourante == EtatAutomate.SELECTION_CARTE)
                 {
                     //valide le clique
+                    //Console.WriteLine(r.i);
                     if (oldCarte == r.i)
                     {
+                        //Console.WriteLine("valide");
                         phase = 0; 
                     }
                     
@@ -524,7 +531,10 @@ public class InGame
                 }
                 
                 _previousMouseState = ms;
+                return;
             }
+
+            
         }
 
         // gerer un clique sur plateau 
