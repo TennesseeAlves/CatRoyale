@@ -1,110 +1,164 @@
 using System;
+using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace TestProjet.Scripts;
 
+
+//J'ai tout revu à cause de la serialization.
+//Il y avait très certainement bien mieux et très facilement, mais j'ai pas trouvé et j'en ai eu marre donc j'ai tout refait de 0.
+
+//classes intermédiaire pour la sérialization
+[XmlType("CasePlateau")]
+public class CasePlateau
+{
+    [XmlAttribute("estVide")] public bool EstVide { get; set; }
+    [XmlElement("invocation")] public Invocation? Invoc { get; set; }
+
+    public CasePlateau()
+    {
+        EstVide = true;
+        Invoc = null;
+    }
+
+    public CasePlateau(bool estVide, Invocation? invocation)
+    {
+        EstVide = estVide;
+        Invoc = invocation;
+    }
+}
+[XmlType("LigneDeCases")]
+public class LigneDeCases
+{
+    [XmlElement("case")] public List<CasePlateau> Cases { get; set; }
+
+    public LigneDeCases()
+    {
+        Cases = new List<CasePlateau>();
+    }
+}
+
+
+[XmlType("Plateau")]
 public class Plateau
 {
-    private Invocation _TowerJ1;
-    private Invocation _TowerJ2;
-    private Invocation?[,] _map;
+    [XmlIgnore] public Invocation TowerJ1 { get; set; }
+    [XmlIgnore] public Invocation TowerJ2 { get; set; }
+
+    [XmlElement("ligneDeCases")]
+    public List<LigneDeCases> Map {get; set;}
 
     public Plateau(int longueur, int largeur)
     {
-        _map = new Invocation?[largeur, longueur];
+        List<LigneDeCases> lignes = new List<LigneDeCases>();
+        for (int i = 0; i < largeur; i++)
+        {
+            LigneDeCases ligne = new LigneDeCases();
+            for (int j = 0; j < longueur; j++)
+            {
+                ligne.Cases.Add(new CasePlateau());
+            }
+            lignes.Add(ligne);
+        }
+        Map = lignes;
+    }
+    
+    //contructeur vide pour le XMLSerializer
+    public Plateau()
+    {
+        Map = new List<LigneDeCases>();
     }
 
-    public int getLongueur()
+    public void InitAfterLoad()
     {
-        return _map.GetLength(1);
+        int largeur = Map.Count;
+        int longueur = Map[0].Cases.Count;
+
+        TowerJ1 = Map[largeur/2].Cases[1].Invoc;
+        TowerJ2 = Map[largeur/2].Cases[longueur-2].Invoc;
     }
 
-    public int getLargeur()
+    public int Longueur()
     {
-        return _map.GetLength(0);
+        if (Largeur() == 0)
+        {
+            return 0;
+        }
+        return Map[0].Cases.Count;
     }
 
-    public Invocation getTowerJ1()
+    public int Largeur()
     {
-        return _TowerJ1;
-    }
-
-    public void setTowerJ1(Invocation TowerJ1)
-    {
-        _TowerJ1 = TowerJ1;
-    }
-
-    public Invocation getTowerJ2()
-    {
-        return _TowerJ2;
-    }
-
-    public void setTowerJ2(Invocation TowerJ2)
-    {
-        _TowerJ2 = TowerJ2;
+        return Map.Count;
     }
 
     public void setEntityAt(Invocation invoc, int ligne, int colonne)
     {
-        _map[ligne, colonne] = invoc;
+        Map[ligne].Cases[colonne].EstVide = (invoc==null);
+        Map[ligne].Cases[colonne].Invoc = invoc;
     }
     public Invocation? getEntityAt(int ligne, int colonne)
     {
-        if (ligne >= _map.GetLength(0) || ligne < 0 || colonne >= _map.GetLength(1) || colonne < 0)
+        if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        return _map[ligne, colonne];
+        return Map[ligne].Cases[colonne].Invoc;
     }
 
     public bool isEmpty(int ligne, int colonne)
     {
-        if (ligne >= _map.GetLength(0) || ligne < 0 || colonne >= _map.GetLength(1) || colonne < 0)
+        if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        return (_map[ligne, colonne] == null);
+        return Map[ligne].Cases[colonne].EstVide;
     }
 
     public void deleteAt(int ligne, int colonne)
     {
-        if (ligne >= _map.GetLength(0) || ligne < 0 || colonne >= _map.GetLength(1) || colonne < 0)
+        if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        _map[ligne, colonne] = null;
+        Map[ligne].Cases[colonne].EstVide = true;
+        Map[ligne].Cases[colonne].Invoc = null;
     }
 
     public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
     {   
-        
-        _map[ligne, colonne] = carte.generateInvocation();
-        _map[ligne, colonne].setInvocateur(joueur);
+        Map[ligne].Cases[colonne].EstVide = false;
+        Map[ligne].Cases[colonne].Invoc = carte.generateInvocation();
+        Map[ligne].Cases[colonne].Invoc.PseudoInvocateur = joueur.Pseudo;
     }
 
     public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
-            _map[ligneArrive, colonneArrive] = _map[ligneDepart, colonneDepart];
-            _map[ligneDepart, colonneDepart] = null;
-            _map[ligneArrive, colonneArrive].setPeutBouger(false);
+        Map[ligneArrive].Cases[colonneArrive].EstVide = false;
+        Map[ligneArrive].Cases[colonneArrive].Invoc = Map[ligneDepart].Cases[colonneDepart].Invoc;
+        Map[ligneDepart].Cases[colonneDepart].EstVide = true;
+        Map[ligneDepart].Cases[colonneDepart].Invoc = null;
+        Map[ligneArrive].Cases[colonneArrive].Invoc.PeutBouger = false;
     }
 
     public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
         //effectue l'attaque et vérifie s'il est mort
-        if (_map[ligneArrive, colonneArrive].takeDamage(_map[ligneDepart, colonneDepart].getDegat()))
+        if (Map[ligneArrive].Cases[colonneArrive].Invoc.takeDamage(Map[ligneDepart].Cases[colonneDepart].Invoc.Degat))
         {
-            _map[ligneArrive, colonneArrive] = null;
+            Map[ligneArrive].Cases[colonneArrive].EstVide = true;
+            Map[ligneArrive].Cases[colonneArrive].Invoc = null;
         }
-        _map[ligneDepart,colonneDepart].setPeutAttaquer(false);
+        Map[ligneDepart].Cases[colonneDepart].Invoc.PeutAttaquer = false;
     }
 
     public bool victory(Joueur joueur)
     {
-        return _TowerJ1.getInvocateur() == joueur && _TowerJ2.getVie() == 0 || _TowerJ2.getInvocateur() == joueur && _TowerJ1.getVie() == 0;
+        return TowerJ1.PseudoInvocateur == joueur.Pseudo && TowerJ2.Vie == 0 || TowerJ2.PseudoInvocateur == joueur.Pseudo && TowerJ1.Vie == 0;
     }
 
     public bool isTower(Invocation invoc)
     {
-        return invoc == _TowerJ1 || invoc == _TowerJ2;
+        return invoc == TowerJ1 || invoc == TowerJ2;
     }
 }

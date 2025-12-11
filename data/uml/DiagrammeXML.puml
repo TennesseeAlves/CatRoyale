@@ -1,0 +1,127 @@
+@startuml
+skinparam linetype ortho
+
+package XMLSchema #DDD {
+    class string
+    class int
+    class boolean
+}
+
+package URICatRoyaleGame {
+    
+    class Jeu {
+        plateau : Plateau
+        joueur1 : Joueur
+        joueur2 : Joueur
+        pseudoJoueurActuel : string
+        cartesDuJeu : ListeDeCartes
+    }
+    note right of Jeu::pseudoJoueurActuel
+        ∈ Joueur/pseudo
+    end note
+    
+    class Plateau { 
+        ligneDeCases : LigneDeCases[]
+    }
+    
+    class LigneDeCases {
+        case : Case[]
+    }
+    
+    class Case {
+        {attribut} estVide : boolean
+        {optional} invocation : Invocation
+    }
+    
+    class Joueur {
+        {unique} {attribute} pseudo : string
+        winStreak : int
+        jauge : int
+        hand : ListeIdCarte
+        deck : ListeIdCarte
+    }
+    note bottom of Joueur
+            Un joueur est identifié par son pseudo
+            cela implique que deux joueurs ne 
+            peuvent pas avoir le meme pseudo
+    end note
+        
+    class ListeDeCartes {
+        carte : Carte[]
+    }
+    
+    class Carte {
+        {unique} {attribut} id : IdCarte
+        vie : int
+        degat : int
+        nom : string
+        imageCarte : string 
+        imageInvocation : string 
+        cout : int
+        type : TypeDeCarte
+        rarete : TypeRarete
+    }
+    note left of Carte::cout
+        Cout d'utilisation en mana
+    end note
+    
+    class IdCarte <<enum>> {
+        sorcier 
+        ...
+        ...
+    }
+    note bottom of IdCarte : à redefinr avec les vrais nom de chaque carte
+    
+    class ListeIdCarte  {
+        idCarte : IdCarte[] 
+    }
+    
+    class TypeDeCarte <<enum>> {
+        combattant
+        sort
+        objet
+    }
+    
+    class TypeRarete <<enum>> {
+        commune
+        rare
+        épique
+        légendaire
+    }
+    
+    class Invocation {
+        pseudoInvocateur : string
+        vie : int
+        degat : int
+        peutJouer : boolean
+        peutAttaquer : boolean
+    }
+    note right of Invocation::pseudoInvocateur
+        ∈ Joueur/pseudo
+    end note
+    
+    Jeu *--"1" Plateau
+    Jeu *--"2" Joueur
+    Jeu *--"1" ListeDeCartes : list
+    
+    LigneDeCases *--"4..*(pair)" Case : list
+    
+    Case *--"0..1" Invocation : > contient
+    
+    Joueur *--"2" ListeIdCarte
+    
+    ListeDeCartes *--"*" Carte : list
+    
+    Carte *--"1" TypeDeCarte
+    Carte *--"1" TypeRarete
+    Carte *--"1" IdCarte
+    
+    ListeIdCarte *-- "*" IdCarte : list
+    
+    Plateau *--"3..*(impair)" LigneDeCases : list
+    
+    IdCarte --|> string 
+    TypeDeCarte --|> string 
+    TypeRarete --|> string 
+}
+@enduml
