@@ -22,9 +22,9 @@ public class MainMenu
     private static int y = (640 - boutonHauteur) / 2;
     private static int ecart = 4;
     private static int offsety = 55;
-    Rectangle boutonStart = new Rectangle(x, y+offsety-(boutonHauteur+ecart), boutonLargeur, boutonHauteur);
-    Rectangle boutonCharger = new Rectangle(x, y+offsety, boutonLargeur, boutonHauteur);
-    Rectangle boutonQuitter = new Rectangle(x+115, y+boutonHauteur+ecart+offsety, 160, boutonHauteur);
+    private Rectangle boutonStart = new Rectangle(x, y+offsety-(boutonHauteur+ecart), boutonLargeur, boutonHauteur);
+    private Rectangle boutonCharger = new Rectangle(x, y+offsety, boutonLargeur, boutonHauteur);
+    private Rectangle boutonQuitter;
     
     
     static MouseState EtatActuelSouris;
@@ -84,6 +84,7 @@ public class MainMenu
 
                     CatRoyal.LoadGame(nom);
                     CatRoyal.setMenu(EtatMenu.INGAME);
+                    return; 
                 }
                 else
                 {
@@ -94,18 +95,20 @@ public class MainMenu
                 }
             }
 
-            return; 
+            
         }
-        
-        if (boutonStart.Contains(mx, my))
+        else
         {
-            select = 0;
-        }
+            if (boutonStart.Contains(mx, my))
+            {
+                select = 0;
+            }
         
-        if (boutonCharger.Contains(mx, my))
-        {
+            if (boutonCharger.Contains(mx, my))
+            {
            
-            select = 1;
+                select = 1;
+            }
         }
         
         if (boutonQuitter.Contains(mx, my))
@@ -133,8 +136,16 @@ public class MainMenu
                     //CatRoyal.setMenu(EtatMenu.INGAME);
                     break;
                 case 2:
-                    Console.WriteLine("Quitter");
-                    CatRoyal.Quitter();
+                    if (!charger)
+                    {
+                        Console.WriteLine("Quitter");
+                        CatRoyal.Quitter();  
+                    }
+                    else
+                    {
+                        charger=false; 
+                    }
+                    
                     break;
             }
         }
@@ -172,8 +183,11 @@ public class MainMenu
         //affiche tout les noms
         if (charger)
         {
+            
             Rectangle cadrestatRect = new Rectangle(graphics.Viewport.Width/2-300,  graphics.Viewport.Height/2-200, 600, 400);
+            
             spriteBatch.Draw(cadrestat, cadrestatRect, Color.White);
+            spriteBatch.DrawString(_font,  "-- Parties sauvegardées --" , new Vector2(cadrestatRect.X+180, cadrestatRect.Y+30), Color.White);
             int i;
             for (i = 0; i<fileSave.Count; i++)
             {
@@ -185,9 +199,12 @@ public class MainMenu
                     selectFile == i ? Color.Blue:Color.Black 
                 );
             }
+            boutonQuitter = new Rectangle(graphics.Viewport.Width/2-80, y+ 180, 160, boutonHauteur);
+            spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);
         }
         else
         {
+            boutonQuitter = new Rectangle(x + 115, y + boutonHauteur + ecart + offsety, 160, boutonHauteur);
             spriteBatch.Draw(select == 0 ? boutonjouer2:boutonjouer, boutonStart, Color.White );
             spriteBatch.Draw(select == 1 ? boutoncharger2:boutoncharger, boutonCharger, Color.White);
             spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);

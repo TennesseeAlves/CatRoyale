@@ -15,8 +15,9 @@ public class InGame
     private List<CaseCliquable> _zonesCase = new List<CaseCliquable>();
     private int phase= -2;
 
-    private Texture2D _background, _case, cadre, cadre2;
+    private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2;
     private Texture2D jauge, contourBarMana;
+    
 
     private KeyboardState _previousKeyboardState;
     private MouseState _previousMouseState;
@@ -26,6 +27,9 @@ public class InGame
     private SpriteFont _font;
     private static int taillecase = 55;
     private static int manaY = 280;
+    
+    private static bool survolQuitter = false;
+    private Rectangle boutonQuitter = new Rectangle(20, 500, 120, 120);
     
     public Joueur joueurWin;
 
@@ -248,6 +252,8 @@ public class InGame
         _carteBaseImage = "textures/cards/carte_base";
         _font = content.Load<SpriteFont>("font");
         contourBarMana = content.Load<Texture2D>("textures/map/barmana");
+        boutonquitter= content.Load<Texture2D>("textures/map/boutonquitter");
+        boutonquitter2= content.Load<Texture2D>("textures/map/boutonquitter2");
 
         jauge = new Texture2D(graphics, 1, 1);
         jauge.SetData(new[]
@@ -310,7 +316,8 @@ public class InGame
 
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
-
+        
+       
 
         //draw du plateau
         int taillel = CatRoyal.jeuChat.Longueur() * taillecase;
@@ -491,6 +498,10 @@ public class InGame
         //Afficher la jauge de mana
         DrawMana(CatRoyal.jeuChat.Joueur1, 180, manaY, spriteBatch);
         DrawMana(CatRoyal.jeuChat.Joueur2, 795, manaY, spriteBatch);
+        
+        //afficher quitter 
+        spriteBatch.Draw(survolQuitter? boutonquitter2 : boutonquitter, boutonQuitter, Color.White);
+        
     }
 
     public void Clic()
@@ -502,13 +513,28 @@ public class InGame
             ms.LeftButton == ButtonState.Pressed;
         
         phase = -2;
-
+        
+        survolQuitter = false;
+        if (boutonQuitter.Contains(ms.Position))
+        {
+            survolQuitter = true;
+            if (estClique)
+            {
+                CatRoyal.setMenu(EtatMenu.MENUMAIN);
+                return;
+            }
+            
+        }
+        
         if (!estClique)
         {
             _previousMouseState = ms;
             return;
         }
-
+        
+       
+      
+        
         EtatAutomate phaseCourante = CatRoyal.jeuChat.Phase;
 
         // ici on gere le clique sur carte

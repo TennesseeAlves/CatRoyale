@@ -129,6 +129,12 @@
             <idCarte>Chronos</idCarte>
             <idCarte>Soin</idCarte>
             <idCarte>Poison</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
         </deck>
     </joueur1>
     <joueur2>
@@ -175,6 +181,12 @@
             <idCarte>Tyranis</idCarte>
             <idCarte>Arcanemao</idCarte>
             <idCarte>Chronos</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
             <idCarte>Soin</idCarte>
             <idCarte>Poison</idCarte>
         </deck>

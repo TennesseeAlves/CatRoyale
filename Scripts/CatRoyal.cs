@@ -107,9 +107,9 @@ public class CatRoyal : Game
                 menuInGame.Draw(gameTime,  GraphicsDevice, Content,_spriteBatch);
                 break;
             case EtatMenu.ENDGAME:
-                Joueur joueur = menuInGame.joueurWin;
-                String texte = jeuChat.PseudoJoueurActuel;
-                menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, texte);
+               
+                Joueur joueur = jeuChat.JoueurActuel;
+                menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, joueur);
                 break;
                 
         }

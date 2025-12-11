@@ -40,17 +40,7 @@
       </case>
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="false">
-        <invocation>
-          <pseudoInvocateur>Alice</pseudoInvocateur>
-          <vie>25</vie>
-          <maxVie>25</maxVie>
-          <degat>15</degat>
-          <image>textures/mobs/blackcat</image>
-          <peutBouger>true</peutBouger>
-          <peutAttaquer>true</peutAttaquer>
-        </invocation>
-      </case>
+      <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -72,7 +62,17 @@
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="true" />
+      <case estVide="false">
+        <invocation>
+          <pseudoInvocateur>Alice</pseudoInvocateur>
+          <vie>14</vie>
+          <maxVie>14</maxVie>
+          <degat>7</degat>
+          <image>textures/mobs/magichat</image>
+          <peutBouger>true</peutBouger>
+          <peutAttaquer>true</peutAttaquer>
+        </invocation>
+      </case>
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -97,16 +97,16 @@
     <winStreak>0</winStreak>
     <jauge>14</jauge>
     <main>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Tactix</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Wrench</idCarte>
-      <idCarte>Catboom</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
       <idCarte>KidCat</idCarte>
-      <idCarte>Catboom</idCarte>
-      <idCarte>Neochrom</idCarte>
-      <idCarte>Tigris</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Vortrex</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Tactix</idCarte>
+      <idCarte>MagiChat</idCarte>
     </main>
     <deck>
       <idCarte>KidCat</idCarte>
@@ -117,28 +117,34 @@
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>MagiChat</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
       <idCarte>Blackcat</idCarte>
+      <idCarte>Blackcat</idCarte>
+      <idCarte>Wrench</idCarte>
       <idCarte>Wrench</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Vortrex</idCarte>
-      <idCarte>Vortrex</idCarte>
       <idCarte>Neochrom</idCarte>
+      <idCarte>Neochrom</idCarte>
+      <idCarte>Tigris</idCarte>
       <idCarte>Tyranis</idCarte>
       <idCarte>Arcanemao</idCarte>
       <idCarte>Chronos</idCarte>
-      <idCarte>Soin</idCarte>
-      <idCarte>Blackcat</idCarte>
       <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>MagiChat</idCarte>
     </deck>
   </joueur1>
   <joueur2>
@@ -146,10 +152,55 @@
     <winStreak>0</winStreak>
     <jauge>14</jauge>
     <main>
+      <idCarte>KidCat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>TitouChat</idCarte>
+      <idCarte>KidCat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>Tigris</idCarte>
+      <idCarte>Chronos</idCarte>
+      <idCarte>TitouChat</idCarte>
+    </main>
+    <deck>
+      <idCarte>KidCat</idCarte>
+      <idCarte>KidCat</idCarte>
+      <idCarte>TitouChat</idCarte>
+      <idCarte>TitouChat</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>Persianator</idCarte>
+      <idCarte>Persianator</idCarte>
+      <idCarte>Persianator</idCarte>
+      <idCarte>Tactix</idCarte>
+      <idCarte>Tactix</idCarte>
+      <idCarte>Blackcat</idCarte>
+      <idCarte>Blackcat</idCarte>
+      <idCarte>Wrench</idCarte>
+      <idCarte>Wrench</idCarte>
+      <idCarte>Chatiment</idCarte>
+      <idCarte>Chatiment</idCarte>
+      <idCarte>Vortrex</idCarte>
+      <idCarte>Vortrex</idCarte>
+      <idCarte>Neochrom</idCarte>
+      <idCarte>Neochrom</idCarte>
+      <idCarte>Tyranis</idCarte>
+      <idCarte>Arcanemao</idCarte>
+      <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
-    </main>
-    <deck />
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+    </deck>
   </joueur2>
   <pseudoJoueurActuel>Bob</pseudoJoueurActuel>
   <cartesDuJeu>
