@@ -127,6 +127,8 @@
             <idCarte>Tyranis</idCarte>
             <idCarte>Arcanemao</idCarte>
             <idCarte>Chronos</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
         </deck>
     </joueur1>
     <joueur2>
@@ -173,6 +175,8 @@
             <idCarte>Tyranis</idCarte>
             <idCarte>Arcanemao</idCarte>
             <idCarte>Chronos</idCarte>
+            <idCarte>Soin</idCarte>
+            <idCarte>Poison</idCarte>
         </deck>
     </joueur2>
     <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
@@ -336,6 +340,26 @@
             <cout>10</cout>
             <type>combattant</type>
             <rarete>légendaire</rarete>
+        </carte>
+        <carte>
+            <vie>-1</vie>
+            <degat>-5</degat>
+            <nom>Soin</nom>
+            <imageCarte>textures/cards/soin</imageCarte>
+            <imageInvocation>textures/cards/soin</imageInvocation>
+            <cout>3</cout>
+            <type>sort</type>
+            <rarete>commune</rarete>
+        </carte>
+        <carte>
+            <vie>-1</vie>
+            <degat>5</degat>
+            <nom>Poison</nom>
+            <imageCarte>textures/cards/poison</imageCarte>
+            <imageInvocation>textures/cards/poison</imageInvocation>
+            <cout>4</cout>
+            <type>sort</type>
+            <rarete>commune</rarete>
         </carte>
     </cartesDuJeu>
 </jeu>

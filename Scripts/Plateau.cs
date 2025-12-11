@@ -127,9 +127,18 @@ public class Plateau
 
     public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
     {   
-        Map[ligne].Cases[colonne].EstVide = false;
-        Map[ligne].Cases[colonne].Invoc = carte.generateInvocation();
-        Map[ligne].Cases[colonne].Invoc.PseudoInvocateur = joueur.Pseudo;
+        
+        if (carte.Type == TypeDeCarte.SORT)
+        {
+            Map[ligne].Cases[colonne].Invoc.takeDamage(carte.Degat);
+        }
+        else
+        {
+            Map[ligne].Cases[colonne].EstVide = false;
+            Map[ligne].Cases[colonne].Invoc = carte.generateInvocation();
+            Map[ligne].Cases[colonne].Invoc.PseudoInvocateur = joueur.Pseudo;
+        }
+        
     }
 
     public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)

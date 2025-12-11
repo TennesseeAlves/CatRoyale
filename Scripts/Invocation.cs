@@ -1,5 +1,5 @@
 using System.Xml.Serialization;
-
+using System;
 namespace TestProjet.Scripts;
 
 [XmlType("Invocation")]
@@ -37,6 +37,11 @@ public class Invocation
 
     public bool takeDamage(int degat)
     {
+        if (degat < 0)
+        {
+            takeVie(Math.Abs(degat));
+            return false;
+        }
         Vie -= degat;
         if (Vie == 0)
         {

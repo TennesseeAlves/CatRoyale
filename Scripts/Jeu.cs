@@ -380,13 +380,24 @@ public class Jeu
         Carte carte = JoueurActuel.getCarteInMainAt(i, CartesExistantes);
 
         // verifier que la case est vide + jauge suffisante 
-        bool boolCaseJauge = Plateau.isEmpty(lig, col) && JoueurActuel.Jauge >= carte.Cout;
+        bool boolJauge = JoueurActuel.Jauge >= carte.Cout;
+        bool boolCase = Plateau.isEmpty(lig, col);
+        bool boolCaseJauge = boolCase && boolJauge;
 
         // verif que la case d,invocation fait partie de l'endroit possible pour ce joueur
         bool boolCaseZone = (JoueurActuel == Joueur1 && col < Longueur() / 2) ||
                             (JoueurActuel == Joueur2 && col+1 > Longueur() / 2);
 
         //Console.WriteLine(boolCaseZone+""+boolCaseZone);
+        Carte CarteenMain = JoueurActuel.getCarteInMainAt(CarteI, CartesExistantes);
+        if (CarteenMain.Type == TypeDeCarte.SORT)
+        {
+            if (CarteenMain.Degat < 0)
+            {
+                return boolJauge && !boolCase && Plateau.getEntityAt(lig,col ).PseudoInvocateur == JoueurActuel.Pseudo;
+            }
+            return boolJauge && !boolCase && Plateau.getEntityAt(lig,col ).PseudoInvocateur != JoueurActuel.Pseudo;
+        }
         return boolCaseJauge && boolCaseZone;
     }
 

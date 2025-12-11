@@ -7,17 +7,7 @@
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="false">
-        <invocation>
-          <pseudoInvocateur>Bob</pseudoInvocateur>
-          <vie>70</vie>
-          <maxVie>70</maxVie>
-          <degat>10</degat>
-          <image>textures/mobs/tigris</image>
-          <peutBouger>false</peutBouger>
-          <peutAttaquer>false</peutAttaquer>
-        </invocation>
-      </case>
+      <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -30,17 +20,7 @@
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="false">
-        <invocation>
-          <pseudoInvocateur>Bob</pseudoInvocateur>
-          <vie>14</vie>
-          <maxVie>14</maxVie>
-          <degat>7</degat>
-          <image>textures/mobs/magichat</image>
-          <peutBouger>false</peutBouger>
-          <peutAttaquer>false</peutAttaquer>
-        </invocation>
-      </case>
+      <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -63,12 +43,12 @@
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <vie>45</vie>
-          <maxVie>45</maxVie>
-          <degat>30</degat>
-          <image>textures/mobs/arcanemao</image>
-          <peutBouger>false</peutBouger>
-          <peutAttaquer>false</peutAttaquer>
+          <vie>25</vie>
+          <maxVie>25</maxVie>
+          <degat>15</degat>
+          <image>textures/mobs/blackcat</image>
+          <peutBouger>true</peutBouger>
+          <peutAttaquer>true</peutAttaquer>
         </invocation>
       </case>
       <case estVide="true" />
@@ -115,95 +95,61 @@
   <joueur1>
     <pseudo>Alice</pseudo>
     <winStreak>0</winStreak>
-    <jauge>5</jauge>
+    <jauge>14</jauge>
     <main>
-      <idCarte>TitouChat</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Tactix</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Wrench</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>KidCat</idCarte>
+      <idCarte>Catboom</idCarte>
+      <idCarte>Neochrom</idCarte>
+      <idCarte>Tigris</idCarte>
     </main>
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
-      <idCarte>KidCat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
+      <idCarte>TitouChat</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
-      <idCarte>Catboom</idCarte>
-      <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
-      <idCarte>Tactix</idCarte>
       <idCarte>Blackcat</idCarte>
-      <idCarte>Blackcat</idCarte>
-      <idCarte>Wrench</idCarte>
       <idCarte>Wrench</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Vortrex</idCarte>
       <idCarte>Vortrex</idCarte>
       <idCarte>Neochrom</idCarte>
-      <idCarte>Neochrom</idCarte>
-      <idCarte>Tigris</idCarte>
       <idCarte>Tyranis</idCarte>
-      <idCarte>Chronos</idCarte>
       <idCarte>Arcanemao</idCarte>
+      <idCarte>Chronos</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Blackcat</idCarte>
+      <idCarte>Poison</idCarte>
     </deck>
   </joueur1>
   <joueur2>
     <pseudo>Bob</pseudo>
     <winStreak>0</winStreak>
-    <jauge>3</jauge>
-    <main />
-    <deck>
-      <idCarte>KidCat</idCarte>
-      <idCarte>KidCat</idCarte>
-      <idCarte>KidCat</idCarte>
-      <idCarte>KidCat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>Catboom</idCarte>
-      <idCarte>Catboom</idCarte>
-      <idCarte>Catboom</idCarte>
-      <idCarte>Persianator</idCarte>
-      <idCarte>Persianator</idCarte>
-      <idCarte>Persianator</idCarte>
-      <idCarte>Tactix</idCarte>
-      <idCarte>Tactix</idCarte>
-      <idCarte>Blackcat</idCarte>
-      <idCarte>Blackcat</idCarte>
-      <idCarte>Wrench</idCarte>
-      <idCarte>Wrench</idCarte>
-      <idCarte>Chatiment</idCarte>
-      <idCarte>Chatiment</idCarte>
-      <idCarte>Vortrex</idCarte>
-      <idCarte>Vortrex</idCarte>
-      <idCarte>Neochrom</idCarte>
-      <idCarte>Neochrom</idCarte>
-      <idCarte>Tyranis</idCarte>
-      <idCarte>Arcanemao</idCarte>
-      <idCarte>Chronos</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>Tigris</idCarte>
-    </deck>
+    <jauge>14</jauge>
+    <main>
+      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+    </main>
+    <deck />
   </joueur2>
   <pseudoJoueurActuel>Bob</pseudoJoueurActuel>
   <cartesDuJeu>
@@ -366,6 +312,26 @@
       <cout>10</cout>
       <type>combattant</type>
       <rarete>légendaire</rarete>
+    </carte>
+    <carte>
+      <vie>0</vie>
+      <degat>-5</degat>
+      <nom>Soin</nom>
+      <imageCarte>textures/cards/soin</imageCarte>
+      <imageInvocation>textures/cards/soin</imageInvocation>
+      <cout>3</cout>
+      <type>sort</type>
+      <rarete>commune</rarete>
+    </carte>
+    <carte>
+      <vie>0</vie>
+      <degat>5</degat>
+      <nom>Poison</nom>
+      <imageCarte>textures/cards/poison</imageCarte>
+      <imageInvocation>textures/cards/poison</imageInvocation>
+      <cout>4</cout>
+      <type>sort</type>
+      <rarete>commune</rarete>
     </carte>
   </cartesDuJeu>
 </jeu>

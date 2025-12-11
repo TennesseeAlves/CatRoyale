@@ -60,12 +60,28 @@ public class Carte
 
     public override string ToString()
     {
-        return "Nom: "+Nom+"\n"+ 
-               "Cout: "+Cout+"\n"+
-               "Type: "+Type+"\n"+
-               "Rareté: "+Rarete+"\n"+
-               "Degat: "+Degat+"\n"+ 
-               "Vie: "+Vie+"\n" ;
+        String affichage= "Nom: "+Nom+"\n"+ 
+                          "Cout: "+Cout+"\n"+
+                          "Type: "+Type+"\n"+
+                          "Rareté: "+Rarete+"\n"+
+                          "Degat: "+Degat+"\n"+ 
+                          "Vie: "+Vie+"\n" ;
         
+        if (Type == TypeDeCarte.SORT)
+        {
+            String soinoudegat= "Inflige :" + Degat;
+            if (Degat < 0)
+            {
+                soinoudegat = "Soigne :" + Math.Abs(Degat);
+            }
+            affichage= "Nom: "+Nom+"\n"+ 
+                   "Cout: "+Cout+"\n"+
+                   "Type: "+Type+"\n"+
+                   "Rareté: "+Rarete+"\n"+
+                   soinoudegat+"\n";
+        }
+
+        return affichage;
+
     }
 }
