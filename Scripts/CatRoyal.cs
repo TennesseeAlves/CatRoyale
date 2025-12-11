@@ -20,6 +20,7 @@ public class CatRoyal : Game
 
     private static EtatMenu _menu= EtatMenu.MENUMAIN;
     
+    public static Jeu jeuChat;
     private MainMenu menuMain;
     private InGame menuInGame;
     private MenuEnd menuEnd;
@@ -31,6 +32,10 @@ public class CatRoyal : Game
 
     private static int manaY = 130;  
     private static Boolean quitter = false;
+    
+    private static string savePath = "../../../data/xml/";
+    public static string defaultSaveFileName = "defaultSave.xml";
+    public static string autoSaveFileName = "autoSave.xml";
 
     public CatRoyal()
     {
@@ -96,7 +101,6 @@ public class CatRoyal : Game
         switch (_menu)
         {
             case EtatMenu.MENUMAIN:
-                menuInGame.jeuChat.EndGame();
                 menuMain.Draw(gameTime, GraphicsDevice, _spriteBatch);
                 break;
             case EtatMenu.INGAME:
@@ -104,7 +108,7 @@ public class CatRoyal : Game
                 break;
             case EtatMenu.ENDGAME:
                 Joueur joueur = menuInGame.joueurWin;
-                String texte = joueur.getPseudo();
+                String texte = joueur.Pseudo;
                 menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, texte);
                 break;
                 
@@ -122,4 +126,23 @@ public class CatRoyal : Game
     {
         quitter = true;
     }
+    
+    
+    
+    
+    
+    public static void SaveGame(String FileName)
+    {
+        XMLManager<Jeu> manager = new XMLManager<Jeu>();
+        manager.Save(savePath+FileName, jeuChat);
+    }
+    
+    public static void LoadGame(String FileName)
+    {
+        //on charge la partie
+        XMLManager<Jeu> manager = new XMLManager<Jeu>();
+        jeuChat = (Jeu)manager.Load(savePath+FileName);
+        jeuChat.Plateau.InitAfterLoad();
+    }
+    
 }

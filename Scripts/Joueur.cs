@@ -14,7 +14,7 @@ public class Joueur
     }
     [XmlElement("main")] public ListeIdCartes Main {get; set;}
     [XmlElement("deck")] public ListeIdCartes Deck {get; set;}
-    [XmlIgnore] public static int MAXJAUGE = 15;
+    [XmlIgnore] public static int MAXJAUGE = 14;
     //champs internes
     [XmlIgnore] private int _jauge;
     

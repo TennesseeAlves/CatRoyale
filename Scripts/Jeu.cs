@@ -49,11 +49,10 @@ public class Jeu
     [XmlIgnore] public int CarteI, CaseI, CaseJ, LastCaseI, LastCaseJ;
 
     //paramètres du jeu (à voir ce qu'on a fait)
-    private string defaultSaveFileName = "defaultSave.xml";
     private int maxDistanceDeplacement = 3;
     private int maxDistanceAttaque = 2;
     private int vieTour = 30;
-    private int maxCarteMain = 6;
+    private int maxCarteMain = 10;
     private int nbCartesPiochees = 2;
 
     //longeur doit être pair et strictement supérieur à 2, largeur doit être impair et srtictement supérieur à 1
@@ -69,12 +68,11 @@ public class Jeu
         CaseJ = -1;
         LastCaseI = -1;
         LastCaseJ = -1;
-        InitGame(defaultSaveFileName);
+        InitTurn();
     }
-    //sinon si on créer un jeu depuis une sauvegarde
-    public Jeu(string saveFileName)
+    
+    public Jeu()
     {
-        LoadGame(saveFileName);
         Phase = EtatAutomate.SELECTION_CARTE;
         CarteI = 0;
         CaseI = -1;
@@ -82,8 +80,6 @@ public class Jeu
         LastCaseI = -1;
         LastCaseJ = -1;
     }
-    //et le contructeur vide pour le XMLSerializer
-    public Jeu(){}
     
     //-------------------------accesseur---------------------------//
     public bool victory() { return Plateau.victory(JoueurActuel); }
@@ -97,14 +93,7 @@ public class Jeu
     {
         return Plateau.Largeur();
     }
-    //-------------------------turnManager---------------------------//
-    //début de partie(charger carte et invoc, placer les cristaux, remplir les jauges, piocher les cartes pour tout le monde, donner la main J1)
-    public void InitGame(string SaveFileName)
-    {
-        //load game (soit une en cours qui a été sauvegarder, soit par défaut une partie au tour 1 avec rien de placé et les jauges rempli)
-        LoadGame(SaveFileName);
-        InitTurn();
-    }
+    //-------------------------turnManager
     //début de tour(remplir jauge, piocher cartes, actualiser les peutBouger et peut Attaquer(mais pas du cristal))
     public void InitTurn()
     {
@@ -139,13 +128,11 @@ public class Jeu
         LastCaseI = -1;
         LastCaseJ = -1;
     }
-    //verification pendant le tour(mana suffisant pour carte, case contenant une invocation ou non, invocation appartenant au bon joueur, invocation peutJouer ou peutBouger, partie fini/gagné)
-    public void MainTurn(){}
     //fin de tour(passer la main à l'autre joueur)
     public void EndTurn()
     {
 
-        SaveGame("autosave.xml");
+        CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
         
         //fonction à garder pour si on ajoute des effets qui s'applique en fin de manche (comme dans l'invocation des 7)
         if (JoueurActuel == Joueur1)
@@ -157,18 +144,6 @@ public class Jeu
             JoueurActuel = Joueur1;
         }
         InitTurn();
-    }
-    //fin de partie(sauvegarder?)
-    public void EndGame()
-    {
-        //on augmente la winstreak du gagnant
-        JoueurActuel.WinStreak += 1;
-        //on actualise le fichier des highscore
-        //si le joueur veut encore jouer
-            //alors on relance une nouvelle game de 0
-            InitGame(defaultSaveFileName);
-        //sinon
-            //quitter le jeu/retourner au menu
     }
 
     //-------------------------inputManager---------------------------//
@@ -383,45 +358,6 @@ public class Jeu
     //---SOURIS---//
     //TO DO
 
-    //-------------------------saveManager---------------------------//
-    public void SaveGame(String FileName)
-    {
-        XMLManager<Jeu> manager = new XMLManager<Jeu>();
-        string path = "../../../data/xml/";
-        manager.Save(path+FileName, this);
-    }
-    public void LoadGame(String FileName)
-    {
-        //on charge la partie
-        XMLManager<Jeu> manager = new XMLManager<Jeu>();
-        string path = "../../../data/xml/";
-        Jeu tmp = (Jeu)manager.Load(path+FileName);
-        Plateau = tmp.Plateau;
-        Plateau.InitAfterLoad();
-        Joueur1 = tmp.Joueur1;
-        Joueur2 = tmp.Joueur2;
-        JoueurActuel = tmp.JoueurActuel;
-        CartesExistantes = tmp.CartesExistantes;
-        
-        /*
-        Carte KidCat = new Carte(8, 3, 1, "KidCat", "textures/cards/kidcat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/kidcat");
-        Carte TitouChat = new Carte(20, 4, 2, "TitouChat", "textures/cards/titouchat", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/titouchat");
-        Carte Archeron = new Carte(12, 8, 3, "Archeron", "textures/cards/archeron", TypeDeCarte.COMBATTANT, TypeRarete.COMMUNE, "textures/mobs/archeron");
-        Carte MagiChat = new Carte(14, 7, 3, "MagiChat", "textures/cards/magichat", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/magichat");
-        Carte Catboom = new Carte(6, 22, 4, "Catboom", "textures/cards/catboom", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/catboom");
-        Carte Persianator = new Carte(28, 6, 4, "Persianator", "textures/cards/persianator", TypeDeCarte.COMBATTANT, TypeRarete.RARE, "textures/mobs/persianator");
-        Carte Tactix = new Carte(45, 8, 5, "Tactix", "textures/cards/tactix", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/tactix");
-        Carte Blackcat = new Carte(25, 15, 5, "Blackcat", "textures/cards/blackcat", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/blackcat");
-        Carte Wrench = new Carte(35, 12, 6, "Wrench", "textures/cards/wrench", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/wrench");
-        Carte Chatiment = new Carte(40, 14, 7, "Chatiment", "textures/cards/chatiment", TypeDeCarte.COMBATTANT, TypeRarete.EPIQUE, "textures/mobs/chatiment");
-        Carte Vortrex = new Carte(32, 20, 7, "Vortrex", "textures/cards/vortrex", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/vortrex");
-        Carte Neochrom = new Carte(55, 16, 8, "Neochrom", "textures/cards/neochrom", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/neochrom");
-        Carte Tigris = new Carte(70, 10, 8, "Tigris", "textures/cards/tigris", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tigris");
-        Carte Tyranis = new Carte(65, 25, 9, "Tyranis", "textures/cards/tyranis", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/tyranis");
-        Carte Arcanemao = new Carte(45, 30, 9, "Arcanemao", "textures/cards/arcanemao", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/arcanemao");
-        Carte Chronos = new Carte(80, 15, 10, "Chronos", "textures/cards/chronos", TypeDeCarte.COMBATTANT, TypeRarete.LEGENDAIRE, "textures/mobs/chronos");
-        */
-    }
 
     //-------------------------testManager---------------------------//
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable

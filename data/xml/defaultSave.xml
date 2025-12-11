@@ -30,8 +30,8 @@
             <case estVide="false">
                 <invocation>
                     <pseudoInvocateur>Alice</pseudoInvocateur>
-                    <vie>30</vie>
-                    <maxVie>30</maxVie>
+                    <vie>50</vie>
+                    <maxVie>50</maxVie>
                     <degat>0</degat>
                     <image>textures/mobs/TourJ1</image>
                     <peutBouger>false</peutBouger>
@@ -47,8 +47,8 @@
             <case estVide="false">
                 <invocation>
                     <pseudoInvocateur>Bob</pseudoInvocateur>
-                    <vie>30</vie>
-                    <maxVie>30</maxVie>
+                    <vie>50</vie>
+                    <maxVie>50</maxVie>
                     <degat>0</degat>
                     <image>textures/mobs/TourJ2</image>
                     <peutBouger>false</peutBouger>
@@ -89,21 +89,44 @@
         <main>
         </main>
         <deck>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
-            <idCarte>TitouChat</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
-            <idCarte>MagiChat</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Tactix</idCarte>
+            <idCarte>Tactix</idCarte>
+            <idCarte>Blackcat</idCarte>
+            <idCarte>Blackcat</idCarte>
+            <idCarte>Wrench</idCarte>
+            <idCarte>Wrench</idCarte>
             <idCarte>Chatiment</idCarte>
             <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
+            <idCarte>Vortrex</idCarte>
+            <idCarte>Vortrex</idCarte>
+            <idCarte>Neochrom</idCarte>
+            <idCarte>Neochrom</idCarte>
+            <idCarte>Tigris</idCarte>
+            <idCarte>Tyranis</idCarte>
+            <idCarte>Arcanemao</idCarte>
+            <idCarte>Chronos</idCarte>
         </deck>
     </joueur1>
     <joueur2>
@@ -112,28 +135,61 @@
         <jauge>15</jauge>
         <main />
         <deck>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
+            <idCarte>KidCat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
             <idCarte>TitouChat</idCarte>
-            <idCarte>TitouChat</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
+            <idCarte>Archeron</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
             <idCarte>MagiChat</idCarte>
-            <idCarte>MagiChat</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Catboom</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Persianator</idCarte>
+            <idCarte>Tactix</idCarte>
+            <idCarte>Tactix</idCarte>
+            <idCarte>Blackcat</idCarte>
+            <idCarte>Blackcat</idCarte>
+            <idCarte>Wrench</idCarte>
+            <idCarte>Wrench</idCarte>
             <idCarte>Chatiment</idCarte>
             <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
-            <idCarte>Chatiment</idCarte>
+            <idCarte>Vortrex</idCarte>
+            <idCarte>Vortrex</idCarte>
+            <idCarte>Neochrom</idCarte>
+            <idCarte>Neochrom</idCarte>
+            <idCarte>Tigris</idCarte>
+            <idCarte>Tyranis</idCarte>
+            <idCarte>Arcanemao</idCarte>
+            <idCarte>Chronos</idCarte>
         </deck>
     </joueur2>
     <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
     <cartesDuJeu>
         <carte>
-            <vie>10</vie>
-            <degat>5</degat>
+            <vie>8</vie>
+            <degat>3</degat>
+            <nom>KidCat</nom>
+            <imageCarte>textures/cards/kidcat</imageCarte>
+            <imageInvocation>textures/mobs/kidcat</imageInvocation>
+            <cout>1</cout>
+            <type>combattant</type>
+            <rarete>commune</rarete>
+        </carte>
+        <carte>
+            <vie>20</vie>
+            <degat>4</degat>
             <nom>TitouChat</nom>
             <imageCarte>textures/cards/titouchat</imageCarte>
             <imageInvocation>textures/mobs/titouchat</imageInvocation>
@@ -142,24 +198,144 @@
             <rarete>commune</rarete>
         </carte>
         <carte>
-            <vie>25</vie>
+            <vie>12</vie>
             <degat>8</degat>
+            <nom>Archeron</nom>
+            <imageCarte>textures/cards/archeron</imageCarte>
+            <imageInvocation>textures/mobs/archeron</imageInvocation>
+            <cout>3</cout>
+            <type>combattant</type>
+            <rarete>commune</rarete>
+        </carte>
+        <carte>
+            <vie>14</vie>
+            <degat>7</degat>
             <nom>MagiChat</nom>
             <imageCarte>textures/cards/magichat</imageCarte>
             <imageInvocation>textures/mobs/magichat</imageInvocation>
+            <cout>3</cout>
+            <type>combattant</type>
+            <rarete>commune</rarete>
+        </carte>
+        <carte>
+            <vie>6</vie>
+            <degat>22</degat>
+            <nom>Catboom</nom>
+            <imageCarte>textures/cards/catboom</imageCarte>
+            <imageInvocation>textures/mobs/catboom</imageInvocation>
             <cout>4</cout>
             <type>combattant</type>
             <rarete>rare</rarete>
         </carte>
         <carte>
+            <vie>28</vie>
+            <degat>6</degat>
+            <nom>Persianator</nom>
+            <imageCarte>textures/cards/persianator</imageCarte>
+            <imageInvocation>textures/mobs/persianator</imageInvocation>
+            <cout>4</cout>
+            <type>combattant</type>
+            <rarete>rare</rarete>
+        </carte>
+        <carte>
+            <vie>45</vie>
+            <degat>8</degat>
+            <nom>Tactix</nom>
+            <imageCarte>textures/cards/tactix</imageCarte>
+            <imageInvocation>textures/mobs/tactix</imageInvocation>
+            <cout>5</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+        <carte>
+            <vie>25</vie>
+            <degat>15</degat>
+            <nom>Blackcat</nom>
+            <imageCarte>textures/cards/blackcat</imageCarte>
+            <imageInvocation>textures/mobs/blackcat</imageInvocation>
+            <cout>5</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+        <carte>
             <vie>35</vie>
-            <degat>13</degat>
-            <nom>Chatiment</nom>
-            <imageCarte>textures/cards/chatiment</imageCarte>
-            <imageInvocation>textures/mobs/chatiment</imageInvocation>
+            <degat>12</degat>
+            <nom>Wrench</nom>
+            <imageCarte>textures/cards/wrench</imageCarte>
+            <imageInvocation>textures/mobs/wrench</imageInvocation>
             <cout>6</cout>
             <type>combattant</type>
             <rarete>épique</rarete>
+        </carte>
+        <carte>
+            <vie>40</vie>
+            <degat>14</degat>
+            <nom>Chatiment</nom>
+            <imageCarte>textures/cards/chatiment</imageCarte>
+            <imageInvocation>textures/mobs/chatiment</imageInvocation>
+            <cout>7</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+        <carte>
+            <vie>32</vie>
+            <degat>20</degat>
+            <nom>Vortrex</nom>
+            <imageCarte>textures/cards/vortrex</imageCarte>
+            <imageInvocation>textures/mobs/vortrex</imageInvocation>
+            <cout>7</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+        <carte>
+            <vie>55</vie>
+            <degat>16</degat>
+            <nom>Neochrom</nom>
+            <imageCarte>textures/cards/neochrom</imageCarte>
+            <imageInvocation>textures/mobs/neochrom</imageInvocation>
+            <cout>8</cout>
+            <type>combattant</type>
+            <rarete>épique</rarete>
+        </carte>
+        <carte>
+            <vie>70</vie>
+            <degat>10</degat>
+            <nom>Tigris</nom>
+            <imageCarte>textures/cards/tigris</imageCarte>
+            <imageInvocation>textures/mobs/tigris</imageInvocation>
+            <cout>8</cout>
+            <type>combattant</type>
+            <rarete>légendaire</rarete>
+        </carte>
+        <carte>
+            <vie>65</vie>
+            <degat>25</degat>
+            <nom>Tyranis</nom>
+            <imageCarte>textures/cards/tyranis</imageCarte>
+            <imageInvocation>textures/mobs/tyranis</imageInvocation>
+            <cout>9</cout>
+            <type>combattant</type>
+            <rarete>légendaire</rarete>
+        </carte>
+        <carte>
+            <vie>45</vie>
+            <degat>30</degat>
+            <nom>Arcanemao</nom>
+            <imageCarte>textures/cards/arcanemao</imageCarte>
+            <imageInvocation>textures/mobs/arcanemao</imageInvocation>
+            <cout>9</cout>
+            <type>combattant</type>
+            <rarete>légendaire</rarete>
+        </carte>
+        <carte>
+            <vie>80</vie>
+            <degat>15</degat>
+            <nom>Chronos</nom>
+            <imageCarte>textures/cards/chronos</imageCarte>
+            <imageInvocation>textures/mobs/chronos</imageInvocation>
+            <cout>10</cout>
+            <type>combattant</type>
+            <rarete>légendaire</rarete>
         </carte>
     </cartesDuJeu>
 </jeu>
