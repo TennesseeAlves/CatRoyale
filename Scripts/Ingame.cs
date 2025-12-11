@@ -524,7 +524,6 @@ public class InGame
                 }
                 
                 _previousMouseState = ms;
-                return;
             }
         }
 

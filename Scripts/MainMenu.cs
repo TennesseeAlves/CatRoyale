@@ -84,7 +84,7 @@ public class MainMenu
 
     public void LoadContent(ContentManager content)
     {
-        _background = content.Load<Texture2D>("textures/map/MainMenu");
+        _background = content.Load<Texture2D>("textures/map/mainmenu");
         boutonjouer = content.Load<Texture2D>("textures/map/boutonjouer");
         boutonjouer2 = content.Load<Texture2D>("textures/map/boutonjouer2");
         boutoncharger= content.Load<Texture2D>("textures/map/boutoncharger");
