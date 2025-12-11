@@ -5,17 +5,17 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TestProjet.Scripts;
-
-
+using System.Collections.Generic;
+using System.IO;
 namespace TestProjet;
 
 public class MainMenu
 {
     private GraphicsDeviceManager _graphics;
     private Texture2D _background, boutonjouer, boutonjouer2, 
-        boutoncharger,boutoncharger2,boutonquitter2,boutonquitter;
+        boutoncharger,boutoncharger2,boutonquitter2,boutonquitter, cadrestat;
     private SpriteBatch _spriteBatch;
-
+    private SpriteFont _font;
     private static int boutonLargeur = 390;
     private static int boutonHauteur = 160;
     private static int x = (1024  - boutonLargeur) / 2;
@@ -31,8 +31,35 @@ public class MainMenu
     static MouseState EtatPrecSouris;
 
     private int select;
+    private int selectFile;
     
+    bool charger = false;
+    private List<string> fileSave = new List<string>();
+    private List<Rectangle> rectSave = new List<Rectangle>();
     
+    private void ChargerListe()
+    {
+        string chemin=CatRoyal.savePath; 
+
+        fileSave.Clear();
+        rectSave.Clear();
+        
+        //ajoute les fichiers sauvegardes dans Filesave
+        //doc ici https://learn.microsoft.com/fr-fr/dotnet/api/system.io.directory.getfiles?view=net-8.0
+        // utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
+        fileSave.AddRange(Directory.GetFiles(chemin));
+        //
+        int Y = 250;
+        int num = 0;
+
+        foreach (string fichier in fileSave)
+        {
+            Rectangle zone = new Rectangle(300, Y+num*40, 400, 35);
+            rectSave.Add(zone);
+            num++;
+        }
+    }
+
     public void ClicBouton()
     {
         bool ClicGauche = EtatActuelSouris.LeftButton == ButtonState.Pressed &&
@@ -41,6 +68,35 @@ public class MainMenu
         int mx = EtatActuelSouris.X;
         int my = EtatActuelSouris.Y;
         select = -1;
+        selectFile = -1;
+        if (charger)
+        {
+            int i;
+            for (i=0; i < rectSave.Count; i++)
+            {
+                if (rectSave[i].Contains(mx, my) && ClicGauche)
+                {
+                    // utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
+                    String nom = Path.GetFileName(fileSave[i]);
+                    // 
+                    
+                    Console.WriteLine("Chargement de " + nom);
+
+                    CatRoyal.LoadGame(nom);
+                    CatRoyal.setMenu(EtatMenu.INGAME);
+                }
+                else
+                {
+                    if (rectSave[i].Contains(mx, my))
+                    {
+                        selectFile = i;
+                    }
+                }
+            }
+
+            return; 
+        }
+        
         if (boutonStart.Contains(mx, my))
         {
             select = 0;
@@ -70,8 +126,11 @@ public class MainMenu
                     break;
                 case 1:
                     Console.WriteLine("CHARGER");
-                    CatRoyal.LoadGame(CatRoyal.autoSaveFileName);
-                    CatRoyal.setMenu(EtatMenu.INGAME);
+                    ChargerListe();
+                    charger=true;
+                    
+                    //CatRoyal.LoadGame(CatRoyal.autoSaveFileName);
+                    //CatRoyal.setMenu(EtatMenu.INGAME);
                     break;
                 case 2:
                     Console.WriteLine("Quitter");
@@ -91,6 +150,9 @@ public class MainMenu
         boutoncharger2= content.Load<Texture2D>("textures/map/boutoncharger2");
         boutonquitter= content.Load<Texture2D>("textures/map/boutonquitter");
         boutonquitter2= content.Load<Texture2D>("textures/map/boutonquitter2");
+        cadrestat= content.Load<Texture2D>("textures/map/cadrestat");
+        
+        _font = content.Load<SpriteFont>("font");
     }
 
     public void Update(GameTime gameTime)
@@ -104,14 +166,33 @@ public class MainMenu
     public void Draw(GameTime gameTime,GraphicsDevice graphics, SpriteBatch spriteBatch)
     {
         
-       
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width , graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
         
-
-        spriteBatch.Draw(select == 0 ? boutonjouer2:boutonjouer, boutonStart, Color.White );
-        spriteBatch.Draw(select == 1 ? boutoncharger2:boutoncharger, boutonCharger, Color.White);
-        spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);
+        //affiche tout les noms
+        if (charger)
+        {
+            Rectangle cadrestatRect = new Rectangle(graphics.Viewport.Width/2-300,  graphics.Viewport.Height/2-200, 600, 400);
+            spriteBatch.Draw(cadrestat, cadrestatRect, Color.White);
+            int i;
+            for (i = 0; i<fileSave.Count; i++)
+            {
+                String nom = Path.GetFileName(fileSave[i]);
+                spriteBatch.DrawString(
+                    _font,
+                    nom,
+                    new Vector2(rectSave[i].X, rectSave[i].Y),
+                    selectFile == i ? Color.Blue:Color.Black 
+                );
+            }
+        }
+        else
+        {
+            spriteBatch.Draw(select == 0 ? boutonjouer2:boutonjouer, boutonStart, Color.White );
+            spriteBatch.Draw(select == 1 ? boutoncharger2:boutoncharger, boutonCharger, Color.White);
+            spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);
+        }
+       
         
     }
     

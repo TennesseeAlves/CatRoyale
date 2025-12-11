@@ -210,7 +210,7 @@ public class InGame
         else
         {
             c1 = Color.Maroon;
-            c2 = Color.Red;
+            c2 = Color.IndianRed;
         }
         
         
@@ -440,7 +440,7 @@ public class InGame
                 spriteBatch.Draw(_case, destcase, tint);
 
                 // draw des invocations
-                Rectangle destpion = new Rectangle(caseX + 2, caseY - 20, 50, 70);
+                Rectangle destpion = new Rectangle(caseX, caseY - 18, 55, 70);
 
                 if (!CatRoyal.jeuChat.Plateau.isEmpty(j, i))
                 {

@@ -383,8 +383,8 @@ public class Jeu
         bool boolCaseJauge = Plateau.isEmpty(lig, col) && JoueurActuel.Jauge >= carte.Cout;
 
         // verif que la case d,invocation fait partie de l'endroit possible pour ce joueur
-        bool boolCaseZone = (JoueurActuel == Joueur1 && col + 1 < Longueur() / 2) ||
-                            (JoueurActuel == Joueur2 && col > Longueur() / 2);
+        bool boolCaseZone = (JoueurActuel == Joueur1 && col < Longueur() / 2) ||
+                            (JoueurActuel == Joueur2 && col+1 > Longueur() / 2);
 
         //Console.WriteLine(boolCaseZone+""+boolCaseZone);
         return boolCaseJauge && boolCaseZone;

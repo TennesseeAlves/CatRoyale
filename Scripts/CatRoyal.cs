@@ -33,7 +33,7 @@ public class CatRoyal : Game
     private static int manaY = 130;  
     private static Boolean quitter = false;
     
-    private static string savePath = "../../../data/xml/";
+    public static string savePath = "../../../data/xml/";
     public static string defaultSaveFileName = "defaultSave.xml";
     public static string autoSaveFileName = "autoSave.xml";
 
@@ -108,7 +108,7 @@ public class CatRoyal : Game
                 break;
             case EtatMenu.ENDGAME:
                 Joueur joueur = menuInGame.joueurWin;
-                String texte = joueur.Pseudo;
+                String texte = jeuChat.PseudoJoueurActuel;
                 menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, texte);
                 break;
                 
