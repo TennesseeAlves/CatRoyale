@@ -126,11 +126,19 @@ public class Plateau
     }
 
     public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
-    {   
+    {
         
         if (carte.Type == TypeDeCarte.SORT)
         {
-            Map[ligne].Cases[colonne].Invoc.takeDamage(carte.Degat);
+            if (carte.Degat < 0)
+            {
+                Map[ligne].Cases[colonne].Invoc.takeVie(Math.Abs(carte.Degat));
+            }
+            else
+            {
+                Map[ligne].Cases[colonne].Invoc.takeDamage(carte.Degat);
+            }
+            
         }
         else
         {

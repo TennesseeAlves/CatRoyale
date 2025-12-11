@@ -184,7 +184,7 @@ public class Jeu
         return current.IsKeyDown(Keys.Space) && !last.IsKeyDown(Keys.Space);
     }
     
-    public void transition(KeyboardState current, KeyboardState last, int phase)
+    public void transition(KeyboardState current, KeyboardState last, ClicPhase phaseSouris)
     {
         //déselectionne = met à -1 (donc pas visible à l'affichage)
         //reset = met à 0 (donc de nouveau visible et pos par défaut)
@@ -218,14 +218,14 @@ public class Jeu
                     //incrément carteI
                     CarteI = (CarteI<JoueurActuel.getNbCartesInMain()-1) ? CarteI+1 : 0;
                 }
-                else if ((appuieSurValide(current,last) || phase == 0) && peutSelectionnerCarte(CarteI)){
+                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMERCARTE) && peutSelectionnerCarte(CarteI)){
                     //passe phase à SELECTION_CASE_CARTE
                     Phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
                     CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
                     CaseJ = Plateau.Largeur()/2;
                 }
-                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2) || phase == 1){
+                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2) || phaseSouris == ClicPhase.CLICSURCASEINVOCATION){
                     //passe phase à SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
@@ -252,7 +252,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phase == 2) && peutInvoquer(CarteI,CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMERSELECTION) && peutInvoquer(CarteI,CaseJ,CaseI))
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -270,7 +270,7 @@ public class Jeu
                     CarteI = 0;
                 }
 
-                else if (appuieSurRetour(current,last)||phase == -1)
+                else if (appuieSurRetour(current,last)||phaseSouris == ClicPhase.ANNULER)
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -296,7 +296,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phase == 3) && peutSelectionnerInvocation(CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CLICSURCASESOURCE) && peutSelectionnerInvocation(CaseJ,CaseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     Phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -304,7 +304,7 @@ public class Jeu
                     LastCaseI = CaseI;
                     LastCaseJ = CaseJ;
                 }
-                else if (appuieSurRetour(current,last)|| phase == -1 && JoueurActuel.getNbCartesInMain() > 0)
+                else if (appuieSurRetour(current,last)|| phaseSouris == ClicPhase.ANNULER && JoueurActuel.getNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -332,7 +332,7 @@ public class Jeu
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phase == 4) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
+                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CLICSURCASECIBLE) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -345,7 +345,7 @@ public class Jeu
                     LastCaseJ = -1;
                 }
 
-                else if (appuieSurRetour(current,last)|| phase == -1)
+                else if (appuieSurRetour(current,last)|| phaseSouris == ClicPhase.ANNULER)
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -377,28 +377,59 @@ public class Jeu
     
     public bool peutInvoquer(int i, int lig, int col)
     {
+        bool conditionTotal = false;
         Carte carte = JoueurActuel.getCarteInMainAt(i, CartesExistantes);
 
-        // verifier que la case est vide + jauge suffisante 
+        // verifier que la case est vide + jauge suffisante
         bool boolJauge = JoueurActuel.Jauge >= carte.Cout;
         bool boolCase = Plateau.isEmpty(lig, col);
-        bool boolCaseJauge = boolCase && boolJauge;
 
-        // verif que la case d,invocation fait partie de l'endroit possible pour ce joueur
+        // verif que la case d,invocation fait partie de l'endroit possible
         bool boolCaseZone = (JoueurActuel == Joueur1 && col < Longueur() / 2) ||
-                            (JoueurActuel == Joueur2 && col+1 > Longueur() / 2);
+                            (JoueurActuel == Joueur2 && col + 1 > Longueur() / 2);
 
-        //Console.WriteLine(boolCaseZone+""+boolCaseZone);
-        Carte CarteenMain = JoueurActuel.getCarteInMainAt(CarteI, CartesExistantes);
-        if (CarteenMain.Type == TypeDeCarte.SORT)
+        switch (carte.Type)
         {
-            if (CarteenMain.Degat < 0)
+            case TypeDeCarte.SORT:
             {
-                return boolJauge && !boolCase && Plateau.getEntityAt(lig,col ).PseudoInvocateur == JoueurActuel.Pseudo;
+                //si case vide sort impossible
+                if (boolCase)
+                {
+                    return false;
+                }
+
+                Invocation invoc = Plateau.getEntityAt(lig, col);
+                if (invoc == null)
+                {
+                    return false;
+                } 
+
+                bool estAllie = invoc.PseudoInvocateur == JoueurActuel.Pseudo;
+
+                if (carte.Degat < 0)
+                {
+                    // sort de soin 
+                    conditionTotal = boolJauge && estAllie;
+                }
+                else
+                {
+                    // sort de degat
+                    conditionTotal = boolJauge && !estAllie;
+                }
+
+                break;
             }
-            return boolJauge && !boolCase && Plateau.getEntityAt(lig,col ).PseudoInvocateur != JoueurActuel.Pseudo;
+
+            case TypeDeCarte.COMBATTANT:
+            {
+                // si case vide jauge ok et zone ok
+                conditionTotal = boolJauge && boolCase && boolCaseZone;
+                break;
+            }
         }
-        return boolCaseJauge && boolCaseZone;
+
+        return conditionTotal;
+
     }
 
     private bool peutAttaquer(int lig1, int col1, int lig2, int col2)

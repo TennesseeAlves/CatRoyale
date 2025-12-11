@@ -9,11 +9,20 @@ using Microsoft.Xna.Framework.Content;
 
 namespace TestProjet;
 
+public enum ClicPhase {
+    INITIAL,          
+    ANNULER,           
+    CONFIRMERCARTE,      
+    CLICSURCASEINVOCATION,
+    CONFIRMERSELECTION,
+    CLICSURCASESOURCE,
+    CLICSURCASECIBLE
+}
 public class InGame
 {
     private List<CarteCliquable> _zonesCartes = new List<CarteCliquable>();
     private List<CaseCliquable> _zonesCase = new List<CaseCliquable>();
-    private int phase= -2;
+    private ClicPhase phaseSouris= ClicPhase.INITIAL;
 
     private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2;
     private Texture2D jauge, contourBarMana;
@@ -286,8 +295,8 @@ public class InGame
 
         //on gère les inputs
         Clic();
-        CatRoyal.jeuChat.transition(keyboardState, _previousKeyboardState, phase);
-        phase = -2;
+        CatRoyal.jeuChat.transition(keyboardState, _previousKeyboardState, phaseSouris);
+        phaseSouris = ClicPhase.INITIAL;
         
         //puis, si victoire
         
@@ -512,7 +521,7 @@ public class InGame
             _previousMouseState.LeftButton == ButtonState.Released &&
             ms.LeftButton == ButtonState.Pressed;
         
-        phase = -2;
+        phaseSouris = ClicPhase.INITIAL;
         
         survolQuitter = false;
         if (boutonQuitter.Contains(ms.Position))
@@ -531,9 +540,6 @@ public class InGame
             _previousMouseState = ms;
             return;
         }
-        
-       
-      
         
         EtatAutomate phaseCourante = CatRoyal.jeuChat.Phase;
 
@@ -558,7 +564,7 @@ public class InGame
                     if (oldCarte == r.i)
                     {
                         //Console.WriteLine("valide");
-                        phase = 0; 
+                        phaseSouris = ClicPhase.CONFIRMERCARTE; 
                     }
                     
                     CatRoyal.jeuChat.CarteI = r.i;
@@ -594,13 +600,14 @@ public class InGame
                 switch (phaseCourante)
                 {
                     case EtatAutomate.SELECTION_CARTE:
-                        phase = 1; 
+                
+                        phaseSouris = ClicPhase.CLICSURCASEINVOCATION; 
                         break;
 
                     case EtatAutomate.SELECTION_CASE_CARTE:
                         if (oldI == r.i && oldJ == r.j)
                         {
-                            phase = 2; 
+                            phaseSouris = ClicPhase.CONFIRMERSELECTION; 
                         }
                         break;
 
@@ -608,20 +615,20 @@ public class InGame
                       
                         if (oldI == r.i && oldJ == r.j)
                         {
-                            phase = 3; 
+                            phaseSouris = ClicPhase.CLICSURCASESOURCE; 
                             
-                       
                         }
                         break;
 
                     case EtatAutomate.SELECTION_CASE_CIBLE:
                         if (oldI == r.i && oldJ == r.j)
                         {
-                            phase = 4; 
+                        
+                            phaseSouris = ClicPhase.CLICSURCASECIBLE; 
                             if (CatRoyal.jeuChat.LastCaseI == CatRoyal.jeuChat.CaseI &&
                                 CatRoyal.jeuChat.LastCaseJ == CatRoyal.jeuChat.CaseJ)
                             {
-                                phase = -1; 
+                                phaseSouris = ClicPhase.ANNULER; 
                             }
                         }
                         break;
