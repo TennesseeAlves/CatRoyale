@@ -337,7 +337,9 @@ public class Jeu
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //attaque ou déplace l'invoc en prevCase vers case
+                    
                     AttaqueOuDeplace(LastCaseJ, LastCaseI,CaseJ,CaseI);
+                    
                     //déselectionne prevCase
                     LastCaseI = -1;
                     LastCaseJ = -1;
@@ -372,11 +374,22 @@ public class Jeu
         Invocation? source = Plateau.getEntityAt(lig, col);
         return source != null && source.PseudoInvocateur == JoueurActuel.Pseudo && (source.PeutAttaquer || source.PeutBouger);
     }
+    
     public bool peutInvoquer(int i, int lig, int col)
     {
-        Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
-        return Plateau.isEmpty(lig,col) && JoueurActuel.Jauge >= carte.Cout;
+        Carte carte = JoueurActuel.getCarteInMainAt(i, CartesExistantes);
+
+        // verifier que la case est vide + jauge suffisante 
+        bool boolCaseJauge = Plateau.isEmpty(lig, col) && JoueurActuel.Jauge >= carte.Cout;
+
+        // verif que la case d,invocation fait partie de l'endroit possible pour ce joueur
+        bool boolCaseZone = (JoueurActuel == Joueur1 && col + 1 < Longueur() / 2) ||
+                            (JoueurActuel == Joueur2 && col > Longueur() / 2);
+
+        //Console.WriteLine(boolCaseZone+""+boolCaseZone);
+        return boolCaseJauge && boolCaseZone;
     }
+
     private bool peutAttaquer(int lig1, int col1, int lig2, int col2)
     {
         Invocation? source = Plateau.getEntityAt(lig1, col1);
@@ -405,6 +418,10 @@ public class Jeu
         }
         else
         {
+            //revenir a l'invoc qui a attaqué
+            CaseI= LastCaseI;
+            CaseJ= LastCaseJ;
+            
             Plateau.attack(lig1, col1, lig2, col2);
         }
     }

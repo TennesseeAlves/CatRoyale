@@ -306,7 +306,7 @@ public class InGame
         graphics.Clear(Color.CornflowerBlue);
         _zonesCartes.Clear();
         _zonesCase.Clear();
-        
+        Color colorInvocation= Color.White;
 
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
@@ -325,7 +325,8 @@ public class InGame
             {
                 int caseX = plateauX + i * taillecase;
                 int caseY = plateauY + j * taillecase;
-
+                colorInvocation= Color.White;
+                
                 Rectangle destcase = new Rectangle(caseX, caseY, taillecase, taillecase);
                 _zonesCase.Add(new CaseCliquable(destcase, i, j));
                 bool selection =
@@ -333,18 +334,30 @@ public class InGame
                     (i == CatRoyal.jeuChat.LastCaseI && j == CatRoyal.jeuChat.LastCaseJ);
 
                 Color tint = selection ? Color.Cyan : Color.White;
+                //Console.WriteLine();
+                
+                if (CatRoyal.jeuChat.Phase == EtatAutomate.SELECTION_CASE_CARTE)
+                {
+                    if (!CatRoyal.jeuChat.peutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
+                    {
+                        //Console.WriteLine(j+" "+i);
+                        //Console.WriteLine(CatRoyal.jeuChat.CarteI);
+                        tint = Color.Gray;
+                    }
+                }
+                
                 if (selection)
                 {
                     switch (CatRoyal.jeuChat.Phase)
                     {
                         case EtatAutomate.SELECTION_CASE_CARTE:
-                            if (CatRoyal.jeuChat.Plateau.isEmpty(j, i))
+                            if (CatRoyal.jeuChat.peutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
                             {
                                 tint = Color.Yellow;
                             }
                             else
                             {
-                                tint = Color.Red;
+                                tint = Color.Gray;
                                 DrawInfoGene(spriteBatch, "Impossible \n d'invoquer ici !");
                             }
                             break;
@@ -395,6 +408,7 @@ public class InGame
                             if (j == CatRoyal.jeuChat.LastCaseJ && i == CatRoyal.jeuChat.LastCaseI)
                             {
                                 tint = Color.MediumSeaGreen;
+                                colorInvocation = Color.MediumSeaGreen;
                             }
                             else
                             {
@@ -410,6 +424,7 @@ public class InGame
                                 if (!CatRoyal.jeuChat.Plateau.isEmpty(j, i))
                                 {
                                     tint = Color.Orange;
+                                    colorInvocation = Color.Orange;
                                 }
                             }
 
@@ -421,7 +436,7 @@ public class InGame
                             break;
                     }
                 }
-
+                
                 spriteBatch.Draw(_case, destcase, tint);
 
                 // draw des invocations
@@ -432,14 +447,14 @@ public class InGame
                     Invocation entite = CatRoyal.jeuChat.Plateau.getEntityAt(j, i);
 
                     String ImageEntite = entite.Image;
-                    Color c= Color.White;
+                    
                     
                     SpriteEffects spriteEffect =
                         (!CatRoyal.jeuChat.Plateau.isTower(entite) && entite.PseudoInvocateur == CatRoyal.jeuChat.Joueur2.Pseudo)
                             ? SpriteEffects.FlipHorizontally
                             : SpriteEffects.None;
 
-                    DrawCarte(destpion, c, ImageEntite, 0, spriteEffect, content, spriteBatch);
+                    DrawCarte(destpion, colorInvocation, ImageEntite, 0, spriteEffect, content, spriteBatch);
                     DrawVie(entite, caseX+13, caseY+30, spriteBatch);
                 }
             }
@@ -568,6 +583,8 @@ public class InGame
                         if (oldI == r.i && oldJ == r.j)
                         {
                             phase = 3; 
+                            
+                       
                         }
                         break;
 
@@ -575,6 +592,11 @@ public class InGame
                         if (oldI == r.i && oldJ == r.j)
                         {
                             phase = 4; 
+                            if (CatRoyal.jeuChat.LastCaseI == CatRoyal.jeuChat.CaseI &&
+                                CatRoyal.jeuChat.LastCaseJ == CatRoyal.jeuChat.CaseJ)
+                            {
+                                phase = -1; 
+                            }
                         }
                         break;
                 }
