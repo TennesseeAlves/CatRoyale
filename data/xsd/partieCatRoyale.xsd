@@ -6,8 +6,50 @@
 >
     <!-- prefix "cat" comme le mot anglais "chat" :P -->
 
-    <!-- element racine instanciable -->
-    <element name="jeu" type="cat:Jeu"/>
+    <!-- elements racine -->
+    <element name="jeu" type="cat:Jeu">
+        <!-- Clef unicité pseudo joueur (incorrecte!) -->
+        <key name="clefPseudoJoueur">
+            <!-- la clef est INCORRECTE. Plus tard dans le projet on s'est rendue compte que modéliser les joueurs
+            par joueur1 et joueur2 aurait rendue plus difficile d'établir une clef d'unicité entre leurs pseudo
+            Une solution serait de remplacer joueur1 et joueur2 par simplement joueur (repeté 2 fois) en rajoutant
+            un attribut numero à joueur.
+            -->
+            <selector xpath="."/> 
+            <field xpath="cat:joueur1/cat:pseudo"/>
+        </key>
+
+        <!-- Clef unicité du nom des cartes du jeux -->
+        <key name="clefNomCarte">
+            <selector xpath="cat:cartesDuJeu/cat:carte"/>
+            <field xpath="cat:nom"/>
+        </key>
+        
+        <!--
+        <keyref name="foreignKeyIdCarteJoueur1" refer="cat:clefNomCarte">
+            <selector xpath="cat:joueur1/cat:main"/>
+            <field xpath="cat:idCarte"/>
+        </keyref>
+        <keyref name="foreignKeyIdCarteJoueur2" refer="cat:clefNomCarte">
+            <selector xpath="cat:joueur2/cat:main"/>
+            <field xpath="cat:idCarte"/>
+        </keyref>
+        -->
+
+        <!-- Le pseudoJoueurActuel doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte)
+        <keyref name="foreignKeyPseudoJoueurActuel" refer="cat:clefPseudoJoueur">
+            <selector xpath="cat:pseudoJoueurActuel"/>
+            <field xpath="."/>
+        </keyref>
+        -->
+        
+        <!-- Le pseudoInvocateur d'une invocation doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte)
+        <keyref name="foreignKeyPseudoInvocateur" refer="cat:clefPseudoJoueur">
+            <selector xpath="cat:plateau/cat:lignesDeCases/cat:case/cat:ivocation"/>
+            <field xpath="cat:pseudoInvocateur"/>
+        </keyref>
+        -->
+    </element>
 
     <!-- Jeu -->
     <complexType name="Jeu">
@@ -15,7 +57,7 @@
             <element name="plateau" type="cat:Plateau"/>
             <element name="joueur1" type="cat:Joueur"/>
             <element name="joueur2" type="cat:Joueur"/>
-            <element name="pseudoJoueurActuel" type="string"/> <!-- TODO: clef existence -->
+            <element name="pseudoJoueurActuel" type="string"/>
             <element name="cartesDuJeu" type="cat:ListeDeCartes"/>
         </sequence>
     </complexType>
@@ -45,7 +87,7 @@
     <!-- Invocation -->
     <complexType name="Invocation">
         <sequence>
-            <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef existence -->
+            <element name="pseudoInvocateur" type="string"/>
             <element name="maxVie" type="int"/>
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
@@ -70,7 +112,7 @@
     <!-- ListeIdCarte -->
     <complexType name="ListeIdCarte">
         <sequence>
-            <element name="idCarte" type="string" minOccurs="0" maxOccurs="unbounded"/> <!-- TODO: clef existence -->
+            <element name="idCarte" type="string" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
@@ -86,7 +128,7 @@
         <sequence>
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
-            <element name="nom" type="string"/> <!-- TODO: unicite id -->
+            <element name="nom" type="string"/> <!-- unique -->
             <element name="imageCarte" type="string"/>
             <element name="imageInvocation" type="string"/>
             <element name="cout" type="int"/>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CatRoyale.Scripts;
@@ -56,6 +57,7 @@ public class CatRoyal : Game
     {
         if (quitter)
         {
+            Console.WriteLine(" CatRoyal Rocks ! Merci d'avoir joué à notre jeu ! :)");
             Exit();
         }
         switch (_menu)
