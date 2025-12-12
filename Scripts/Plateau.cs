@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 namespace TestProjet.Scripts;
 
+/*
+ * 
+ *  Stocké ainsi à cause de la sérialization. Il y avait très certainement bien mieux et très facilement, mais je n'ai pas trouvé et cette version marche correctement.
+ *
+ */
 
-//J'ai tout revu à cause de la serialization.
-//Il y avait très certainement bien mieux et très facilement, mais j'ai pas trouvé et j'en ai eu marre donc j'ai tout refait de 0.
-
-//classes intermédiaire pour la sérialization
 [XmlType("CasePlateau")]
 public class CasePlateau
 {
@@ -48,6 +49,7 @@ public class Plateau
     [XmlElement("ligneDeCases")]
     public List<LigneDeCases> Map {get; set;}
 
+    //contructeur avec paramètres non utilisé actuellement mais déja implémenté par sécurité
     public Plateau(int longueur, int largeur)
     {
         List<LigneDeCases> lignes = new List<LigneDeCases>();
@@ -61,6 +63,7 @@ public class Plateau
             lignes.Add(ligne);
         }
         Map = lignes;
+        InitAfterLoad();
     }
     
     //contructeur vide pour le XMLSerializer
@@ -68,7 +71,8 @@ public class Plateau
     {
         Map = new List<LigneDeCases>();
     }
-
+    
+    //fonction à appelé après chaque Load
     public void InitAfterLoad()
     {
         int largeur = Map.Count;
@@ -92,12 +96,14 @@ public class Plateau
         return Map.Count;
     }
 
-    public void setEntityAt(Invocation invoc, int ligne, int colonne)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes de listes
+    public void SetEntityAt(Invocation invoc, int ligne, int colonne)
     {
         Map[ligne].Cases[colonne].EstVide = (invoc==null);
         Map[ligne].Cases[colonne].Invoc = invoc;
     }
-    public Invocation? getEntityAt(int ligne, int colonne)
+    
+    public Invocation? GetEntityAt(int ligne, int colonne)
     {
         if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
@@ -106,7 +112,7 @@ public class Plateau
         return Map[ligne].Cases[colonne].Invoc;
     }
 
-    public bool isEmpty(int ligne, int colonne)
+    public bool IsEmpty(int ligne, int colonne)
     {
         if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
@@ -115,7 +121,7 @@ public class Plateau
         return Map[ligne].Cases[colonne].EstVide;
     }
 
-    public void deleteAt(int ligne, int colonne)
+    public void DeleteAt(int ligne, int colonne)
     {
         if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
         {
@@ -124,32 +130,27 @@ public class Plateau
         Map[ligne].Cases[colonne].EstVide = true;
         Map[ligne].Cases[colonne].Invoc = null;
     }
-
-    public void invoke(Joueur joueur, Carte carte, int ligne, int colonne)
+    
+    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    public void Invoke(Joueur joueur, Carte carte, int ligne, int colonne)
     {
         
         if (carte.Type == TypeDeCarte.SORT)
         {
-            if (carte.Degat < 0)
-            {
-                Map[ligne].Cases[colonne].Invoc.takeVie(Math.Abs(carte.Degat));
-            }
-            else
-            {
-                Map[ligne].Cases[colonne].Invoc.takeDamage(carte.Degat);
-            }
-            
+            //puisque pour l'instant les 2 seuls sorts sont une potion de vie (avec dégat négatif ducoup) et une potion de poison (sans dégat sur la durée)
+            Map[ligne].Cases[colonne].Invoc.TakeDamage(carte.Degat);
         }
         else
         {
             Map[ligne].Cases[colonne].EstVide = false;
-            Map[ligne].Cases[colonne].Invoc = carte.generateInvocation();
+            Map[ligne].Cases[colonne].Invoc = carte.GenerateInvocation();
             Map[ligne].Cases[colonne].Invoc.PseudoInvocateur = joueur.Pseudo;
         }
         
     }
-
-    public void move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    
+    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    public void Move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
         Map[ligneArrive].Cases[colonneArrive].EstVide = false;
         Map[ligneArrive].Cases[colonneArrive].Invoc = Map[ligneDepart].Cases[colonneDepart].Invoc;
@@ -157,11 +158,12 @@ public class Plateau
         Map[ligneDepart].Cases[colonneDepart].Invoc = null;
         Map[ligneArrive].Cases[colonneArrive].Invoc.PeutBouger = false;
     }
-
-    public void attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
+    
+    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    public void Attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
         //effectue l'attaque et vérifie s'il est mort
-        if (Map[ligneArrive].Cases[colonneArrive].Invoc.takeDamage(Map[ligneDepart].Cases[colonneDepart].Invoc.Degat))
+        if (Map[ligneArrive].Cases[colonneArrive].Invoc.TakeDamage(Map[ligneDepart].Cases[colonneDepart].Invoc.Degat))
         {
             Map[ligneArrive].Cases[colonneArrive].EstVide = true;
             Map[ligneArrive].Cases[colonneArrive].Invoc = null;
@@ -169,12 +171,12 @@ public class Plateau
         Map[ligneDepart].Cases[colonneDepart].Invoc.PeutAttaquer = false;
     }
 
-    public bool victory(Joueur joueur)
+    public bool Victory(Joueur joueur)
     {
         return TowerJ1.PseudoInvocateur == joueur.Pseudo && TowerJ2.Vie == 0 || TowerJ2.PseudoInvocateur == joueur.Pseudo && TowerJ1.Vie == 0;
     }
 
-    public bool isTower(Invocation invoc)
+    public bool IsTower(Invocation invoc)
     {
         return invoc == TowerJ1 || invoc == TowerJ2;
     }

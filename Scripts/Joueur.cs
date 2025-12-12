@@ -15,10 +15,9 @@ public class Joueur
     [XmlElement("main")] public ListeIdCartes Main {get; set;}
     [XmlElement("deck")] public ListeIdCartes Deck {get; set;}
     [XmlIgnore] public static int MAXJAUGE = 14;
-    //champs internes
     [XmlIgnore] private int _jauge;
     
-    //constructeurs
+    //contructeur avec paramètres non utilisé actuellement mais déja implémenté par sécurité
     public Joueur(string pseudo, int winStreak)
     {
         Pseudo = pseudo;
@@ -30,110 +29,121 @@ public class Joueur
     //constructeur vide pour le XMLSerializer
     public Joueur(){}
     
-    //methodes autres
-    public void remplirJauge()
+    public void RemplirJauge()
     {
         Jauge = MAXJAUGE;
     }
 
-    public void reduireJauge(int usage)
+    public void ReduireJauge(int usage)
     {
         Jauge -= usage;
     }
 
-    public int getNbCartesInMain()
+    public int GetNbCartesInMain()
     {
         return Main.Length();
     }
     
-    public int getNbCartesInDeck()
+    public int GetNbCartesInDeck()
     {
         return Deck.Length();
     }
     
-    public void addCarteInMain(Carte carte)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void AddCarteInMain(Carte carte)
     {
-        Main.appendCarte(carte);
-    }
-    public void addCarteInMain(string carte)
-    {
-        Main.appendId(carte);
+        Main.AppendCarte(carte);
     }
     
-    public void addCarteInDeck(Carte carte)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void AddCarteInMain(string carte)
     {
-        Deck.appendCarte(carte);
+        Main.AppendId(carte);
     }
-    public void addCarteInDeck(string carte)
+    
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void AddCarteInDeck(Carte carte)
     {
-        Deck.appendId(carte);
+        Deck.AppendCarte(carte);
+    }
+    
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void AddCarteInDeck(string carte)
+    {
+        Deck.AppendId(carte);
     }
 
-    public Carte getCarteInMainAt(int i, ListeDeCartes Cartes)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public Carte GetCarteInMainAt(int i, ListeDeCartes cartes)
     {
-        return Main.getCarteAt(i, Cartes);
+        return Main.GetCarteAt(i, cartes);
     }
 
-    public Carte getCarteInDeckAt(int i, ListeDeCartes Cartes)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public Carte GetCarteInDeckAt(int i, ListeDeCartes cartes)
     {
-        return Deck.getCarteAt(i, Cartes);
+        return Deck.GetCarteAt(i, cartes);
     }
 
-    public void deleteCarteInMain(Carte carte)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void DeleteCarteInMain(Carte carte)
     {
-        int i = Main.getIndexOf(carte);
+        int i = Main.GetIndexOf(carte);
         if (i == -1)
         {
             throw new ArgumentException();
         }
-        Main.removeIdAt(i);
+        Main.RemoveIdAt(i);
     }
 
-    public void deleteCarteInMainAt(int i)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void DeleteCarteInMainAt(int i)
     {
         if (i >= Main.Length())
         {
             throw new ArgumentException();
         }
-        Main.removeIdAt(i);
+        Main.RemoveIdAt(i);
     }
 
-    public void deleteCarteInDeck(Carte carte)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void DeleteCarteInDeck(Carte carte)
     {
-        int i = Deck.getIndexOf(carte);
+        int i = Deck.GetIndexOf(carte);
         if (i == -1)
         {
             throw new ArgumentException();
         }
-        Deck.removeIdAt(i);
+        Deck.RemoveIdAt(i);
     }
 
-    public void deleteCarteInDeckAt(int i)
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void DeleteCarteInDeckAt(int i)
     {
         if (i >= Deck.Length())
         {
             throw new ArgumentException();
         }
-        Deck.removeIdAt(i);
+        Deck.RemoveIdAt(i);
     }
 
-    public void putCarteInDeckFromMainAt(int i)
+    public void PutCarteInDeckFromMainAt(int i)
     {
         if (i >= Main.Length())
         {
             throw new ArgumentException();
         }
-        string carte = Main.getIdAt(i);
-        Main.removeIdAt(i);
-        Deck.appendId(carte);
+        string carte = Main.GetIdAt(i);
+        Main.RemoveIdAt(i);
+        Deck.AppendId(carte);
     }
 
-    public void pioche()
+    public void Pioche()
     {
         Random random = new Random();
         int i = random.Next(0, Deck.Length());
-        string cartePioche = Deck.getIdAt(i);
-        Deck.removeIdAt(i);
-        Main.appendId(cartePioche);
+        string cartePioche = Deck.GetIdAt(i);
+        Deck.RemoveIdAt(i);
+        Main.AppendId(cartePioche);
     }
 }

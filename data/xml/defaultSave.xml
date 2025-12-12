@@ -30,9 +30,10 @@
             <case estVide="false">
                 <invocation>
                     <pseudoInvocateur>Alice</pseudoInvocateur>
-                    <vie>50</vie>
                     <maxVie>50</maxVie>
+                    <vie>50</vie>
                     <degat>0</degat>
+                    <nom>Tour du Joueur 1</nom>
                     <image>textures/mobs/TourJ1</image>
                     <peutBouger>false</peutBouger>
                     <peutAttaquer>false</peutAttaquer>
@@ -47,9 +48,10 @@
             <case estVide="false">
                 <invocation>
                     <pseudoInvocateur>Bob</pseudoInvocateur>
-                    <vie>50</vie>
                     <maxVie>50</maxVie>
+                    <vie>50</vie>
                     <degat>0</degat>
+                    <nom>Tour du Joueur 2</nom>
                     <image>textures/mobs/TourJ2</image>
                     <peutBouger>false</peutBouger>
                     <peutAttaquer>false</peutAttaquer>
@@ -193,6 +195,26 @@
     </joueur2>
     <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
     <cartesDuJeu>
+        <carte>
+            <vie>50</vie>
+            <degat>0</degat>
+            <nom>Tour du Joueur 1</nom>
+            <imageCarte>textures/mobs/tourj1</imageCarte>
+            <imageInvocation>textures/mobs/tourj1</imageInvocation>
+            <cout>0</cout>
+            <type>objet</type>
+            <rarete>légendaire</rarete>
+        </carte>
+        <carte>
+            <vie>50</vie>
+            <degat>0</degat>
+            <nom>Tour du Joueur 2</nom>
+            <imageCarte>textures/mobs/tourj2</imageCarte>
+            <imageInvocation>textures/mobs/tourj2</imageInvocation>
+            <cout>0</cout>
+            <type>objet</type>
+            <rarete>légendaire</rarete>
+        </carte>
         <carte>
             <vie>8</vie>
             <degat>3</degat>

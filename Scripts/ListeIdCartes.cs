@@ -15,28 +15,21 @@ public class ListeIdCartes
 
     public int Length()
     {
-        if (IdCartes == null) IdCartes = new string[0]; //--------------------------------------------------------------
+        if (IdCartes == null) IdCartes = new string[0]; //je n'arrive pas à comprendre la raison exact, mais sans cette ligne-là certaine sauvegarde font crash quand on les charges
         return IdCartes.Length;
     }
 
-    public Carte getCarteAt(int i, ListeDeCartes Cartes) 
+    public Carte GetCarteAt(int i, ListeDeCartes cartes) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
 
-        for (int j = 0; j < Cartes.Length(); j++)
-        {
-            if (Cartes.getCarteAt(j).Nom == IdCartes[i])
-            {
-                return Cartes.getCarteAt(j);
-            }
-        }
-        throw new Exception("un id incorrect a été entré dans une ListeIdCartes : "+IdCartes[i]);
+        return cartes.GetCarteByName(IdCartes[i]);
     }
 
-    public string getIdAt(int i) 
+    public string GetIdAt(int i) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -45,8 +38,9 @@ public class ListeIdCartes
         
         return IdCartes[i];
     }
-
-    public void setCarteAt(int i, Carte carte) 
+    
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void SetCarteAt(int i, Carte carte) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -55,7 +49,8 @@ public class ListeIdCartes
         IdCartes[i] =  carte.Nom;
     }
 
-    public void setIdAt(int i, string carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void SetIdAt(int i, string carte) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -64,13 +59,14 @@ public class ListeIdCartes
         IdCartes[i] =  carte;
     }
 
-    public Carte removeCarteAt(int i, ListeDeCartes Cartes) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public Carte RemoveCarteAt(int i, ListeDeCartes cartes) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
             throw new IndexOutOfRangeException();
         }
-        string rep = IdCartes[i];
+        
         string[] newIdCartes = new string[IdCartes.Length - 1];
 
         int k = 0;
@@ -98,20 +94,11 @@ public class ListeIdCartes
         }
         */
         IdCartes = newIdCartes;
-        
-        
 
-        for (int j = 0; j < Cartes.Length(); j++)
-        {
-            if (Cartes.getCarteAt(j).Nom == rep)
-            {
-                return Cartes.getCarteAt(j);
-            }
-        }
-        throw new Exception("un id incorrect a été entré dans une ListeIdCartes : "+IdCartes[i]);
+        return cartes.GetCarteByName(IdCartes[i]);
     }
 
-    public string removeIdAt(int i) 
+    public string RemoveIdAt(int i) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -148,7 +135,7 @@ public class ListeIdCartes
         return rep;
     }
 
-    public int getIndexOf(Carte carte) 
+    public int GetIndexOf(Carte carte) 
     {
         int rep = -1;
         int i = 0;
@@ -163,7 +150,7 @@ public class ListeIdCartes
         return rep;
     }
 
-    public int getIndexOf(string carte) 
+    public int GetIndexOf(string carte) 
     {
         int rep = -1;
         int i = 0;
@@ -178,7 +165,8 @@ public class ListeIdCartes
         return rep;
     }
 
-    public void insertCarteAt(int i, Carte carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void InsertCarteAt(int i, Carte carte) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -204,7 +192,8 @@ public class ListeIdCartes
         IdCartes = newIdCartes;
     }
 
-    public void insertIdAt(int i, string carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void InsertIdAt(int i, string carte) 
     {
         if (i >= IdCartes.Length || i < 0)
         {
@@ -230,7 +219,7 @@ public class ListeIdCartes
         IdCartes = newIdCartes;
     }
 
-    public void appendCarte(Carte carte) 
+    public void AppendCarte(Carte carte) 
     {
         string[] newIdCartes = new string[IdCartes.Length + 1];
         for (int j = 0; j < IdCartes.Length; j++)
@@ -242,7 +231,7 @@ public class ListeIdCartes
         IdCartes = newIdCartes;
     }
 
-    public void appendId(string carte) 
+    public void AppendId(string carte) 
     {
         string[] newIdCartes = new string[IdCartes.Length + 1];
         for (int j = 0; j < IdCartes.Length; j++)

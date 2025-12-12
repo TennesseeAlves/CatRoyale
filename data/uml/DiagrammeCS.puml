@@ -11,11 +11,63 @@ package CS {
 
 package MonoGame {
     class KeyboardState{}
+    class GameTime{}
+    class GraphicsDevice{}
+    class SpriteBatch{}
+    class Game{}
 }
 
 package CatRoyale{
     
-    class Game1{}
+    class CatRoyal{
+        +JeuChat : Jeu
+        -menuMain : MainMenu
+        -menuInGame : InGame
+        -menuEnd : MenuEnd
+        {static} +savePath : string
+        {static} +defaultSaveFileName : string
+        {static} +autoSaveFileName : string
+        +CatRoyal()
+        #Initialize() : void
+        #LoadContent() : void
+        #Update(GameTime gameTime) : void
+        #Draw(GameTime gameTime) : void
+        {static} +SetMenu(EtatMenu menu) : void
+        {static} +Quitter() : void
+        {static} +SaveGame(string FileName) : void
+        {static} +LoadGame(string FileName) : void
+    }
+    class MainMenu{
+        +LoadContent(ContentManager content) : void
+        +Update() : void
+        +Draw(GraphicsDevice graphics, SpriteBatch spriteBatch) : void
+    }
+    
+    class InGame{
+        +LoadContent(ContentManager content, GraphicsDevice graphics) : void
+        +Update() : void
+        +Draw(GraphicsDevice graphics, SpriteBatch spriteBatch) : void
+    }
+    
+    class MenuEnd{
+        +LoadContent(ContentManager content) : void
+        +Update() : void
+        +Draw(GraphicsDevice graphics, SpriteBatch spriteBatch) : void
+    }
+   
+   class EtatMenu <<enum>> {
+        MENUMAIN
+        INGAME
+        ENDGAME
+   }
+   
+   class ClicPhase <<enum>> {
+        INITIAL
+        ANNULER
+        CONFIRMER_CARTE
+        CLIC_SUR_CASE_INVOCATION
+        CONFIRMER_CASE
+   }
     
     class Jeu{
         +Plateau : Plateau
@@ -26,25 +78,23 @@ package CatRoyale{
         +Phase : EtatAutomate
         +CarteI, CaseI, CaseJ, LastCaseI, LasteCaseJ : int
         +Jeu(int longueur, int largeur, string nom1, string nom2)
-        +Jeu(string FileName)
         +Jeu()
         +victory() : bool
-        +Longueur() : int
-        +Largeur() : int
-        +InitGame() : void
         +InitTurn() : void
-        +MainTurn() : void
         +EndTurn() : void
-        +EndGame() : void
-        +transition(KeyboardState current, KeyboardState last) : void
-        +SaveGame(string FileName): void
-        +LoadGame(string FileName): void
+        +transition(KeyboardState current, KeyboardState last, ClicOhase phaseSouris) : void
+        +PeutSelectionnerCarte(int i) : bool
+        +PeutSelectionnerInvocation(int lig, int col) : bool
+        +PeutInvoquer(int i, int lig, int col) : bool
+        +PeutAttaquer(int lig1, int col1, int lig2, int col2) : bool
+        +PeutDeplacer(int lig1, int col1, int lig2, int col2) : bool
+        +PeutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2) : bool
    }
-    note left of Jeu::JouerActuel
+    note top of Jeu
         JouerActuel toujours égal soit à Joueur1 soit à Joueur2
     end note
    
-   enum EtatAutomate {
+   class EtatAutomate <<enum>> {
         SELECTION_CARTE
         SELECTION_CASE_CARTE
         SELECTION_CASE_SOURCE
@@ -64,8 +114,8 @@ package CatRoyale{
         +isEmpty(int ligne, int colonne) : bool
         +deleteAt(int ligne, int colonne) : bool
         +invoke(Carte carte, int ligne, int colonne Joueur invocateur) : bool
-        +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
-        +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : bool
+        +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
+        +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
         +victory(Joueur joueur) : bool
         +isTower(Invocation invoc) : bool
     }
@@ -89,7 +139,7 @@ package CatRoyale{
         +CasePlateau(bool estVide, Invocation? invocation)
         +CasePlateau()
     }
-    note left of CasePlateau::Invoc
+    note right of CasePlateau::Invoc
         Invoc vaut null si EstVide est à true
     end note
     
@@ -110,8 +160,8 @@ package CatRoyale{
         +addCarteInMain(string carte) : void
         +addCarteInDeck(Carte carte) : void
         +addCarteInDeck(string carte) : void
-        +getCarteInMainAt(int i, ListeDeCartes Cartes) : Carte
-        +getCarteInDeckAt(int i, ListeDeCartes Cartes) : Carte
+        +getCarteInMainAt(int i, ListeDeCartes cartes) : Carte
+        +getCarteInDeckAt(int i, ListeDeCartes cartes) : Carte
         +deleteCarteInMain(Carte carte) : void
         +deleteCarteInMainAt(int i) : void
         +deleteCarteInDeck(Carte carte) : void
@@ -127,11 +177,11 @@ package CatRoyale{
         +IdCartes : string[]
         +ListeIdCartes()
         +Length() : int
-        +getCarteAt(int i, ListeDeCartes Cartes) : Carte
+        +getCarteAt(int i, ListeDeCartes cartes) : Carte
         +getIdAt(int i) : string
         +setCarteAt(int i, Carte carte) : void
         +setIdAt(int i, string carte) : void
-        +removeCarteAt(int i, ListeDeCartes Cartes) : Carte
+        +removeCarteAt(int i, ListeDeCartes cartes) : Carte
         +removeIdAt(int i) : string
         +getIndexOf(Carte carte) : int
         +getIndexOf(string carte) : int
@@ -149,6 +199,7 @@ package CatRoyale{
         +Cartes : Carte[]
         +ListeDeCartes()
         +Length() : int
+        +GetCarteByName(string name) : Carte
         +getCarteAt(int i) : Carte
         +setCarteAt(int i, Carte carte) : void
         +removeCarteAt(int i) : Carte
@@ -186,30 +237,29 @@ package CatRoyale{
     }
     
     class Invocation {
-        +Vie : int
+        +PseudoInvocateur : string
         +MaxVie : int
+        +Vie : int
         +Degat : int
         +Image : string
         +PeutBouger : bool
         +PeutAttaquer : bool
-        +Invocateur : Joueur
-        +PseudoInvocateur : string
         +Invocation(int vie, int degat, string image)
         +Invocation()
         +getVie() : int
         +takeDamage(int degat) : bool
         +takeVie(int vie) : bool
     }
-    note left of Invocation::Invocateur
-        Invocateur est juste une référence vers la joueur qui
-        l'a invoqué, pour avoir un accès direct sans le chercher
-    end note
-    note left of Invocation::PseudoInvocateur
+    note right of Invocation::PseudoInvocateur
         PseudoInvocateur est utilisé pour la serialization
         et contient précisément le pseudo de Invocateur
     end note
     
-    Game1 *-- Jeu
+    Game <|-- CatRoyal
+    CatRoyal *-- Jeu
+    CatRoyal *-- MainMenu
+    CatRoyal *-- InGame
+    CatRoyal *-- MenuEnd
     Jeu *-- Plateau
     Jeu "1"*--"3" Joueur
     Jeu *-- ListeDeCartes
@@ -221,8 +271,11 @@ package CatRoyale{
     Joueur "1"*--"2" ListeIdCartes
     ListeDeCartes "1"*--"*" Carte
     Carte *-- TypeDeCarte
-    Carte *-- Invocation
     Carte *-- TypeRarete
-    Invocation *-- Joueur
 }
+note as N1
+    <size:22>Dû au trop grand nombre d'attributs et méthodes nécéssaires à ce projet,
+    <size:22>nous avons décidé de ne pas représenter les attributs et méthodes private,
+    <size:22>sauf si nous les jugeons important.
+end note
 @enduml

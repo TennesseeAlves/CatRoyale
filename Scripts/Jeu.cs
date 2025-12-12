@@ -4,26 +4,14 @@ using System.Xml.Serialization;
 
 namespace TestProjet.Scripts;
 
-
-/* Ce qu'on voudrait pouvoir faire:
- *      -entrer les pseudo et charger le deck par défaut (et mettre winstreak à 0) si on ne charge pas une partie
- *      -charger/sauvegarder des joueurs (pseudo + winstreak + deck) mais pas une partie (donc pas plateau ni main)
- *      -charger/sauvegarder une partie (en cours ou fini) depuis/vers un XML
+/* Ce qu'on aurait aimer ajouter si on avait plus de temps:
+ *      -entrer les pseudo et créer un deck sans le charger
+ *      -charger/sauvegarder des joueurs (pseudo + winstreak + deck) mais pas toute la partie (donc pas le plateau ni la main)
  *      -afficher un tableau des highscores (en winstreak)
- *      -controler à la souris
- *      -voir les stats de nos cartes et invoc (vie, attaque, si elles sont jouables...)
- *      -encercler une invoc et qu'elle ne puisse plus bouger
-*/
-/*
- * Problèmes restants:
- *                      -pas de load and save
- *                      -pas de deck
- *                      -pas de menu (parties en boucles)
- *                      -doit copier coller controle souris et faire partie sauvegarde
- *                      -deplacement en noclip
- *                      -mana max écrit en dur dans l'affichage
- *                      -pas de bot en face?
- *                      -sort de vie et de dégats (degat negatif pour vie)
+ *      -qu'une invoc encerclée ne puisse plus bouger
+ *      -ajouter un bot en face
+ *      -ajouter des sorts et des objets (comme des batiments par exemple)
+ *      -gérer les paramètres depuis un XML (pas long mais on y a pensé trop tard)
 */
 
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
@@ -44,18 +32,17 @@ public class Jeu
     [XmlElement("cartesDuJeu")] public ListeDeCartes CartesExistantes { get; set; }
 
     //variables globales aux fonctions
-    [XmlIgnore] public Joueur JoueurActuel; //pour savoir à qui c'est le tour
+    [XmlIgnore] public Joueur JoueurActuel; //sert à gérer les tours
     [XmlIgnore] public EtatAutomate Phase;
     [XmlIgnore] public int CarteI, CaseI, CaseJ, LastCaseI, LastCaseJ;
 
-    //paramètres du jeu (à voir ce qu'on a fait)
-    private int maxDistanceDeplacement = 3;
-    private int maxDistanceAttaque = 2;
-    private int vieTour = 30;
-    private int maxCarteMain = 10;
-    private int nbCartesPiochees = 2;
+    //paramètres du jeu (pourrait idéalement être stocké et géré dans un XML)
+    private const int MaxDistanceDeplacement = 3;
+    private const int MaxDistanceAttaque = 2;
+    private const int MaxCarteMain = 10;
+    private const int NbCartesPiochees = 2;
 
-    //longeur doit être pair et strictement supérieur à 2, largeur doit être impair et srtictement supérieur à 1
+    //contructeur avec paramètres non utilisé actuellement mais déja implémenté par sécurité
     public Jeu(int longueur, int largeur, string nom1, string nom2)
     {
         Plateau = new Plateau(longueur, largeur);
@@ -71,6 +58,7 @@ public class Jeu
         InitTurn();
     }
     
+    //contructeur vide pour le XMLSerializer
     public Jeu()
     {
         Phase = EtatAutomate.SELECTION_CARTE;
@@ -81,39 +69,28 @@ public class Jeu
         LastCaseJ = -1;
     }
     
-    //-------------------------accesseur---------------------------//
-    public bool victory() { return Plateau.victory(JoueurActuel); }
+    public bool Victory() { return Plateau.Victory(JoueurActuel); }
     
-    public int Longueur()
-    {
-        return Plateau.Longueur();
-    }
-    
-    public int Largeur()
-    {
-        return Plateau.Largeur();
-    }
-    //-------------------------turnManager
-    //début de tour(remplir jauge, piocher cartes, actualiser les peutBouger et peut Attaquer(mais pas du cristal))
+    //-------------------------gestion des tours-------------------------//
     public void InitTurn()
     {
-        //on rempli notre jauge
-        JoueurActuel.remplirJauge();
+        //on rempli sa jauge
+        JoueurActuel.RemplirJauge();
         int n = 0;
         //tant qu'on a pas pioché trop de carte, qu'on a pas la main pleine, et qu'il nous reste des cartes à piocher dans le deck
-        while (n < nbCartesPiochees && JoueurActuel.getNbCartesInMain() < maxCarteMain && JoueurActuel.getNbCartesInDeck() > 0)
+        while (n < NbCartesPiochees && JoueurActuel.GetNbCartesInMain() < MaxCarteMain && JoueurActuel.GetNbCartesInDeck() > 0)
         {
             //on pioche
-            JoueurActuel.pioche();
+            JoueurActuel.Pioche();
             n++;
         }
-        //toutes nos invocs sont de nouveau jouables
+        //toutes nos invocs sont de nouveau jouables (sauf la tour)
         for (int i = 0; i < Plateau.Largeur(); i++)
         {
             for (int j = 0; j < Plateau.Longueur(); j++)
             {
-                Invocation? invoc = Plateau.getEntityAt(i, j);
-                if (invoc != null && invoc.PseudoInvocateur == JoueurActuel.Pseudo && !Plateau.isTower(invoc))
+                Invocation? invoc = Plateau.GetEntityAt(i, j);
+                if (invoc != null && invoc.PseudoInvocateur == JoueurActuel.Pseudo && !Plateau.IsTower(invoc))
                 {
                     invoc.PeutAttaquer = true;
                     invoc.PeutBouger = true;
@@ -128,13 +105,14 @@ public class Jeu
         LastCaseI = -1;
         LastCaseJ = -1;
     }
-    //fin de tour(passer la main à l'autre joueur)
+    
     public void EndTurn()
     {
-
-        CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
+        //fonction qui pourrait servir si on ajoute des effets qui s'applique en fin de manche (comme dans le jeu "invocation des 7")
         
-        //fonction à garder pour si on ajoute des effets qui s'applique en fin de manche (comme dans l'invocation des 7)
+        //on fait une sauvegarde automatique
+        CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
+        //on inverse le joueur actuel
         if (JoueurActuel == Joueur1)
         {
             JoueurActuel = Joueur2;
@@ -143,62 +121,62 @@ public class Jeu
         {
             JoueurActuel = Joueur1;
         }
+        //et on commence son tour
         InitTurn();
     }
 
-    //-------------------------inputManager---------------------------//
-    //---CLAVIER---//
-    //fonctions pour la lisibilité des inputs
-    private bool appuieSurGauche(KeyboardState current, KeyboardState last)
+    //-------------------------gestion des inputs-------------------------//
+    //fonctions pour la lisibilité des inputs et pour pouvoir prendre en charge différentes touches à la fois (pourrait servir pour ajouter les contrôle manette au besoin)
+    private bool AppuieSurGauche(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.Q) && !last.IsKeyDown(Keys.Q)
                || current.IsKeyDown(Keys.Left) && !last.IsKeyDown(Keys.Left);
     }
-    private bool appuieSurDroite(KeyboardState current, KeyboardState last)
+    private bool AppuieSurDroite(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.D) && !last.IsKeyDown(Keys.D)
                || current.IsKeyDown(Keys.Right) && !last.IsKeyDown(Keys.Right);
     }
-    private bool appuieSurHaut(KeyboardState current, KeyboardState last)
+    private bool AppuieSurHaut(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.Z) && !last.IsKeyDown(Keys.Z)
                || current.IsKeyDown(Keys.Up) && !last.IsKeyDown(Keys.Up);
     }
-    private bool appuieSurBas(KeyboardState current, KeyboardState last)
+    private bool AppuieSurBas(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.S) && !last.IsKeyDown(Keys.S)
                || current.IsKeyDown(Keys.Down) && !last.IsKeyDown(Keys.Down);
     }
-    private bool appuieSurRetour(KeyboardState current, KeyboardState last)
+    private bool AppuieSurRetour(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.A) && !last.IsKeyDown(Keys.A)
                || current.IsKeyDown(Keys.Back) && !last.IsKeyDown(Keys.Back);
     }
-    private bool appuieSurValide(KeyboardState current, KeyboardState last)
+    private bool AppuieSurValide(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.E) && !last.IsKeyDown(Keys.E)
                || current.IsKeyDown(Keys.Enter) && !last.IsKeyDown(Keys.Enter);
     }
-    private bool appuieSurFinTour(KeyboardState current, KeyboardState last)
+    private bool AppuieSurFinTour(KeyboardState current, KeyboardState last)
     {
         return current.IsKeyDown(Keys.Space) && !last.IsKeyDown(Keys.Space);
     }
     
-    public void transition(KeyboardState current, KeyboardState last, ClicPhase phaseSouris)
+    public void Transition(KeyboardState current, KeyboardState last, ClicPhase phaseSouris)
     {
-        //déselectionne = met à -1 (donc pas visible à l'affichage)
-        //reset = met à 0 (donc de nouveau visible et pos par défaut)
+        //déselectionne = met à -1 (et donc pas visible à l'affichage)
+        //reset = met à position par défaut (et donc de nouveau visible)
         
-        if (appuieSurFinTour(current,last)){
+        if (AppuieSurFinTour(current,last)){
             //fini le tour
             EndTurn();
-            //return pour pas faire le switch (un else indenterait trop)
+            //return pour pas faire le switch (et indenterait éviter l'indentation supplémentaire que causerait un else)
             return;
         }
         switch (Phase)
         {
             case EtatAutomate.SELECTION_CARTE:
-                if (JoueurActuel.getNbCartesInMain() < 1)
+                if (JoueurActuel.GetNbCartesInMain() < 1)
                 {
                     //si la main est vide, on a pas de carte à selectionner, on passe donc aux mouvements :
                     //passe phase à SELECTION_CASE_SOURCE
@@ -206,62 +184,65 @@ public class Jeu
                     //déselectionne carte
                     CarteI = -1;
                     //reset case
-                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
+                    CaseI = (JoueurActuel==Joueur1) ? 1 : Plateau.Longueur()-2;
                     CaseJ = Plateau.Largeur()/2;
 
                 }
-                else if (appuieSurGauche(current,last) && JoueurActuel == Joueur1 || appuieSurDroite(current,last) &&  JoueurActuel == Joueur2){
+                else if (AppuieSurGauche(current,last) && JoueurActuel == Joueur1 || AppuieSurDroite(current,last) &&  JoueurActuel == Joueur2){
                     //décrémente carteI
-                    CarteI = (CarteI>0) ? CarteI-1 : JoueurActuel.getNbCartesInMain()-1;
+                    CarteI = (CarteI>0) ? CarteI-1 : JoueurActuel.GetNbCartesInMain()-1;
                 }
-                else if (appuieSurDroite(current,last) && JoueurActuel == Joueur1 || appuieSurGauche(current,last) &&  JoueurActuel == Joueur2){
+                else if (AppuieSurDroite(current,last) && JoueurActuel == Joueur1 || AppuieSurGauche(current,last) &&  JoueurActuel == Joueur2){
                     //incrément carteI
-                    CarteI = (CarteI<JoueurActuel.getNbCartesInMain()-1) ? CarteI+1 : 0;
+                    CarteI = (CarteI<JoueurActuel.GetNbCartesInMain()-1) ? CarteI+1 : 0;
                 }
-                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMERCARTE) && peutSelectionnerCarte(CarteI)){
+                else if ((AppuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMER_CARTE) && PeutSelectionnerCarte(CarteI)){
                     //passe phase à SELECTION_CASE_CARTE
                     Phase = EtatAutomate.SELECTION_CASE_CARTE;
                     //reset case
-                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
+                    CaseI = (JoueurActuel==Joueur1) ? 1 : Plateau.Longueur()-2;
                     CaseJ = Plateau.Largeur()/2;
                 }
-                else if ((appuieSurHaut(current,last) && JoueurActuel ==  Joueur1) || (appuieSurBas(current,last) && JoueurActuel ==  Joueur2) || phaseSouris == ClicPhase.CLICSURCASEINVOCATION){
+                else if (AppuieSurHaut(current,last) && JoueurActuel ==  Joueur1 || AppuieSurBas(current,last) && JoueurActuel ==  Joueur2 || phaseSouris == ClicPhase.CLIC_SUR_CASE_INVOCATION){
                     //passe phase à SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //déselectionne carte
                     CarteI = -1;
-                    //reset case
-                    CaseI = (JoueurActuel==Joueur1)?1:Plateau.Longueur()-2;
-                    CaseJ = Plateau.Largeur()/2;
+                    if (phaseSouris != ClicPhase.CLIC_SUR_CASE_INVOCATION)
+                    {
+                        //reset case
+                        CaseI = (JoueurActuel==Joueur1) ? 1 : Plateau.Longueur()-2;
+                        CaseJ = Plateau.Largeur()/2;
+                    }
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CARTE:
-                if (appuieSurGauche(current,last) && (JoueurActuel == Joueur1 || CaseI > Plateau.Longueur()/2)){
+                if (AppuieSurGauche(current,last) && (JoueurActuel == Joueur1 || CaseI > Plateau.Longueur()/2)){
                     //décrémente caseI
                     CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
-                else if (appuieSurDroite(current,last) && (JoueurActuel == Joueur2 || CaseI+1 < Plateau.Longueur()/2)){
+                else if (AppuieSurDroite(current,last) && (JoueurActuel == Joueur2 || CaseI+1 < Plateau.Longueur()/2)){
                     //incrémente caseI
                     CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
-                else if (appuieSurHaut(current,last)){
+                else if (AppuieSurHaut(current,last)){
                     //décrémente caseJ
                     CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
-                else if (appuieSurBas(current,last)){
+                else if (AppuieSurBas(current,last)){
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMERSELECTION) && peutInvoquer(CarteI,CaseJ,CaseI))
+                else if ((AppuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMER_CASE) && PeutInvoquer(CarteI,CaseJ,CaseI))
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
                     //invoque la carte sur la case
-                    Plateau.invoke(JoueurActuel,JoueurActuel.getCarteInMainAt(CarteI,CartesExistantes),CaseJ,CaseI);
+                    Plateau.Invoke(JoueurActuel,JoueurActuel.GetCarteInMainAt(CarteI,CartesExistantes),CaseJ,CaseI);
                     //consomme le mana
-                    JoueurActuel.reduireJauge(JoueurActuel.getCarteInMainAt(CarteI,CartesExistantes).Cout);
+                    JoueurActuel.ReduireJauge(JoueurActuel.GetCarteInMainAt(CarteI,CartesExistantes).Cout);
                     //retire la carte de la main et la remet dans le deck
-                    JoueurActuel.putCarteInDeckFromMainAt(CarteI);
+                    JoueurActuel.PutCarteInDeckFromMainAt(CarteI);
                     
                     //déselectionne la case
                     CaseI = -1;
@@ -270,7 +251,7 @@ public class Jeu
                     CarteI = 0;
                 }
 
-                else if (appuieSurRetour(current,last)||phaseSouris == ClicPhase.ANNULER)
+                else if (AppuieSurRetour(current,last) || phaseSouris == ClicPhase.ANNULER)
                 {
                     //passe phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -280,23 +261,23 @@ public class Jeu
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_SOURCE:
-                if (appuieSurGauche(current,last)){
+                if (AppuieSurGauche(current,last)){
                     //décrémente caseI
                     CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
-                else if (appuieSurDroite(current,last)){
+                else if (AppuieSurDroite(current,last)){
                     //incrémente caseI
                     CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
-                else if (appuieSurHaut(current,last)){
+                else if (AppuieSurHaut(current,last)){
                     //décrémente caseJ
                     CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
-                else if (appuieSurBas(current,last)){
+                else if (AppuieSurBas(current,last)){
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CLICSURCASESOURCE) && peutSelectionnerInvocation(CaseJ,CaseI))
+                else if ((AppuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMER_CASE) && PeutSelectionnerInvocation(CaseJ,CaseI))
                 {
                     //pass phase à SELECTION_CASE_CIBLE
                     Phase = EtatAutomate.SELECTION_CASE_CIBLE;
@@ -304,7 +285,7 @@ public class Jeu
                     LastCaseI = CaseI;
                     LastCaseJ = CaseJ;
                 }
-                else if (appuieSurRetour(current,last)|| phaseSouris == ClicPhase.ANNULER && JoueurActuel.getNbCartesInMain() > 0)
+                else if ((AppuieSurRetour(current,last) || phaseSouris == ClicPhase.ANNULER) && JoueurActuel.GetNbCartesInMain() > 0)
                 {
                     //pass phase à SELECTION_CARTE
                     Phase = EtatAutomate.SELECTION_CARTE;
@@ -316,36 +297,34 @@ public class Jeu
                 }
                 break;
             case EtatAutomate.SELECTION_CASE_CIBLE:
-                if (appuieSurGauche(current,last)){
+                if (AppuieSurGauche(current,last)){
                     //décrémente caseI
                     CaseI = (CaseI>0) ? CaseI-1 : CaseI;
                 }
-                else if (appuieSurDroite(current,last)){
+                else if (AppuieSurDroite(current,last)){
                     //incrémente caseI
                     CaseI = (CaseI<Plateau.Longueur()-1) ? CaseI+1 : CaseI;
                 }
-                else if (appuieSurHaut(current,last)){
+                else if (AppuieSurHaut(current,last)){
                     //décrémente caseJ
                     CaseJ = (CaseJ>0) ? CaseJ-1 : CaseJ;
                 }
-                else if (appuieSurBas(current,last)){
+                else if (AppuieSurBas(current,last)){
                     //incrémente caseJ
                     CaseJ = (CaseJ<Plateau.Largeur()-1) ? CaseJ+1 : CaseJ;
                 }
-                else if ((appuieSurValide(current,last) || phaseSouris == ClicPhase.CLICSURCASECIBLE) && peutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
+                else if ((AppuieSurValide(current,last) || phaseSouris == ClicPhase.CONFIRMER_CASE) && PeutAttaquerOuDeplacer(LastCaseJ,LastCaseI,CaseJ,CaseI))
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
                     //attaque ou déplace l'invoc en prevCase vers case
-                    
                     AttaqueOuDeplace(LastCaseJ, LastCaseI,CaseJ,CaseI);
-                    
                     //déselectionne prevCase
                     LastCaseI = -1;
                     LastCaseJ = -1;
                 }
 
-                else if (appuieSurRetour(current,last)|| phaseSouris == ClicPhase.ANNULER)
+                else if (AppuieSurRetour(current,last)|| phaseSouris == ClicPhase.ANNULER)
                 {
                     //passe phase SELECTION_CASE_SOURCE
                     Phase = EtatAutomate.SELECTION_CASE_SOURCE;
@@ -356,115 +335,97 @@ public class Jeu
                 break;
         }
     }
-    
-    //---SOURIS---//
-    //TO DO
 
-
-    //-------------------------testManager---------------------------//
+    //-------------------------gérer les vérifications-------------------------//
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une carte non jouable
-    public bool peutSelectionnerCarte(int i)
+    public bool PeutSelectionnerCarte(int i)
     {
-        Carte carte = JoueurActuel.getCarteInMainAt(i,CartesExistantes);
+        Carte carte = JoueurActuel.GetCarteInMainAt(i,CartesExistantes);
         return JoueurActuel.Jauge >= carte.Cout;
     }
+    
     //pour l'ergonomie, pour éviter qu'on puisse séléctionner une invocation non jouable
-    private bool peutSelectionnerInvocation(int lig, int col)
+    public bool PeutSelectionnerInvocation(int lig, int col)
     {
-        Invocation? source = Plateau.getEntityAt(lig, col);
+        Invocation? source = Plateau.GetEntityAt(lig, col);
         return source != null && source.PseudoInvocateur == JoueurActuel.Pseudo && (source.PeutAttaquer || source.PeutBouger);
     }
     
-    public bool peutInvoquer(int i, int lig, int col)
+    public bool PeutInvoquer(int i, int lig, int col)
     {
-        bool conditionTotal = false;
-        Carte carte = JoueurActuel.getCarteInMainAt(i, CartesExistantes);
+        bool rep = false;
+        Carte carte = JoueurActuel.GetCarteInMainAt(i, CartesExistantes);
 
-        // verifier que la case est vide + jauge suffisante
-        bool boolJauge = JoueurActuel.Jauge >= carte.Cout;
-        bool boolCase = Plateau.isEmpty(lig, col);
-
-        // verif que la case d,invocation fait partie de l'endroit possible
-        bool boolCaseZone = (JoueurActuel == Joueur1 && col < Longueur() / 2) ||
-                            (JoueurActuel == Joueur2 && col + 1 > Longueur() / 2);
+        //verifier que la jauge est suffisante
+       if(JoueurActuel.Jauge < carte.Cout) return false;
+        // verif que la case d'invocation fait partie de l'endroit possible
 
         switch (carte.Type)
         {
             case TypeDeCarte.SORT:
-            {
                 //si case vide sort impossible
-                if (boolCase)
+                if (Plateau.IsEmpty(lig, col))
                 {
                     return false;
                 }
-
-                Invocation invoc = Plateau.getEntityAt(lig, col);
-                if (invoc == null)
-                {
-                    return false;
-                } 
-
-                bool estAllie = invoc.PseudoInvocateur == JoueurActuel.Pseudo;
-
+                Invocation invoc = Plateau.GetEntityAt(lig, col);
                 if (carte.Degat < 0)
                 {
-                    // sort de soin 
-                    conditionTotal = boolJauge && estAllie;
+                    //le sort de soin ne peut être utilisé que sur ses propres invocations
+                    rep =  invoc.PseudoInvocateur == JoueurActuel.Pseudo;
                 }
                 else
                 {
-                    // sort de degat
-                    conditionTotal = boolJauge && !estAllie;
+                    //le sort de dégat ne peut être utilisé que sur les invocations adverses
+                    rep =  invoc.PseudoInvocateur != JoueurActuel.Pseudo;
                 }
-
                 break;
-            }
-
             case TypeDeCarte.COMBATTANT:
-            {
-                // si case vide jauge ok et zone ok
-                conditionTotal = boolJauge && boolCase && boolCaseZone;
+                //si la case est vide et dans la zone admissible
+                rep = Plateau.IsEmpty(lig, col)
+                      && (JoueurActuel == Joueur1 && col < Plateau.Longueur()/2
+                          || JoueurActuel == Joueur2 && col+1 > Plateau.Longueur()/2);
                 break;
-            }
+            case TypeDeCarte.OBJET:
+                rep = false; //pas encore implémenté les objets
+                break;
         }
-
-        return conditionTotal;
-
+        return rep;
     }
 
-    private bool peutAttaquer(int lig1, int col1, int lig2, int col2)
+    public bool PeutAttaquer(int lig1, int col1, int lig2, int col2)
     {
-        Invocation? source = Plateau.getEntityAt(lig1, col1);
-        Invocation? cible = Plateau.getEntityAt(lig2, col2);
+        Invocation? source = Plateau.GetEntityAt(lig1, col1);
+        Invocation? cible = Plateau.GetEntityAt(lig2, col2);
         int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceAttaque &&  source != null && cible != null && source.PseudoInvocateur==JoueurActuel.Pseudo && cible.PseudoInvocateur != JoueurActuel.Pseudo && source.PeutAttaquer;
+        return distance <= MaxDistanceAttaque && source != null && cible != null && source.PseudoInvocateur==JoueurActuel.Pseudo && cible.PseudoInvocateur != JoueurActuel.Pseudo && source.PeutAttaquer;
     }
-    public bool peutDeplacer(int lig1, int col1, int lig2, int col2)
-    {
-        Invocation? source = Plateau.getEntityAt(lig1, col1);
-        int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
-        return distance <= maxDistanceDeplacement && source != null && Plateau.isEmpty(lig2,col2) && source.PseudoInvocateur==JoueurActuel.Pseudo && source.PeutBouger;
-    }
-    public bool peutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     
+    public bool PeutDeplacer(int lig1, int col1, int lig2, int col2)
+    {
+        Invocation? source = Plateau.GetEntityAt(lig1, col1);
+        int distance = Math.Abs(lig2-lig1)+Math.Abs(col2-col1);
+        return distance <= MaxDistanceDeplacement && source != null && Plateau.IsEmpty(lig2,col2) && source.PseudoInvocateur==JoueurActuel.Pseudo && source.PeutBouger;
+    }
+    
+    public bool PeutAttaquerOuDeplacer(int lig1, int col1, int lig2, int col2)
     {
      
-        return (peutAttaquer(lig1, col1, lig2, col2) ||  peutDeplacer(lig1, col1, lig2, col2));
+        return (PeutAttaquer(lig1, col1, lig2, col2) ||  PeutDeplacer(lig1, col1, lig2, col2));
     }
 
     private void AttaqueOuDeplace(int lig1, int col1, int lig2, int col2)
     {
-        if (peutDeplacer(lig1, col1, lig2, col2))
+        if (PeutDeplacer(lig1, col1, lig2, col2))
         {
-            Plateau.move(lig1, col1, lig2, col2);
+            Plateau.Move(lig1, col1, lig2, col2);
         }
         else
         {
+            Plateau.Attack(lig1, col1, lig2, col2);
             //revenir a l'invoc qui a attaqué
-            CaseI= LastCaseI;
-            CaseJ= LastCaseJ;
-            
-            Plateau.attack(lig1, col1, lig2, col2);
+            CaseI = LastCaseI;
+            CaseJ = LastCaseJ;
         }
     }
 }

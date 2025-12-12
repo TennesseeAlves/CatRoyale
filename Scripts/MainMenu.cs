@@ -1,53 +1,49 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TestProjet.Scripts;
 using System.Collections.Generic;
 using System.IO;
-namespace TestProjet;
+namespace TestProjet.Scripts;
 
 public class MainMenu
 {
     private GraphicsDeviceManager _graphics;
-    private Texture2D _background, boutonjouer, boutonjouer2, 
-        boutoncharger,boutoncharger2,boutonquitter2,boutonquitter, cadrestat;
+    private Texture2D _background, boutonjouer, boutonjouer2, boutoncharger,
+        boutoncharger2, boutonquitter2, boutonquitter, cadrestat;
     private SpriteBatch _spriteBatch;
-    private SpriteFont _font;
-    private static int boutonLargeur = 390;
-    private static int boutonHauteur = 160;
-    private static int x = (1024  - boutonLargeur) / 2;
-    private static int y = (640 - boutonHauteur) / 2;
-    private static int ecart = 4;
-    private static int offsety = 55;
+    private SpriteFont font;
+    private const int boutonLargeur = 390;
+    private const int boutonHauteur = 160;
+    private const int x = (1024  - boutonLargeur) / 2;
+    private const int y = (640 - boutonHauteur) / 2;
+    private const int ecart = 4;
+    private const int offsety = 55;
     private Rectangle boutonStart = new Rectangle(x, y+offsety-(boutonHauteur+ecart), boutonLargeur, boutonHauteur);
     private Rectangle boutonCharger = new Rectangle(x, y+offsety, boutonLargeur, boutonHauteur);
     private Rectangle boutonQuitter;
     
     
-    static MouseState EtatActuelSouris;
-    static MouseState EtatPrecSouris;
+    private MouseState EtatActuelSouris;
+    private MouseState EtatPrecSouris;
 
     private int select;
     private int selectFile;
     
-    bool charger = false;
+    private bool charger = false;
     private List<string> fileSave = new List<string>();
     private List<Rectangle> rectSave = new List<Rectangle>();
     
     private void ChargerListe()
     {
-        string chemin=CatRoyal.savePath; 
-
         fileSave.Clear();
         rectSave.Clear();
         
         //ajoute les fichiers sauvegardes dans Filesave
         //doc ici https://learn.microsoft.com/fr-fr/dotnet/api/system.io.directory.getfiles?view=net-8.0
         // utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
-        fileSave.AddRange(Directory.GetFiles(chemin));
+        fileSave.AddRange(Directory.GetFiles(CatRoyal.savePath));
         //
         int Y = 250;
         int num = 0;
@@ -60,7 +56,7 @@ public class MainMenu
         }
     }
 
-    public void ClicBouton()
+    private void ClicBouton()
     {
         bool ClicGauche = EtatActuelSouris.LeftButton == ButtonState.Pressed &&
                           EtatPrecSouris.LeftButton == ButtonState.Released;
@@ -83,7 +79,7 @@ public class MainMenu
                     Console.WriteLine("Chargement de " + nom);
 
                     CatRoyal.LoadGame(nom);
-                    CatRoyal.setMenu(EtatMenu.INGAME);
+                    CatRoyal.SetMenu(EtatMenu.INGAME);
                     return; 
                 }
                 else
@@ -124,7 +120,7 @@ public class MainMenu
                     Console.WriteLine("START");
                     CatRoyal.LoadGame(CatRoyal.defaultSaveFileName);
                     CatRoyal.jeuChat.InitTurn();
-                    CatRoyal.setMenu(EtatMenu.INGAME);
+                    CatRoyal.SetMenu(EtatMenu.INGAME);
                     
                     break;
                 case 1:
@@ -163,10 +159,10 @@ public class MainMenu
         boutonquitter2= content.Load<Texture2D>("textures/map/boutonquitter2");
         cadrestat= content.Load<Texture2D>("textures/map/cadrestat");
         
-        _font = content.Load<SpriteFont>("font");
+        font = content.Load<SpriteFont>("font");
     }
 
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         EtatActuelSouris = Mouse.GetState();
         ClicBouton();
@@ -174,7 +170,7 @@ public class MainMenu
 
     }
 
-    public void Draw(GameTime gameTime,GraphicsDevice graphics, SpriteBatch spriteBatch)
+    public void Draw(GraphicsDevice graphics, SpriteBatch spriteBatch)
     {
         
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width , graphics.Viewport.Height);
@@ -187,13 +183,13 @@ public class MainMenu
             Rectangle cadrestatRect = new Rectangle(graphics.Viewport.Width/2-300,  graphics.Viewport.Height/2-200, 600, 400);
             
             spriteBatch.Draw(cadrestat, cadrestatRect, Color.White);
-            spriteBatch.DrawString(_font,  "-- Parties sauvegardées --" , new Vector2(cadrestatRect.X+180, cadrestatRect.Y+30), Color.White);
+            spriteBatch.DrawString(font,  "-- Parties sauvegardées --" , new Vector2(cadrestatRect.X+180, cadrestatRect.Y+30), Color.White);
             int i;
             for (i = 0; i<fileSave.Count; i++)
             {
                 String nom = Path.GetFileName(fileSave[i]);
                 spriteBatch.DrawString(
-                    _font,
+                    font,
                     nom,
                     new Vector2(rectSave[i].X, rectSave[i].Y),
                     selectFile == i ? Color.Blue:Color.Black 

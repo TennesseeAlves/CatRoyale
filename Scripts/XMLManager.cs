@@ -2,6 +2,12 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
+/*
+ *
+ *  Code pris du mini-projet trajectoire et non modifié.
+ *
+ */
+
 /* An XMLManager is used to Serialize (save) /Deserialize (load) XML documents and Objects.
 It's a generic class that must be specialized for a particular object that corresponds to the XML document.
 */

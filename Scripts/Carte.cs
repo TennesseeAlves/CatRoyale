@@ -1,6 +1,4 @@
-using System;
 using System.Xml.Serialization;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace TestProjet.Scripts;
 
@@ -33,10 +31,9 @@ public class Carte
     [XmlElement("cout")] public int Cout { get; set; }
     [XmlElement("type")] public TypeDeCarte Type { get; set; }
     [XmlElement("rarete")] public TypeRarete Rarete { get; set; }
-    //champs internes
     [XmlIgnore] private int _vie;
     
-    //constructeurs
+    //contructeur avec paramètres non utilisé actuellement mais déja implémenté par sécurité
     public Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
     {
         Vie = vie;
@@ -49,39 +46,47 @@ public class Carte
         Rarete = rarete;
         
     }
-    //constructeur vide pour le XMLSerializer
+    //contructeur vide pour le XMLSerializer
     public Carte() { }
 
-    public Invocation generateInvocation()
+    public Invocation GenerateInvocation()
     {
         
-        return new Invocation(Vie, Degat, SpriteInvocation);
+        return new Invocation(Vie, Degat, Nom, SpriteInvocation);
     }
 
     public override string ToString()
     {
-        String affichage= "Nom: "+Nom+"\n"+ 
-                          "Cout: "+Cout+"\n"+
-                          "Type: "+Type+"\n"+
-                          "Rareté: "+Rarete+"\n"+
-                          "Degat: "+Degat+"\n"+ 
-                          "Vie: "+Vie+"\n" ;
-        
-        if (Type == TypeDeCarte.SORT)
+        switch (Type)
         {
-            String soinoudegat= "Inflige :" + Degat;
-            if (Degat < 0)
-            {
-                soinoudegat = "Soigne :" + Math.Abs(Degat);
-            }
-            affichage= "Nom: "+Nom+"\n"+ 
-                   "Cout: "+Cout+"\n"+
-                   "Type: "+Type+"\n"+
-                   "Rareté: "+Rarete+"\n"+
-                   soinoudegat+"\n";
+            case TypeDeCarte.COMBATTANT:
+                return "Nom: "+Nom+"\n"+ 
+                       "Cout: "+Cout+"\n"+
+                       "Type: "+Type+"\n"+
+                       "Rareté: "+Rarete+"\n"+
+                       "Degat: "+Degat+"\n"+ 
+                       "Vie: "+Vie+"\n" ;
+            case TypeDeCarte.SORT:
+                if (Degat < 0)
+                {
+                    return "Nom: "+Nom+"\n"+ 
+                           "Cout: "+Cout+"\n"+
+                           "Type: "+Type+"\n"+
+                           "Rareté: "+Rarete+"\n"+
+                           "Soigne :"+(-1*Degat)+"\n";
+                }
+                return "Nom: "+Nom+"\n"+ 
+                       "Cout: "+Cout+"\n"+
+                       "Type: "+Type+"\n"+
+                       "Rareté: "+Rarete+"\n"+
+                       "Inflige :"+Degat+"\n";
+            case TypeDeCarte.OBJET:
+                return "Nom: "+Nom+"\n" +
+                       "Cout: "+Cout+"\n" +
+                       "Type: "+Type+"\n" +
+                       "Rareté: "+Rarete+"\n";
         }
 
-        return affichage;
-
+        return "";
     }
 }

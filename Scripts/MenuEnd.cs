@@ -1,36 +1,35 @@
-﻿
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TestProjet.Scripts;
 
 
-namespace TestProjet;
+namespace TestProjet.Scripts;
 
 public class MenuEnd
 {
     private GraphicsDeviceManager _graphics;
-    private Texture2D _background, boutonjouer, boutonjouer2, 
-        boutoncharger,boutoncharger2,boutonquitter2,boutonquitter, cadrestat;
+    private Texture2D _background, boutonjouer, boutonjouer2, boutoncharger, 
+        boutoncharger2, boutonquitter2, boutonquitter, cadrestat;
     private SpriteBatch _spriteBatch;
-    private SpriteFont _font;
-    private static int boutonLargeur = 260;
-    private static int boutonHauteur = 106;
-    private static int x = ((1024  - boutonLargeur) / 2)+180;
-    private static int y = ((640 - boutonHauteur) / 2)+150;
-    private static int ecart = 5;
-    Rectangle cadrestatRect = new Rectangle(300,  180, 420, 320);
-    Rectangle boutonStart = new Rectangle(x-boutonLargeur,  y+boutonHauteur+ecart, boutonLargeur, boutonHauteur);
-    Rectangle boutonQuitter = new Rectangle(x, y+boutonHauteur+ecart, 160, boutonHauteur);
+    private SpriteFont font;
+    private const int boutonLargeur = 260;
+    private const int boutonHauteur = 106;
+    private const int x = ((1024  - boutonLargeur) / 2)+180;
+    private const int y = ((640 - boutonHauteur) / 2)+150;
+    private const int ecart = 5;
+    private Rectangle cadrestatRect = new Rectangle(300,  180, 420, 320);
+    private Rectangle boutonStart = new Rectangle(x-boutonLargeur,  y+boutonHauteur+ecart, boutonLargeur, boutonHauteur);
+    private Rectangle boutonQuitter = new Rectangle(x, y+boutonHauteur+ecart, 160, boutonHauteur);
     
     
-    static MouseState EtatActuelSouris;
-    static MouseState EtatPrecSouris;
+    private MouseState EtatActuelSouris;
+    private MouseState EtatPrecSouris;
 
     private int select;
-    public void ClicBouton()
+    
+    private void ClicBouton()
     {
         bool ClicGauche = EtatActuelSouris.LeftButton == ButtonState.Pressed &&
                           EtatPrecSouris.LeftButton == ButtonState.Released;
@@ -65,12 +64,12 @@ public class MenuEnd
                     CatRoyal.jeuChat.Joueur1.WinStreak = winStreakJ1;
                     CatRoyal.jeuChat.Joueur2.WinStreak = winStreakJ2;
                     CatRoyal.jeuChat.InitTurn();
-                    CatRoyal.setMenu(EtatMenu.INGAME);
+                    CatRoyal.SetMenu(EtatMenu.INGAME);
                     break;
           
                 case 2:
                     Console.WriteLine("Quitter");
-                    CatRoyal.setMenu(EtatMenu.MENUMAIN);
+                    CatRoyal.SetMenu(EtatMenu.MENUMAIN);
                     break;
             }
         }
@@ -86,11 +85,11 @@ public class MenuEnd
         boutonjouer2 = content.Load<Texture2D>("textures/map/boutonjouer2");
         boutoncharger= content.Load<Texture2D>("textures/map/boutoncharger");
         boutoncharger2= content.Load<Texture2D>("textures/map/boutoncharger2");
-        _font = content.Load<SpriteFont>("font");
+        font = content.Load<SpriteFont>("font");
         cadrestat= content.Load<Texture2D>("textures/map/cadrestat");
     }
 
-    public void Update(GameTime gameTime)
+    public void Update()
     {
         EtatActuelSouris = Mouse.GetState();
         ClicBouton();
@@ -98,7 +97,7 @@ public class MenuEnd
 
     }
 
-    public void Draw(GameTime gameTime,GraphicsDevice graphics, SpriteBatch spriteBatch, Joueur joueur)
+    public void Draw(GraphicsDevice graphics, SpriteBatch spriteBatch, Joueur joueur)
     {
         
        
@@ -112,8 +111,8 @@ public class MenuEnd
         spriteBatch.Draw(select == 0 ? boutonjouer2:boutonjouer, boutonStart, Color.White );
         spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);
         
-        spriteBatch.DrawString(_font,  "Gagnant(e) : "+ joueur.Pseudo , new Vector2(cadrestatRect.X+120, cadrestatRect.Y+25), Color.White);
-        spriteBatch.DrawString(_font,  "Nombre de partie gagne: "+ joueur.WinStreak , new Vector2(370, 300), Color.Black);
+        spriteBatch.DrawString(font,  "Gagnant(e) : "+ joueur.Pseudo , new Vector2(cadrestatRect.X+120, cadrestatRect.Y+25), Color.White);
+        spriteBatch.DrawString(font,  "Nombre de partie gagne: "+ joueur.WinStreak , new Vector2(370, 300), Color.Black);
         
     }
 }

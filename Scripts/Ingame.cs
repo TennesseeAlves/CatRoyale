@@ -4,25 +4,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
-using TestProjet.Scripts;
 using Microsoft.Xna.Framework.Content;
 
-namespace TestProjet;
+namespace TestProjet.Scripts;
 
 public enum ClicPhase {
-    INITIAL,          
-    ANNULER,           
-    CONFIRMERCARTE,      
-    CLICSURCASEINVOCATION,
-    CONFIRMERSELECTION,
-    CLICSURCASESOURCE,
-    CLICSURCASECIBLE
+    INITIAL,
+    ANNULER,
+    CONFIRMER_CARTE,
+    CLIC_SUR_CASE_INVOCATION,
+    CONFIRMER_CASE
 }
 public class InGame
 {
     private List<CarteCliquable> _zonesCartes = new List<CarteCliquable>();
     private List<CaseCliquable> _zonesCase = new List<CaseCliquable>();
-    private ClicPhase phaseSouris= ClicPhase.INITIAL;
+    private ClicPhase phaseSouris = ClicPhase.INITIAL;
 
     private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2;
     private Texture2D jauge, contourBarMana;
@@ -34,13 +31,11 @@ public class InGame
     private String _carteBaseImage;
 
     private SpriteFont _font;
-    private static int taillecase = 55;
-    private static int manaY = 280;
+    private const int taillecase = 55;
+    private const int manaY = 280;
     
-    private static bool survolQuitter = false;
+    private bool survolQuitter = false;
     private Rectangle boutonQuitter = new Rectangle(20, 500, 120, 120);
-    
-    public Joueur joueurWin;
 
     private class CarteCliquable
     {
@@ -67,7 +62,7 @@ public class InGame
         }
     }
 
-    public void DrawCarte(Rectangle dest, Color tint, String image, int degrees,
+    private void DrawCarte(Rectangle dest, Color tint, String image, int degrees,
         SpriteEffects spriteEffect, ContentManager content, SpriteBatch spriteBatch)
     {
 
@@ -85,7 +80,7 @@ public class InGame
         );
     }
     
-    public void DrawInfoGene(SpriteBatch spriteBatch, String text)
+    private void DrawInfoGene(SpriteBatch spriteBatch, String text)
     {
         
         Rectangle cadreRect = new Rectangle(760, 480, 260, 150);
@@ -105,7 +100,7 @@ public class InGame
         SpriteBatch spriteBatch
     )
     {
-        for (int cartenum = 0; cartenum < joueur.getNbCartesInMain(); cartenum++)
+        for (int cartenum = 0; cartenum < joueur.GetNbCartesInMain(); cartenum++)
         {
             int cardX = x + direction * cartenum * espaceCarte;
 
@@ -113,7 +108,7 @@ public class InGame
             Color tint = Color.White;
             if (joueur == CatRoyal.jeuChat.JoueurActuel)
             {
-                Carte carteAt = joueur.getCarteInMainAt(cartenum,CatRoyal.jeuChat.CartesExistantes);
+                Carte carteAt = joueur.GetCarteInMainAt(cartenum,CatRoyal.jeuChat.CartesExistantes);
                 string image = carteAt.Image;
 
                 if (CatRoyal.jeuChat.CarteI == cartenum)
@@ -127,7 +122,7 @@ public class InGame
                         tint = Color.Yellow;
                     }
 
-                    if (!CatRoyal.jeuChat.peutSelectionnerCarte(cartenum))
+                    if (!CatRoyal.jeuChat.PeutSelectionnerCarte(cartenum))
                     {
                         tint = Color.Red;
                         DrawInfoGene(spriteBatch, "Mana trop faible !");
@@ -156,7 +151,7 @@ public class InGame
         }
     }
 
-    public void DrawInfoCarte(Carte carte, SpriteBatch spriteBatch)
+    private void DrawInfoCarte(Carte carte, SpriteBatch spriteBatch)
     {
         if (carte != null)
         {
@@ -167,7 +162,7 @@ public class InGame
 
     }
 
-    public void DrawVie(Invocation invocation, int x, int y, SpriteBatch spriteBatch)
+    private void DrawVie(Invocation invocation, int x, int y, SpriteBatch spriteBatch)
     {
         int vie = invocation.Vie;
         int maxVie = invocation.MaxVie;
@@ -202,7 +197,7 @@ public class InGame
             Color.Black);
     }
 
-    public void DrawMana(Joueur joueur, int x, int y, SpriteBatch spriteBatch)
+    private void DrawMana(Joueur joueur, int x, int y, SpriteBatch spriteBatch)
     {
         int mana = joueur.Jauge;
         int maxMana = Joueur.MAXJAUGE;
@@ -271,7 +266,7 @@ public class InGame
         });
     }
 
-    public void Update(GameTime gameTime, GraphicsDeviceManager graphics)
+    public void Update()
     {
 
         KeyboardState keyboardState = Keyboard.GetState();
@@ -280,33 +275,18 @@ public class InGame
             CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
             CatRoyal.Quitter();
         }
-            
-
-        //Console.WriteLine("joueurActuel : " + ((CatRoyal.jeuChat.joueurActuel() == CatRoyal.jeuChat.joueur1()) ? "joueur1" : "joueur2") +
-        //                  "\n" +
-        //                  "mana : " + CatRoyal.jeuChat.joueurActuel().getJauge() + "\n" +
-        //                "phase : " + CatRoyal.jeuChat.phase() + "\n" +
-        //              "main : " + CatRoyal.jeuChat.joueurActuel().getNbCartesInMain() + "\n" +
-        //              "carteI : " + CatRoyal.jeuChat.carteI() + "\n" +
-        //              "caseI : " + CatRoyal.jeuChat.caseI() + "\n" +
-        //             "caseJ : " + CatRoyal.jeuChat.caseJ() + "\n" +
-        //              "prevI : " + CatRoyal.jeuChat.lastCaseI() + "\n" +
-        //             "prevJ : " + CatRoyal.jeuChat.lastCaseJ() + "\n");
-
+        
         //on gère les inputs
         Clic();
-        CatRoyal.jeuChat.transition(keyboardState, _previousKeyboardState, phaseSouris);
-        phaseSouris = ClicPhase.INITIAL;
+        CatRoyal.jeuChat.Transition(keyboardState, _previousKeyboardState, phaseSouris);
         
         //puis, si victoire
         
-        if (CatRoyal.jeuChat.victory())
+        if (CatRoyal.jeuChat.Victory())
         {
             //alors finir la partie
-            joueurWin = CatRoyal.jeuChat.JoueurActuel;
-            joueurWin.WinStreak += 1;
-            
-            CatRoyal.setMenu(EtatMenu.ENDGAME);
+            CatRoyal.jeuChat.JoueurActuel.WinStreak += 1;
+            CatRoyal.SetMenu(EtatMenu.ENDGAME);
             Console.WriteLine("-------------------------GAGNÉ--------------------------------");
             
         }
@@ -315,13 +295,12 @@ public class InGame
         _previousKeyboardState = keyboardState;
     }
 
-    public void Draw(GameTime gameTime, GraphicsDevice graphics, ContentManager content, SpriteBatch spriteBatch)
+    public void Draw(GraphicsDevice graphics, ContentManager content, SpriteBatch spriteBatch)
     {
 
         graphics.Clear(Color.CornflowerBlue);
         _zonesCartes.Clear();
         _zonesCase.Clear();
-        Color colorInvocation= Color.White;
 
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
@@ -329,19 +308,19 @@ public class InGame
        
 
         //draw du plateau
-        int taillel = CatRoyal.jeuChat.Longueur() * taillecase;
-        int tailleh = CatRoyal.jeuChat.Largeur() * taillecase;
+        int taillel = CatRoyal.jeuChat.Plateau.Longueur() * taillecase;
+        int tailleh = CatRoyal.jeuChat.Plateau.Largeur() * taillecase;
 
         int plateauX = (graphics.Viewport.Width - taillel) / 2;
         int plateauY = (graphics.Viewport.Height - tailleh) / 2;
 
-        for (int j = 0; j < CatRoyal.jeuChat.Largeur(); j++)
+        for (int j = 0; j < CatRoyal.jeuChat.Plateau.Largeur(); j++)
         {
-            for (int i = 0; i < CatRoyal.jeuChat.Longueur(); i++)
+            for (int i = 0; i < CatRoyal.jeuChat.Plateau.Longueur(); i++)
             {
                 int caseX = plateauX + i * taillecase;
                 int caseY = plateauY + j * taillecase;
-                colorInvocation= Color.White;
+                Color colorInvocation= Color.White;
                 
                 Rectangle destcase = new Rectangle(caseX, caseY, taillecase, taillecase);
                 _zonesCase.Add(new CaseCliquable(destcase, i, j));
@@ -354,7 +333,7 @@ public class InGame
                 
                 if (CatRoyal.jeuChat.Phase == EtatAutomate.SELECTION_CASE_CARTE)
                 {
-                    if (!CatRoyal.jeuChat.peutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
+                    if (!CatRoyal.jeuChat.PeutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
                     {
                         //Console.WriteLine(j+" "+i);
                         //Console.WriteLine(CatRoyal.jeuChat.CarteI);
@@ -367,7 +346,7 @@ public class InGame
                     switch (CatRoyal.jeuChat.Phase)
                     {
                         case EtatAutomate.SELECTION_CASE_CARTE:
-                            if (CatRoyal.jeuChat.peutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
+                            if (CatRoyal.jeuChat.PeutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
                             {
                                 tint = Color.Yellow;
                             }
@@ -383,9 +362,9 @@ public class InGame
                             Invocation invocAt = null;
                             
                             //si il y a une invocation afficher du bleu
-                            if (!CatRoyal.jeuChat.Plateau.isEmpty(j, i))
+                            if (!CatRoyal.jeuChat.Plateau.IsEmpty(j, i))
                             {
-                                invocAt = CatRoyal.jeuChat.Plateau.getEntityAt(j, i);
+                                invocAt = CatRoyal.jeuChat.Plateau.GetEntityAt(j, i);
                                 tint = Color.DeepSkyBlue;
                             }
                             
@@ -414,7 +393,7 @@ public class InGame
                             //afficher info carte d une invocation sur le plateau
                             if (invocAt != null)
                             {
-                                //DrawInfoCarte(invocAt.Carte, spriteBatch);
+                                DrawInfoCarte(CatRoyal.jeuChat.CartesExistantes.GetCarteByName(invocAt.Nom), spriteBatch);
                             }
 
                             break;
@@ -433,11 +412,11 @@ public class InGame
                             //Console.WriteLine(j+" "+i);
                             //Console.WriteLine(CatRoyal.jeuChat.getLastCaseJ()+" "+CatRoyal.jeuChat.getLastCaseI());
                             
-                            bool go = CatRoyal.jeuChat.peutAttaquerOuDeplacer(CatRoyal.jeuChat.LastCaseJ, CatRoyal.jeuChat.LastCaseI, j, i);
+                            bool go = CatRoyal.jeuChat.PeutAttaquerOuDeplacer(CatRoyal.jeuChat.LastCaseJ, CatRoyal.jeuChat.LastCaseI, j, i);
                             if (go)
                             {
                                 tint = Color.DeepSkyBlue;
-                                if (!CatRoyal.jeuChat.Plateau.isEmpty(j, i))
+                                if (!CatRoyal.jeuChat.Plateau.IsEmpty(j, i))
                                 {
                                     tint = Color.Orange;
                                     colorInvocation = Color.Orange;
@@ -458,15 +437,15 @@ public class InGame
                 // draw des invocations
                 Rectangle destpion = new Rectangle(caseX, caseY - 18, 55, 70);
 
-                if (!CatRoyal.jeuChat.Plateau.isEmpty(j, i))
+                if (!CatRoyal.jeuChat.Plateau.IsEmpty(j, i))
                 {
-                    Invocation entite = CatRoyal.jeuChat.Plateau.getEntityAt(j, i);
+                    Invocation entite = CatRoyal.jeuChat.Plateau.GetEntityAt(j, i);
 
                     String ImageEntite = entite.Image;
                     
                     
                     SpriteEffects spriteEffect =
-                        (!CatRoyal.jeuChat.Plateau.isTower(entite) && entite.PseudoInvocateur == CatRoyal.jeuChat.Joueur2.Pseudo)
+                        (!CatRoyal.jeuChat.Plateau.IsTower(entite) && entite.PseudoInvocateur == CatRoyal.jeuChat.Joueur2.Pseudo)
                             ? SpriteEffects.FlipHorizontally
                             : SpriteEffects.None;
 
@@ -513,7 +492,7 @@ public class InGame
         
     }
 
-    public void Clic()
+    private void Clic()
     {
         MouseState ms = Mouse.GetState();
         
@@ -523,18 +502,22 @@ public class InGame
         
         phaseSouris = ClicPhase.INITIAL;
         
-        survolQuitter = false;
+        //vérifier si la souris est au dessus du bouton quitter
         if (boutonQuitter.Contains(ms.Position))
         {
             survolQuitter = true;
             if (estClique)
             {
-                CatRoyal.setMenu(EtatMenu.MENUMAIN);
+                CatRoyal.SetMenu(EtatMenu.MENUMAIN);
                 return;
             }
-            
+        }
+        else
+        {
+            survolQuitter = false;
         }
         
+        //s'il n'y a pas de clique, on s'arrête là
         if (!estClique)
         {
             _previousMouseState = ms;
@@ -543,95 +526,60 @@ public class InGame
         
         EtatAutomate phaseCourante = CatRoyal.jeuChat.Phase;
 
-        // ici on gere le clique sur carte
-        //Console.WriteLine("");
-        
-        //gerer le chevauchement en partant du haut
+        //gérer un clique sur carte, en gerant le chevauchement en partant du haut
         int i;
         for (i = _zonesCartes.Count - 1; i >= 0; i--)
         {
-            CarteCliquable r = _zonesCartes[i];
-            if (r.zone.Contains(ms.Position))
+            CarteCliquable zoneCarte = _zonesCartes[i];
+            if (zoneCarte.zone.Contains(ms.Position))
             {
                 int oldCarte = CatRoyal.jeuChat.CarteI;
-
-                //Console.WriteLine("Clic carte" + phaseCourante);
-
+                
                 if (phaseCourante == EtatAutomate.SELECTION_CARTE)
                 {
-                    //valide le clique
-                    //Console.WriteLine(r.i);
-                    if (oldCarte == r.i)
-                    {
-                        //Console.WriteLine("valide");
-                        phaseSouris = ClicPhase.CONFIRMERCARTE; 
-                    }
+                    CatRoyal.jeuChat.CarteI = zoneCarte.i;
                     
-                    CatRoyal.jeuChat.CarteI = r.i;
+                    if (oldCarte == zoneCarte.i)
+                    {
+                        phaseSouris = ClicPhase.CONFIRMER_CARTE; 
+                    }
                 }
                 else
                 {
-                    CatRoyal.jeuChat.CarteI = r.i;
                     CatRoyal.jeuChat.Phase = EtatAutomate.SELECTION_CARTE;
+                    CatRoyal.jeuChat.CarteI = zoneCarte.i;
                     CatRoyal.jeuChat.CaseI = -1;
                     CatRoyal.jeuChat.CaseJ = -1;
                 }
-                
                 _previousMouseState = ms;
                 return;
             }
-
-            
         }
-
+        
         // gerer un clique sur plateau 
-        foreach (CaseCliquable r in _zonesCase)
+        foreach (CaseCliquable zoneCase in _zonesCase)
         {
-            if (r.zone.Contains(ms.Position))
+            if (zoneCase.zone.Contains(ms.Position))
             {
                 int oldI = CatRoyal.jeuChat.CaseI;
                 int oldJ = CatRoyal.jeuChat.CaseJ;
                 
-                CatRoyal.jeuChat.CaseI = r.i;
-                CatRoyal.jeuChat.CaseJ = r.j;
+                CatRoyal.jeuChat.CaseI = zoneCase.i;
+                CatRoyal.jeuChat.CaseJ = zoneCase.j;
 
-                //Console.WriteLine("Clic plateau:" + phaseCourante);
-
-                switch (phaseCourante)
+                if (phaseCourante == EtatAutomate.SELECTION_CARTE)
                 {
-                    case EtatAutomate.SELECTION_CARTE:
-                
-                        phaseSouris = ClicPhase.CLICSURCASEINVOCATION; 
-                        break;
-
-                    case EtatAutomate.SELECTION_CASE_CARTE:
-                        if (oldI == r.i && oldJ == r.j)
-                        {
-                            phaseSouris = ClicPhase.CONFIRMERSELECTION; 
-                        }
-                        break;
-
-                    case EtatAutomate.SELECTION_CASE_SOURCE:
-                      
-                        if (oldI == r.i && oldJ == r.j)
-                        {
-                            phaseSouris = ClicPhase.CLICSURCASESOURCE; 
-                            
-                        }
-                        break;
-
-                    case EtatAutomate.SELECTION_CASE_CIBLE:
-                        if (oldI == r.i && oldJ == r.j)
-                        {
-                        
-                            phaseSouris = ClicPhase.CLICSURCASECIBLE; 
-                            if (CatRoyal.jeuChat.LastCaseI == CatRoyal.jeuChat.CaseI &&
-                                CatRoyal.jeuChat.LastCaseJ == CatRoyal.jeuChat.CaseJ)
-                            {
-                                phaseSouris = ClicPhase.ANNULER; 
-                            }
-                        }
-                        break;
+                    phaseSouris = ClicPhase.CLIC_SUR_CASE_INVOCATION;
+                }
+                else if (oldI == zoneCase.i && oldJ == zoneCase.j)
+                {
+                    phaseSouris = ClicPhase.CONFIRMER_CASE;
+                    if(phaseCourante == EtatAutomate.SELECTION_CASE_CIBLE
+                       && CatRoyal.jeuChat.LastCaseI == zoneCase.i
+                       && CatRoyal.jeuChat.LastCaseJ == zoneCase.j)
+                    {
+                        phaseSouris = ClicPhase.ANNULER; 
+                    }
                 }
 
                 _previousMouseState = ms;

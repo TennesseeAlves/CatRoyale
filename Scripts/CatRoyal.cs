@@ -1,11 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
-using TestProjet.Scripts;
 
-namespace TestProjet;
+namespace TestProjet.Scripts;
+
 public enum EtatMenu { MENUMAIN, INGAME, ENDGAME }
 public class CatRoyal : Game
 {
@@ -13,10 +10,6 @@ public class CatRoyal : Game
     
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D _background, _case;
-    private KeyboardState _previousKeyboardState;
-    private String _carteBaseImage;
-    private Texture2D jauge;
 
     private static EtatMenu _menu= EtatMenu.MENUMAIN;
     
@@ -25,13 +18,7 @@ public class CatRoyal : Game
     private InGame menuInGame;
     private MenuEnd menuEnd;
     
-    private SpriteFont _font;
-    private MouseState _previousMouseState;
-    
-    private static int taillecase = 55;
-
-    private static int manaY = 130;  
-    private static Boolean quitter = false;
+    private static bool quitter = false;
     
     public static string savePath = "../../../data/xml/";
     public static string defaultSaveFileName = "defaultSave.xml";
@@ -80,13 +67,13 @@ public class CatRoyal : Game
         switch (_menu)
         {
             case EtatMenu.MENUMAIN:
-                menuMain.Update(gameTime);
+                menuMain.Update();
                 break;
             case EtatMenu.INGAME:
-                menuInGame.Update(gameTime, _graphics);
+                menuInGame.Update();
                 break;
             case EtatMenu.ENDGAME:
-                menuEnd.Update(gameTime);
+                menuEnd.Update();
                 break;
                 
         }
@@ -101,15 +88,15 @@ public class CatRoyal : Game
         switch (_menu)
         {
             case EtatMenu.MENUMAIN:
-                menuMain.Draw(gameTime, GraphicsDevice, _spriteBatch);
+                menuMain.Draw(GraphicsDevice, _spriteBatch);
                 break;
             case EtatMenu.INGAME:
-                menuInGame.Draw(gameTime,  GraphicsDevice, Content,_spriteBatch);
+                menuInGame.Draw(GraphicsDevice, Content,_spriteBatch);
                 break;
             case EtatMenu.ENDGAME:
                
                 Joueur joueur = jeuChat.JoueurActuel;
-                menuEnd.Draw(gameTime, GraphicsDevice, _spriteBatch, joueur);
+                menuEnd.Draw(GraphicsDevice, _spriteBatch, joueur);
                 break;
                 
         }
@@ -117,7 +104,7 @@ public class CatRoyal : Game
         base.Draw(gameTime);
     }
 
-    public static void setMenu(EtatMenu menu)
+    public static void SetMenu(EtatMenu menu)
     {
         _menu = menu;
     }
@@ -131,13 +118,13 @@ public class CatRoyal : Game
     
     
     
-    public static void SaveGame(String FileName)
+    public static void SaveGame(string FileName)
     {
         XMLManager<Jeu> manager = new XMLManager<Jeu>();
         manager.Save(savePath+FileName, jeuChat);
     }
     
-    public static void LoadGame(String FileName)
+    public static void LoadGame(string FileName)
     {
         //on charge la partie
         XMLManager<Jeu> manager = new XMLManager<Jeu>();

@@ -6,28 +6,29 @@ namespace TestProjet.Scripts;
 public class Invocation
 {
     [XmlElement("pseudoInvocateur")] public string PseudoInvocateur { get; set; }
-    [XmlElement("vie")] public int Vie {
-        get => _vie;
-        set => _vie = (value < 0) ? 0 : value;
-    }
     [XmlElement("maxVie")] public int MaxVie {
         get => _maxVie;
         set => _maxVie = (value < 0) ? 0 : value;
     }
+    [XmlElement("vie")] public int Vie {
+        get => _vie;
+        set => _vie = (value < 0) ? 0 : ((value > MaxVie) ? MaxVie : value);
+    }
     [XmlElement("degat")] public int Degat { get; set; }
+    [XmlElement("nom")] public string Nom { get; set; }
     [XmlElement("image")] public string Image { get; set; }
     [XmlElement("peutBouger")] public bool PeutBouger { get; set; }
     [XmlElement("peutAttaquer")] public bool PeutAttaquer { get; set; }
-    //champs internes
     [XmlIgnore] private int _vie;
     [XmlIgnore] private int _maxVie;
     
-    //constructeur
-    public Invocation(int vie, int degat, string image)
+    //contructeur avec paramètres non utilisé actuellement mais déja implémenté par sécurité
+    public Invocation(int vie, int degat, string nom, string image)
     {
-        Vie = vie;
         MaxVie = vie;
+        Vie = vie;
         Degat = degat;
+        Nom = nom;
         Image = image;
         PeutBouger = false;
         PeutAttaquer = false;
@@ -35,22 +36,14 @@ public class Invocation
     //constructeur vide pour le XMLSerializer
     public Invocation() { }
 
-    public bool takeDamage(int degat)
+    public bool TakeDamage(int degat)
     {
         Vie -= degat;
+        //pas besoin de vérifier <0 car le setter assure que Vie ne passe pas en dessous de 0
         if (Vie == 0)
         {
             return true;
         }
         return false;
-    }
-    
-    public void takeVie(int vie)
-    {
-        Vie += vie;
-        if (Vie > MaxVie)
-        {
-            Vie = MaxVie;
-        }
     }
 }

@@ -13,12 +13,26 @@ public class ListeDeCartes
         Cartes = new Carte[0];
     }
 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
     public int Length()
     {
         return Cartes.Length;
     }
 
-    public Carte getCarteAt(int i) 
+    public Carte GetCarteByName(string name)
+    {
+        foreach (Carte c in Cartes)
+        {
+            if (c.Nom == name)
+            {
+                return c;
+            }
+        }
+        throw new Exception("nom absent de la liste : "+name);
+    }
+
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public Carte GetCarteAt(int i) 
     {
         if (i >= Cartes.Length || i < 0)
         {
@@ -27,7 +41,8 @@ public class ListeDeCartes
         return Cartes[i];
     }
 
-    public void setCarteAt(int i, Carte carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void SetCarteAt(int i, Carte carte) 
     {
         if (i >= Cartes.Length || i < 0)
         {
@@ -36,7 +51,7 @@ public class ListeDeCartes
         Cartes[i] =  carte;
     }
 
-    public Carte removeCarteAt(int i) 
+    public Carte RemoveCarteAt(int i) 
     {
         if (i >= Cartes.Length || i < 0)
         {
@@ -73,7 +88,8 @@ public class ListeDeCartes
         return rep;
     }
 
-    public int getIndexOf(Carte carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public int GetIndexOf(Carte carte) 
     {
         int rep = -1;
         int i = 0;
@@ -88,7 +104,8 @@ public class ListeDeCartes
         return rep;
     }
 
-    public void insertCarteAt(int i, Carte carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void InsertCarteAt(int i, Carte carte) 
     {
         if (i >= Cartes.Length || i < 0)
         {
@@ -114,7 +131,8 @@ public class ListeDeCartes
         Cartes = newCartes;
     }
 
-    public void appendCarte(Carte carte) 
+    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    public void AppendCarte(Carte carte) 
     {
         Carte[] newCartes = new Carte[Cartes.Length + 1];
         for (int j = 0; j < Cartes.Length; j++)

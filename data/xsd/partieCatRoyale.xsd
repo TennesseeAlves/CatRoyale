@@ -46,9 +46,10 @@
     <complexType name="Invocation">
         <sequence>
             <element name="pseudoInvocateur" type="string"/> <!-- TODO: clef existence -->
-            <element name="vie" type="int"/>
             <element name="maxVie" type="int"/>
+            <element name="vie" type="int"/>
             <element name="degat" type="int"/>
+            <element name="nom" type="string"/>
             <element name="image" type="string"/>
             <element name="peutBouger" type="boolean"/>
             <element name="peutAttaquer" type="boolean"/>
