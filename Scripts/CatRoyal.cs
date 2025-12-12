@@ -19,7 +19,7 @@ public class CatRoyal : Game
     private static bool quitter = false;
     
     public static string savePath = "../../../data/xml/";
-    public static string defaultSaveFileName = "defaultSave.xml";
+    public static string defaultSaveFileName = "nouvellePartie.xml";
     public static string autoSaveFileName = "autoSave.xml";
 
     public CatRoyal()

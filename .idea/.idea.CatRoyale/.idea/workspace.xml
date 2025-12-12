@@ -8,26 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="619addfe-4476-41f9-8120-8b3af62d062e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TestProjet/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/Carte.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Carte.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Scripts/CatRoyal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/CatRoyal.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/Ingame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Ingame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/Invocation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Invocation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/Jeu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Jeu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/Joueur.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Joueur.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/ListeDeCartes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/ListeDeCartes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scripts/ListeIdCartes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/ListeIdCartes.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Scripts/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/MainMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Scripts/MenuEnd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/MenuEnd.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Scripts/Plateau.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Plateau.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestProjet.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CatRoyale.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestProjet.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TestProjet.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/autosave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/autosave.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/defaultSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/nouvellePartie.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +31,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -101,7 +89,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.TestProjet.executor": "Debug",
+    ".NET Project.TestProjet.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -158,6 +147,7 @@
       <workItem from="1765468749432" duration="24845000" />
       <workItem from="1765520613054" duration="2000" />
       <workItem from="1765521310757" duration="223000" />
+      <workItem from="1765551502549" duration="892000" />
     </task>
     <task id="LOCAL-00001" summary="Problèmes principaux résolus (jeu maintenant jouable) + suggestion d'affichage pour l'adversaire">
       <option name="closed" value="true" />

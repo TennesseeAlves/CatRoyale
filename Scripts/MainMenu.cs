@@ -44,6 +44,7 @@ public class MainMenu
         //doc ici https://learn.microsoft.com/fr-fr/dotnet/api/system.io.directory.getfiles?view=net-8.0
         //utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
         fileSave.AddRange(Directory.GetFiles(CatRoyal.savePath));
+        fileSave.Remove(CatRoyal.savePath + CatRoyal.defaultSaveFileName);
         
         int Y = 250;
         int num = 0;
@@ -146,6 +147,10 @@ public class MainMenu
 
     public void Update()
     {
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
+            CatRoyal.Quitter();
+        }
         EtatActuelSouris = Mouse.GetState();
         ClicBouton();
         EtatPrecSouris = EtatActuelSouris;

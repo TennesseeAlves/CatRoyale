@@ -40,27 +40,27 @@
         </invocation>
       </case>
       <case estVide="true" />
-      <case estVide="true" />
-      <case estVide="true" />
-      <case estVide="true" />
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <maxVie>55</maxVie>
-          <vie>0</vie>
-          <degat>16</degat>
-          <nom>Neochrom</nom>
-          <image>textures/mobs/neochrom</image>
-          <peutBouger>true</peutBouger>
+          <maxVie>28</maxVie>
+          <vie>28</vie>
+          <degat>6</degat>
+          <nom>Persianator</nom>
+          <image>textures/mobs/persianator</image>
+          <peutBouger>false</peutBouger>
           <peutAttaquer>false</peutAttaquer>
         </invocation>
       </case>
+      <case estVide="true" />
+      <case estVide="true" />
+      <case estVide="true" />
       <case estVide="true" />
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Bob</pseudoInvocateur>
           <maxVie>50</maxVie>
-          <vie>2</vie>
+          <vie>50</vie>
           <degat>0</degat>
           <nom>Tour du Joueur 2</nom>
           <image>textures/mobs/TourJ2</image>
@@ -97,36 +97,33 @@
   </plateau>
   <joueur1>
     <pseudo>Alice</pseudo>
-    <winStreak>1</winStreak>
-    <jauge>14</jauge>
+    <winStreak>0</winStreak>
+    <jauge>10</jauge>
     <main>
-      <idCarte>KidCat</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>Poison</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>Neochrom</idCarte>
-      <idCarte>MagiChat</idCarte>
       <idCarte>Soin</idCarte>
-      <idCarte>MagiChat</idCarte>
-      <idCarte>Archeron</idCarte>
     </main>
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
+      <idCarte>KidCat</idCarte>
+      <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>Archeron</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>MagiChat</idCarte>
+      <idCarte>MagiChat</idCarte>
       <idCarte>MagiChat</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
-      <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
       <idCarte>Tactix</idCarte>
       <idCarte>Blackcat</idCarte>
@@ -137,6 +134,8 @@
       <idCarte>Chatiment</idCarte>
       <idCarte>Vortrex</idCarte>
       <idCarte>Vortrex</idCarte>
+      <idCarte>Neochrom</idCarte>
+      <idCarte>Neochrom</idCarte>
       <idCarte>Tigris</idCarte>
       <idCarte>Tyranis</idCarte>
       <idCarte>Arcanemao</idCarte>
@@ -145,33 +144,27 @@
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
+      <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
-      <idCarte>Neochrom</idCarte>
+      <idCarte>Persianator</idCarte>
     </deck>
   </joueur1>
   <joueur2>
     <pseudo>Bob</pseudo>
     <winStreak>0</winStreak>
     <jauge>14</jauge>
-    <main>
-      <idCarte>Poison</idCarte>
-      <idCarte>Persianator</idCarte>
-      <idCarte>Blackcat</idCarte>
-      <idCarte>KidCat</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>Soin</idCarte>
-      <idCarte>Tyranis</idCarte>
-      <idCarte>TitouChat</idCarte>
-      <idCarte>Archeron</idCarte>
-      <idCarte>Poison</idCarte>
-    </main>
+    <main />
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
+      <idCarte>KidCat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
+      <idCarte>TitouChat</idCarte>
+      <idCarte>TitouChat</idCarte>
+      <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
@@ -184,8 +177,10 @@
       <idCarte>Catboom</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
+      <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
       <idCarte>Tactix</idCarte>
+      <idCarte>Blackcat</idCarte>
       <idCarte>Blackcat</idCarte>
       <idCarte>Wrench</idCarte>
       <idCarte>Wrench</idCarte>
@@ -196,16 +191,20 @@
       <idCarte>Neochrom</idCarte>
       <idCarte>Neochrom</idCarte>
       <idCarte>Tigris</idCarte>
+      <idCarte>Tyranis</idCarte>
       <idCarte>Arcanemao</idCarte>
       <idCarte>Chronos</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
     </deck>
   </joueur2>
-  <pseudoJoueurActuel>Bob</pseudoJoueurActuel>
+  <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
   <cartesDuJeu>
     <carte>
       <vie>50</vie>
