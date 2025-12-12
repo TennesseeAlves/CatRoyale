@@ -22,6 +22,9 @@
         <None Update="data\xsd\partieCatRoyale.xsd">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="data\css\autoSave.css">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Icon.ico">
@@ -38,7 +41,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="data\html\" />
-      <Folder Include="data\xslt\" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Scripts\Carte.cs">
