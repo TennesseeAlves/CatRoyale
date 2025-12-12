@@ -8,12 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="619addfe-4476-41f9-8120-8b3af62d062e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data/css/autoSave.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/css/boutDePlateau.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/xslt/autoSave_to_html.xsl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CatRoyale.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CatRoyale.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/xsd/CatRoyale.xsd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/uml/DiagrammeXML.puml" beforeDir="false" afterPath="$PROJECT_DIR$/data/uml/DiagrammeXML.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/autoSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/autoSave.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xsd/partieCatRoyale.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/data/xsd/partieCatRoyale.xsd" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -245,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765563090884</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="ajout autoSave_to_html.xsl + css">
+      <option name="closed" value="true" />
+      <created>1765569798476</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765569798476</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -288,7 +294,8 @@
     <MESSAGE value="premier clean up" />
     <MESSAGE value="ajout fichiers internes Rider" />
     <MESSAGE value="ajout fichier interne Rider" />
-    <option name="LAST_COMMIT_MESSAGE" value="ajout fichier interne Rider" />
+    <MESSAGE value="ajout autoSave_to_html.xsl + css" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout autoSave_to_html.xsl + css" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
