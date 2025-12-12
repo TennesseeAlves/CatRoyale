@@ -18,8 +18,30 @@
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="true" />
-      <case estVide="true" />
+      <case estVide="false">
+        <invocation>
+          <pseudoInvocateur>Alice</pseudoInvocateur>
+          <maxVie>45</maxVie>
+          <vie>45</vie>
+          <degat>8</degat>
+          <nom>Tactix</nom>
+          <image>textures/mobs/tactix</image>
+          <peutBouger>false</peutBouger>
+          <peutAttaquer>false</peutAttaquer>
+        </invocation>
+      </case>
+      <case estVide="false">
+        <invocation>
+          <pseudoInvocateur>Bob</pseudoInvocateur>
+          <maxVie>35</maxVie>
+          <vie>35</vie>
+          <degat>12</degat>
+          <nom>Wrench</nom>
+          <image>textures/mobs/wrench</image>
+          <peutBouger>false</peutBouger>
+          <peutAttaquer>false</peutAttaquer>
+        </invocation>
+      </case>
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -40,22 +62,33 @@
         </invocation>
       </case>
       <case estVide="true" />
+      <case estVide="true" />
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <maxVie>32</maxVie>
-          <vie>32</vie>
-          <degat>20</degat>
-          <nom>Vortrex</nom>
-          <image>textures/mobs/vortrex</image>
-          <peutBouger>true</peutBouger>
-          <peutAttaquer>true</peutAttaquer>
+          <maxVie>14</maxVie>
+          <vie>14</vie>
+          <degat>7</degat>
+          <nom>MagiChat</nom>
+          <image>textures/mobs/magichat</image>
+          <peutBouger>false</peutBouger>
+          <peutAttaquer>false</peutAttaquer>
         </invocation>
       </case>
       <case estVide="true" />
       <case estVide="true" />
-      <case estVide="true" />
-      <case estVide="true" />
+      <case estVide="false">
+        <invocation>
+          <pseudoInvocateur>Bob</pseudoInvocateur>
+          <maxVie>28</maxVie>
+          <vie>28</vie>
+          <degat>6</degat>
+          <nom>Persianator</nom>
+          <image>textures/mobs/persianator</image>
+          <peutBouger>false</peutBouger>
+          <peutAttaquer>false</peutAttaquer>
+        </invocation>
+      </case>
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Bob</pseudoInvocateur>
@@ -98,12 +131,8 @@
   <joueur1>
     <pseudo>Alice</pseudo>
     <winStreak>0</winStreak>
-    <jauge>14</jauge>
-    <main>
-      <idCarte>Vortrex</idCarte>
-      <idCarte>Poison</idCarte>
-      <idCarte>MagiChat</idCarte>
-    </main>
+    <jauge>6</jauge>
+    <main />
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
@@ -127,13 +156,14 @@
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
-      <idCarte>Tactix</idCarte>
       <idCarte>Blackcat</idCarte>
       <idCarte>Blackcat</idCarte>
       <idCarte>Wrench</idCarte>
       <idCarte>Wrench</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Chatiment</idCarte>
+      <idCarte>Vortrex</idCarte>
+      <idCarte>Vortrex</idCarte>
       <idCarte>Neochrom</idCarte>
       <idCarte>Neochrom</idCarte>
       <idCarte>Tigris</idCarte>
@@ -147,17 +177,16 @@
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
-      <idCarte>Vortrex</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Tactix</idCarte>
+      <idCarte>MagiChat</idCarte>
     </deck>
   </joueur1>
   <joueur2>
     <pseudo>Bob</pseudo>
     <winStreak>0</winStreak>
-    <jauge>14</jauge>
-    <main>
-      <idCarte>Poison</idCarte>
-      <idCarte>Persianator</idCarte>
-    </main>
+    <jauge>4</jauge>
+    <main />
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
@@ -185,7 +214,6 @@
       <idCarte>Blackcat</idCarte>
       <idCarte>Blackcat</idCarte>
       <idCarte>Wrench</idCarte>
-      <idCarte>Wrench</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Chatiment</idCarte>
       <idCarte>Vortrex</idCarte>
@@ -199,13 +227,16 @@
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
-      <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Persianator</idCarte>
+      <idCarte>Wrench</idCarte>
     </deck>
   </joueur2>
-  <pseudoJoueurActuel>Alice</pseudoJoueurActuel>
+  <pseudoJoueurActuel>Bob</pseudoJoueurActuel>
   <cartesDuJeu>
     <carte>
       <vie>50</vie>

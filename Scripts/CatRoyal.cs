@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace CatRoyale.Scripts;
@@ -19,7 +20,7 @@ public class CatRoyal : Game
     private static bool quitter = false;
     
     public static string savePath = "../../../data/xml/";
-    public static string defaultSaveFileName = "defaultSave.xml";
+    public static string defaultSaveFileName = "nouvellePartie.xml";
     public static string autoSaveFileName = "autoSave.xml";
 
     public CatRoyal()
@@ -56,6 +57,7 @@ public class CatRoyal : Game
     {
         if (quitter)
         {
+            Console.WriteLine(" CatRoyal Rocks ! Merci d'avoir joué à notre jeu ! :)");
             Exit();
         }
         switch (_menu)

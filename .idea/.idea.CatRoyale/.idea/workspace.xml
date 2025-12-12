@@ -9,6 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="619addfe-4476-41f9-8120-8b3af62d062e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CatRoyale.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CatRoyale.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/CatRoyal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/CatRoyal.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/CatRoyale.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/autoSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/autoSave.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/xml/defaultSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/nouvellePartie.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +26,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="burha" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,31 +44,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a8bc4cc6ef55ff52bdc2cceb90b85b6185d78214175364dfccd0e265298dc/XmlSerializer.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/dea6296226a1ded2c19159fd061c4813e599cdde192de14917d35e756b6564/XmlSerializationReader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f432d226f39c20908ac3887b55abdacbc5f39ee7e684efe38010dbf0616c2f35/XmlArrayAttribute.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Carte.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Carte.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Carte.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/CatRoyal.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Ingame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/Ingame.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Invocation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Invocation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Invocation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Jeu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/Jeu.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Jeu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Jeu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Jeu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/Joueur.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/ListeDeCartes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/ListeIdCartes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/MainMenu.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/MainMenu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Scripts/MenuEnd.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Plateau.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tenne/RiderProjects/CatRoyale/Scripts/Plateau.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/b/barkoko/l3miage/RiderProjects/CatRoyale/Scripts/CatRoyal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/b/barkoko/l3miage/RiderProjects/CatRoyale/Scripts/CatRoyal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/b/barkoko/l3miage/RiderProjects/CatRoyale/Scripts/MainMenu.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -75,6 +58,7 @@
   <component name="ProjectId" id="36IYj65XkLDCaj6lpM6JdR6Rug3" />
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -86,7 +70,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;omar&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -140,6 +124,7 @@
       <workItem from="1765520613054" duration="2000" />
       <workItem from="1765521310757" duration="223000" />
       <workItem from="1765533045748" duration="387000" />
+      <workItem from="1765543550795" duration="6992000" />
     </task>
     <task id="LOCAL-00001" summary="Problèmes principaux résolus (jeu maintenant jouable) + suggestion d'affichage pour l'adversaire">
       <option name="closed" value="true" />
@@ -197,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765497759175</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="ajout fichiers internes Rider">
+      <option name="closed" value="true" />
+      <created>1765543820922</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1765543820922</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,7 +231,8 @@
     <MESSAGE value="few minor fixes" />
     <MESSAGE value="version entièrment jouable potentiellement prête à être rendu" />
     <MESSAGE value="premier clean up" />
-    <option name="LAST_COMMIT_MESSAGE" value="premier clean up" />
+    <MESSAGE value="ajout fichiers internes Rider" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajout fichiers internes Rider" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
