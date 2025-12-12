@@ -25,6 +25,7 @@
             <field xpath="cat:nom"/>
         </key>
         
+        <!--
         <keyref name="foreignKeyIdCarteJoueur1" refer="cat:clefNomCarte">
             <selector xpath="cat:joueur1/cat:main"/>
             <field xpath="cat:idCarte"/>
@@ -33,6 +34,7 @@
             <selector xpath="cat:joueur2/cat:main"/>
             <field xpath="cat:idCarte"/>
         </keyref>
+        -->
 
         <!-- Le pseudoJoueurActuel doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte)
         <keyref name="foreignKeyPseudoJoueurActuel" refer="cat:clefPseudoJoueur">
@@ -110,7 +112,7 @@
     <!-- ListeIdCarte -->
     <complexType name="ListeIdCarte">
         <sequence>
-            <element name="idCarte" type="string" minOccurs="0" maxOccurs="unbounded"/> <!-- TODO: clef existence -->
+            <element name="idCarte" type="string" minOccurs="0" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
@@ -126,7 +128,7 @@
         <sequence>
             <element name="vie" type="int"/>
             <element name="degat" type="int"/>
-            <element name="nom" type="string"/>
+            <element name="nom" type="string"/> <!-- unique -->
             <element name="imageCarte" type="string"/>
             <element name="imageInvocation" type="string"/>
             <element name="cout" type="int"/>

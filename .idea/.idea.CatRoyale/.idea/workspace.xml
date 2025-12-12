@@ -9,9 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="619addfe-4476-41f9-8120-8b3af62d062e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/uml/DiagrammeXML.puml" beforeDir="false" afterPath="$PROJECT_DIR$/data/uml/DiagrammeXML.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/xml/autoSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/autoSave.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/xsd/partieCatRoyale.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/data/xsd/partieCatRoyale.xsd" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,25 +66,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.TestProjet.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XSLT.autoSave_html.executor": "Run",
-    "git-widget-placeholder": "omar",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.TestProjet.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;XSLT.autoSave_html.executor&quot;: &quot;Run&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="XSLT.autoSave_html">
+}</component>
+  <component name="RunManager" selected=".NET Project.TestProjet">
     <configuration name="TestProjet" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/net9.0/CatRoyale.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -314,26 +310,26 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Scripts/Jeu.cs</url>
-          <line>87</line>
+          <line>77</line>
           <properties documentPath="C:\Users\tenne\RiderProjects\CatRoyale\Scripts\Jeu.cs" containingFunctionPresentation="Method 'InitTurn'">
             <startOffsets>
-              <option value="3320" />
+              <option value="2766" />
             </startOffsets>
             <endOffsets>
-              <option value="3363" />
+              <option value="2809" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Scripts/Jeu.cs</url>
-          <line>414</line>
+          <line>404</line>
           <properties documentPath="C:\Users\tenne\RiderProjects\CatRoyale\Scripts\Jeu.cs" containingFunctionPresentation="Method 'PeutAttaquerOuDeplacer'">
             <startOffsets>
-              <option value="18191" />
+              <option value="17676" />
             </startOffsets>
             <endOffsets>
-              <option value="18192" />
+              <option value="17677" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
