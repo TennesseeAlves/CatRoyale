@@ -50,43 +50,43 @@ public class Joueur
         return Deck.Length();
     }
     
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void AddCarteInMain(Carte carte)
     {
         Main.AppendCarte(carte);
     }
     
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void AddCarteInMain(string carte)
     {
         Main.AppendId(carte);
     }
     
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void AddCarteInDeck(Carte carte)
     {
         Deck.AppendCarte(carte);
     }
     
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void AddCarteInDeck(string carte)
     {
         Deck.AppendId(carte);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public Carte GetCarteInMainAt(int i, ListeDeCartes cartes)
     {
         return Main.GetCarteAt(i, cartes);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public Carte GetCarteInDeckAt(int i, ListeDeCartes cartes)
     {
         return Deck.GetCarteAt(i, cartes);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void DeleteCarteInMain(Carte carte)
     {
         int i = Main.GetIndexOf(carte);
@@ -97,7 +97,7 @@ public class Joueur
         Main.RemoveIdAt(i);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void DeleteCarteInMainAt(int i)
     {
         if (i >= Main.Length())
@@ -107,7 +107,7 @@ public class Joueur
         Main.RemoveIdAt(i);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void DeleteCarteInDeck(Carte carte)
     {
         int i = Deck.GetIndexOf(carte);
@@ -118,7 +118,7 @@ public class Joueur
         Deck.RemoveIdAt(i);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void DeleteCarteInDeckAt(int i)
     {
         if (i >= Deck.Length())

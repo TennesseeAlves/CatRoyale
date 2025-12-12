@@ -8,12 +8,13 @@ public class ListeDeCartes
 {
     [XmlElement("carte")] public Carte[] Cartes {get; set;}
 
+    //constructeur vide pour le XMLSerializer
     public ListeDeCartes()
     {
         Cartes = new Carte[0];
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public int Length()
     {
         return Cartes.Length;
@@ -31,7 +32,7 @@ public class ListeDeCartes
         throw new Exception("nom absent de la liste : "+name);
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public Carte GetCarteAt(int i) 
     {
         if (i >= Cartes.Length || i < 0)
@@ -41,7 +42,7 @@ public class ListeDeCartes
         return Cartes[i];
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void SetCarteAt(int i, Carte carte) 
     {
         if (i >= Cartes.Length || i < 0)
@@ -51,6 +52,7 @@ public class ListeDeCartes
         Cartes[i] =  carte;
     }
 
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public Carte RemoveCarteAt(int i) 
     {
         if (i >= Cartes.Length || i < 0)
@@ -88,7 +90,7 @@ public class ListeDeCartes
         return rep;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public int GetIndexOf(Carte carte) 
     {
         int rep = -1;
@@ -104,7 +106,7 @@ public class ListeDeCartes
         return rep;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void InsertCarteAt(int i, Carte carte) 
     {
         if (i >= Cartes.Length || i < 0)
@@ -131,7 +133,7 @@ public class ListeDeCartes
         Cartes = newCartes;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void AppendCarte(Carte carte) 
     {
         Carte[] newCartes = new Carte[Cartes.Length + 1];

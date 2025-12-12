@@ -4,16 +4,6 @@ using System.Xml.Serialization;
 
 namespace CatRoyale.Scripts;
 
-/* Ce qu'on aurait aimer ajouter si on avait plus de temps:
- *      -entrer les pseudo et créer un deck sans le charger
- *      -charger/sauvegarder des joueurs (pseudo + winstreak + deck) mais pas toute la partie (donc pas le plateau ni la main)
- *      -afficher un tableau des highscores (en winstreak)
- *      -qu'une invoc encerclée ne puisse plus bouger
- *      -ajouter un bot en face
- *      -ajouter des sorts et des objets (comme des batiments par exemple)
- *      -gérer les paramètres depuis un XML (pas long mais on y a pensé trop tard)
-*/
-
 public enum EtatAutomate { SELECTION_CARTE,SELECTION_CASE_CARTE,SELECTION_CASE_SOURCE,SELECTION_CASE_CIBLE }
 
 [Serializable]
@@ -167,7 +157,7 @@ public class Jeu
         //déselectionne = met à -1 (et donc pas visible à l'affichage)
         //reset = met à position par défaut (et donc de nouveau visible)
         
-        if (AppuieSurFinTour(current,last)){
+        if (AppuieSurFinTour(current,last) || phaseSouris == ClicPhase.FINIR_TOUR){
             //fini le tour
             EndTurn();
             //return pour pas faire le switch (et indenterait éviter l'indentation supplémentaire que causerait un else)

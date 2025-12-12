@@ -48,11 +48,13 @@ public class Carte
     //contructeur vide pour le XMLSerializer
     public Carte() { }
 
+    //méthodes qui génèrent l'invocation correspondant à la carte
     public Invocation GenerateInvocation()
     {
         return new Invocation(Vie, Degat, Nom, SpriteInvocation);
     }
 
+    //méthodes pour pouvoir afficher les informations sur la carte
     public override string ToString()
     {
         switch (Type)

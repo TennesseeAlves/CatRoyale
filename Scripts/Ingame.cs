@@ -13,7 +13,8 @@ public enum ClicPhase {
     ANNULER,
     CONFIRMER_CARTE,
     CLIC_SUR_CASE_INVOCATION,
-    CONFIRMER_CASE
+    CONFIRMER_CASE,
+    FINIR_TOUR
 }
 public class InGame
 {
@@ -21,7 +22,7 @@ public class InGame
     private List<CaseCliquable> _zonesCase = new List<CaseCliquable>();
     private ClicPhase phaseSouris = ClicPhase.INITIAL;
 
-    private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2;
+    private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2, boutonfintour, boutonfintour2;
     private Texture2D jauge, contourBarMana;
     
     private KeyboardState _previousKeyboardState;
@@ -35,6 +36,8 @@ public class InGame
     
     private bool survolQuitter = false;
     private Rectangle boutonQuitter = new Rectangle(20, 500, 120, 120);
+    private bool survolFinTour = false;
+    private Rectangle boutonFinTour = new Rectangle(130, 500, 120, 120);
 
     private class CarteCliquable
     {
@@ -229,6 +232,8 @@ public class InGame
         contourBarMana = content.Load<Texture2D>("textures/map/barmana");
         boutonquitter= content.Load<Texture2D>("textures/map/boutonquitter");
         boutonquitter2= content.Load<Texture2D>("textures/map/boutonquitter2");
+        boutonfintour= content.Load<Texture2D>("textures/map/boutonfintour");
+        boutonfintour2= content.Load<Texture2D>("textures/map/boutonfintour2");
 
         jauge = new Texture2D(graphics, 1, 1);
         jauge.SetData(new[]
@@ -419,6 +424,7 @@ public class InGame
         
         //afficher quitter 
         spriteBatch.Draw(survolQuitter? boutonquitter2 : boutonquitter, boutonQuitter, Color.White);
+        spriteBatch.Draw(survolFinTour? boutonfintour2 : boutonfintour, boutonFinTour, Color.White);
     }
 
     private void Clic()
@@ -431,7 +437,9 @@ public class InGame
         
         phaseSouris = ClicPhase.INITIAL;
         
-        //vérifier si la souris est au dessus du bouton quitter
+        //vérifier si la souris est au dessus du bouton quitter ou fin tour
+        survolQuitter = false;
+        survolFinTour = false;
         if (boutonQuitter.Contains(ms.Position))
         {
             survolQuitter = true;
@@ -441,9 +449,15 @@ public class InGame
                 return;
             }
         }
-        else
+        else if (boutonFinTour.Contains(ms.Position))
         {
-            survolQuitter = false;
+            survolFinTour = true;
+            if (estClique)
+            {
+                _previousMouseState = ms;
+                phaseSouris = ClicPhase.FINIR_TOUR;
+                return;
+            }
         }
         
         //s'il n'y a pas de clique, on s'arrête là
