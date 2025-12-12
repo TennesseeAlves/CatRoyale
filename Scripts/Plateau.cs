@@ -162,13 +162,23 @@ public class Plateau
     //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
     public void Attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
-        //effectue l'attaque et vérifie s'il est mort
-        if (Map[ligneArrive].Cases[colonneArrive].Invoc.TakeDamage(Map[ligneDepart].Cases[colonneDepart].Invoc.Degat))
+        CasePlateau caseSource = Map[ligneDepart].Cases[colonneDepart];
+        CasePlateau caseCible = Map[ligneArrive].Cases[colonneArrive];
+        //effectue l'attaque et la contre-attaque
+        bool mortCible = caseCible.Invoc.TakeDamage(caseSource.Invoc.Degat);
+        bool mortSource = caseSource.Invoc.TakeDamage(caseCible.Invoc.Degat);
+        caseSource.Invoc.PeutAttaquer = false;
+        //vérifie s'ils sont morts
+        if (mortCible)
         {
-            Map[ligneArrive].Cases[colonneArrive].EstVide = true;
-            Map[ligneArrive].Cases[colonneArrive].Invoc = null;
+            caseCible.EstVide = true;
+            caseCible.Invoc = null;
         }
-        Map[ligneDepart].Cases[colonneDepart].Invoc.PeutAttaquer = false;
+        if (mortSource)
+        {
+            caseSource.EstVide = true;
+            caseSource.Invoc = null;
+        }
     }
 
     public bool Victory(Joueur joueur)

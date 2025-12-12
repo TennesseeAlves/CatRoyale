@@ -66,6 +66,11 @@ public class MenuEnd
 
     public void Update()
     {
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
+            CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
+            CatRoyal.Quitter();
+        }
         EtatActuelSouris = Mouse.GetState();
         ClicBouton();
         EtatPrecSouris = EtatActuelSouris;
