@@ -4,12 +4,6 @@ using System.Collections.Generic;
 
 namespace CatRoyale.Scripts;
 
-/*
- * 
- *  Stocké ainsi à cause de la sérialization. Il y avait très certainement bien mieux et très facilement, mais je n'ai pas trouvé et cette version marche correctement.
- *
- */
-
 [XmlType("CasePlateau")]
 public class CasePlateau
 {
@@ -28,6 +22,7 @@ public class CasePlateau
         Invoc = invocation;
     }
 }
+
 [XmlType("LigneDeCases")]
 public class LigneDeCases
 {
@@ -72,7 +67,7 @@ public class Plateau
         Map = new List<LigneDeCases>();
     }
     
-    //fonction à appelé après chaque Load
+    //méthode à appeler après chaque Load
     public void InitAfterLoad()
     {
         int largeur = Map.Count;
@@ -96,7 +91,7 @@ public class Plateau
         return Map.Count;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes de listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes de listes
     public void SetEntityAt(Invocation invoc, int ligne, int colonne)
     {
         Map[ligne].Cases[colonne].EstVide = (invoc==null);
@@ -121,6 +116,7 @@ public class Plateau
         return Map[ligne].Cases[colonne].EstVide;
     }
 
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes de listes
     public void DeleteAt(int ligne, int colonne)
     {
         if (ligne >= Largeur() || ligne < 0 || colonne >= Longueur() || colonne < 0)
@@ -131,7 +127,7 @@ public class Plateau
         Map[ligne].Cases[colonne].Invoc = null;
     }
     
-    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    //on ne gère pas les tests ici, on admet que le test a été effectué avant l'appel
     public void Invoke(Joueur joueur, Carte carte, int ligne, int colonne)
     {
         
@@ -149,7 +145,7 @@ public class Plateau
         
     }
     
-    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    //on ne gère pas les tests ici, on admet que le test a été effectué avant l'appel
     public void Move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
         Map[ligneArrive].Cases[colonneArrive].EstVide = false;
@@ -159,7 +155,7 @@ public class Plateau
         Map[ligneArrive].Cases[colonneArrive].Invoc.PeutBouger = false;
     }
     
-    //on ne gère pas les tests ici, on fait confiance en le fait que le test a été effectué avant l'appel
+    //on ne gère pas les tests ici, on admet que le test a été effectué avant l'appel
     public void Attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive)
     {
         CasePlateau caseSource = Map[ligneDepart].Cases[colonneDepart];

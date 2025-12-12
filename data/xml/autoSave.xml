@@ -40,19 +40,19 @@
         </invocation>
       </case>
       <case estVide="true" />
+      <case estVide="true" />
       <case estVide="false">
         <invocation>
           <pseudoInvocateur>Alice</pseudoInvocateur>
-          <maxVie>28</maxVie>
-          <vie>28</vie>
-          <degat>6</degat>
-          <nom>Persianator</nom>
-          <image>textures/mobs/persianator</image>
+          <maxVie>8</maxVie>
+          <vie>8</vie>
+          <degat>3</degat>
+          <nom>KidCat</nom>
+          <image>textures/mobs/kidcat</image>
           <peutBouger>false</peutBouger>
           <peutAttaquer>false</peutAttaquer>
         </invocation>
       </case>
-      <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
       <case estVide="true" />
@@ -98,20 +98,18 @@
   <joueur1>
     <pseudo>Alice</pseudo>
     <winStreak>0</winStreak>
-    <jauge>10</jauge>
+    <jauge>13</jauge>
     <main>
-      <idCarte>Soin</idCarte>
+      <idCarte>Archeron</idCarte>
     </main>
     <deck>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
       <idCarte>KidCat</idCarte>
-      <idCarte>KidCat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
       <idCarte>TitouChat</idCarte>
-      <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
       <idCarte>Archeron</idCarte>
@@ -122,6 +120,7 @@
       <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
       <idCarte>Catboom</idCarte>
+      <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Persianator</idCarte>
       <idCarte>Tactix</idCarte>
@@ -141,13 +140,16 @@
       <idCarte>Arcanemao</idCarte>
       <idCarte>Chronos</idCarte>
       <idCarte>Soin</idCarte>
-      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Soin</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
       <idCarte>Poison</idCarte>
-      <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
-      <idCarte>Persianator</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>KidCat</idCarte>
     </deck>
   </joueur1>
   <joueur2>
@@ -195,12 +197,14 @@
       <idCarte>Arcanemao</idCarte>
       <idCarte>Chronos</idCarte>
       <idCarte>Soin</idCarte>
-      <idCarte>Poison</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Soin</idCarte>
+      <idCarte>Soin</idCarte>
       <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
-      <idCarte>Soin</idCarte>
       <idCarte>Poison</idCarte>
-      <idCarte>Soin</idCarte>
+      <idCarte>Poison</idCarte>
+      <idCarte>Poison</idCarte>
       <idCarte>Poison</idCarte>
     </deck>
   </joueur2>

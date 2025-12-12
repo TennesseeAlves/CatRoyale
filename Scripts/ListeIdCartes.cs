@@ -15,7 +15,8 @@ public class ListeIdCartes
 
     public int Length()
     {
-        if (IdCartes == null) IdCartes = new string[0]; //je n'arrive pas à comprendre la raison exact, mais sans cette ligne-là certaine sauvegarde font crash quand on les charges
+        //je n'arrive pas à comprendre la raison exact, mais sans cette ligne-là certaines sauvegardes font crash quand on les charges, ce qui supposerait que le constructeur n'est aps appelé
+        if (IdCartes == null) IdCartes = new string[0]; 
         return IdCartes.Length;
     }
 
@@ -39,7 +40,7 @@ public class ListeIdCartes
         return IdCartes[i];
     }
     
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void SetCarteAt(int i, Carte carte) 
     {
         if (i >= IdCartes.Length || i < 0)
@@ -49,7 +50,7 @@ public class ListeIdCartes
         IdCartes[i] =  carte.Nom;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void SetIdAt(int i, string carte) 
     {
         if (i >= IdCartes.Length || i < 0)
@@ -59,7 +60,7 @@ public class ListeIdCartes
         IdCartes[i] =  carte;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public Carte RemoveCarteAt(int i, ListeDeCartes cartes) 
     {
         if (i >= IdCartes.Length || i < 0)
@@ -165,7 +166,7 @@ public class ListeIdCartes
         return rep;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void InsertCarteAt(int i, Carte carte) 
     {
         if (i >= IdCartes.Length || i < 0)
@@ -192,7 +193,7 @@ public class ListeIdCartes
         IdCartes = newIdCartes;
     }
 
-    //fonction inutilisé mais implémenté car toujours utile pour manipuler des listes
+    //méthode inutilisée mais implémentée car toujours utile pour manipuler des listes
     public void InsertIdAt(int i, string carte) 
     {
         if (i >= IdCartes.Length || i < 0)
