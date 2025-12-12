@@ -28,9 +28,6 @@
         <None Update="data\xml\exempleSave2.xml">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="data\html\autoSave.html">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
         <None Update="data\css\boutDePlateau.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

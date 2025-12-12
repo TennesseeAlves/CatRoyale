@@ -8,11 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="619addfe-4476-41f9-8120-8b3af62d062e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Scripts/XMLUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CatRoyale.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CatRoyale.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CatRoyale/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/html/autoSave.html" beforeDir="false" afterPath="$PROJECT_DIR$/data/html/autoSave.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/xml/autoSave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/data/xml/autoSave.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/Ingame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/Ingame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scripts/XMLUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scripts/XMLUtils.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +42,12 @@
     &quot;assignee&quot;: &quot;TennesseeAlves&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/TennesseeAlves/CatRoyale.git",
-    "accountId": "2753e822-77a0-4eab-9790-1ea30739e9a9"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/TennesseeAlves/CatRoyale.git&quot;,
+    &quot;accountId&quot;: &quot;2753e822-77a0-4eab-9790-1ea30739e9a9&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Scripts/XMLUtils.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -68,25 +67,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.TestProjet.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "XSLT.autoSave_html.executor": "Run",
-    "git-widget-placeholder": "master",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.TestProjet.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;XSLT.autoSave_html.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Project.TestProjet">
     <configuration name="TestProjet" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/net9.0/CatRoyale.exe" />
@@ -260,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765576665087</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="réglé clé d'existence">
+      <option name="closed" value="true" />
+      <created>1765578099414</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1765578099414</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,7 +312,8 @@
     <MESSAGE value="ajout fichier interne Rider" />
     <MESSAGE value="ajout autoSave_to_html.xsl + css" />
     <MESSAGE value="ajout clefs cabinet.xsd" />
-    <option name="LAST_COMMIT_MESSAGE" value="ajout clefs cabinet.xsd" />
+    <MESSAGE value="réglé clé d'existence" />
+    <option name="LAST_COMMIT_MESSAGE" value="réglé clé d'existence" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

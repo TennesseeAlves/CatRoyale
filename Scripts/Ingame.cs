@@ -258,6 +258,7 @@ public class InGame
         {
             //alors finir la partie
             CatRoyal.jeuChat.JoueurActuel.WinStreak += 1;
+            XMLUtils.XslTransform("../../../data/xml/autoSave.xml", "../../../data/xslt/autoSave_to_html.xsl", "../../../data/html/score.html"); 
             CatRoyal.SetMenu(EtatMenu.ENDGAME);
         }
         _previousKeyboardState = keyboardState;

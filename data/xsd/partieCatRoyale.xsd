@@ -10,45 +10,43 @@
     <element name="jeu" type="cat:Jeu">
         <!-- Clef unicité pseudo joueur (incorrecte!) -->
         <key name="clefPseudoJoueur">
-            <!-- la clef est INCORRECTE. Plus tard dans le projet on s'est rendue compte que modéliser les joueurs
-            par joueur1 et joueur2 aurait rendue plus difficile d'établir une clef d'unicité entre leurs pseudo
-            Une solution serait de remplacer joueur1 et joueur2 par simplement joueur (repeté 2 fois) en rajoutant
-            un attribut numero à joueur.
+            <!-- la clef est INCORRECTE. On s'est rendue compte trop tard dans le projet que modéliser les joueurs
+            par joueur1 et joueur2 a rendue plus difficile d'établir une clef d'unicité entre leurs pseudo
+            Une solution serait de remplacer joueur1 et joueur2 par simplement joueur (avec minOccurs et maxOccurs = 2)
+            En cherchant on a trouvé que assert pourrait marcher mais n'est pas disponible en XML version 1.0.
             -->
-            <selector xpath="."/> 
+            <selector xpath="."/>
             <field xpath="cat:joueur1/cat:pseudo"/>
         </key>
 
         <!-- Clef unicité du nom des cartes du jeux -->
         <key name="clefNomCarte">
-            <selector xpath="cat:cartesDuJeu/cat:carte"/>
-            <field xpath="cat:nom"/>
+            <selector xpath="cat:cartesDuJeu/cat:carte/cat:nom"/>
+            <field xpath="."/>
         </key>
         
-        <!--
+        
         <keyref name="foreignKeyIdCarteJoueur1" refer="cat:clefNomCarte">
-            <selector xpath="cat:joueur1/cat:main"/>
-            <field xpath="cat:idCarte"/>
+            <selector xpath="cat:joueur1/cat:main/cat:idCarte"/>
+            <field xpath="."/>
         </keyref>
         <keyref name="foreignKeyIdCarteJoueur2" refer="cat:clefNomCarte">
-            <selector xpath="cat:joueur2/cat:main"/>
-            <field xpath="cat:idCarte"/>
+            <selector xpath="cat:joueur2/cat:main/cat:idCarte"/>
+            <field xpath="."/>
         </keyref>
-        -->
+        
 
-        <!-- Le pseudoJoueurActuel doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte)
+        <!-- Le pseudoJoueurActuel doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte) -->
         <keyref name="foreignKeyPseudoJoueurActuel" refer="cat:clefPseudoJoueur">
             <selector xpath="cat:pseudoJoueurActuel"/>
             <field xpath="."/>
         </keyref>
-        -->
         
-        <!-- Le pseudoInvocateur d'une invocation doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte)
+        <!-- Le pseudoInvocateur d'une invocation doit être le pseudo d'un des joueurs (ne marche pas du coup vue que clefPseudoJoueur est incorrecte) -->
         <keyref name="foreignKeyPseudoInvocateur" refer="cat:clefPseudoJoueur">
-            <selector xpath="cat:plateau/cat:lignesDeCases/cat:case/cat:ivocation"/>
-            <field xpath="cat:pseudoInvocateur"/>
+            <selector xpath="cat:plateau/cat:lignesDeCases/cat:case/cat:ivocation/cat:pseudoInvocateur"/>
+            <field xpath="."/>
         </keyref>
-        -->
     </element>
 
     <!-- Jeu -->
