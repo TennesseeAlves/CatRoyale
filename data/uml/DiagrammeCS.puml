@@ -79,10 +79,10 @@ package CatRoyale{
         +CarteI, CaseI, CaseJ, LastCaseI, LasteCaseJ : int
         +Jeu(int longueur, int largeur, string nom1, string nom2)
         +Jeu()
-        +victory() : bool
+        +Victory() : bool
         +InitTurn() : void
         +EndTurn() : void
-        +transition(KeyboardState current, KeyboardState last, ClicOhase phaseSouris) : void
+        +Transition(KeyboardState current, KeyboardState last, ClicOhase phaseSouris) : void
         +PeutSelectionnerCarte(int i) : bool
         +PeutSelectionnerInvocation(int lig, int col) : bool
         +PeutInvoquer(int i, int lig, int col) : bool
@@ -109,15 +109,15 @@ package CatRoyale{
         +Plateau()
         +Longueur() : int
         +Largeur() : int
-        +setEntityAt(Invocation invoc, int ligne, int colonne) : void
-        +getEntityAt(int ligne, int colonne) : Invocation?
-        +isEmpty(int ligne, int colonne) : bool
-        +deleteAt(int ligne, int colonne) : bool
-        +invoke(Carte carte, int ligne, int colonne Joueur invocateur) : bool
-        +move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
-        +attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
-        +victory(Joueur joueur) : bool
-        +isTower(Invocation invoc) : bool
+        +SetEntityAt(Invocation invoc, int ligne, int colonne) : void
+        +GetEntityAt(int ligne, int colonne) : Invocation?
+        +IsEmpty(int ligne, int colonne) : bool
+        +DeleteAt(int ligne, int colonne) : bool
+        +Invoke(Carte carte, int ligne, int colonne Joueur invocateur) : bool
+        +Move(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
+        +Attack(int ligneDepart, int colonneDepart, int ligneArrive, int colonneArrive) : void
+        +Victory(Joueur joueur) : bool
+        +IsTower(Invocation invoc) : bool
     }
     note right of Plateau::TowerJ1
         TowerJ1 est juste une référence vers la tour du joueur1
@@ -152,22 +152,22 @@ package CatRoyale{
         +MAX_JAUGE = 15
         +Joueur(string pseudo, int winStreak)
         +Joueur()
-        +remplirJauge(int niveau) : void
-        +reduireJauge(int usage) : void
-        +getNbCartesInMain() : int
-        +getNbCartesInDeck() : int
-        +addCarteInMain(Carte carte) : void
-        +addCarteInMain(string carte) : void
-        +addCarteInDeck(Carte carte) : void
-        +addCarteInDeck(string carte) : void
-        +getCarteInMainAt(int i, ListeDeCartes cartes) : Carte
-        +getCarteInDeckAt(int i, ListeDeCartes cartes) : Carte
-        +deleteCarteInMain(Carte carte) : void
-        +deleteCarteInMainAt(int i) : void
-        +deleteCarteInDeck(Carte carte) : void
-        +deleteCarteInDeckAt(int i) : void
-        +putCarteInDeckFromMainAt(int i) : void
-        +pioche() : void
+        +RemplirJauge(int niveau) : void
+        +ReduireJauge(int usage) : void
+        +GetNbCartesInMain() : int
+        +GetNbCartesInDeck() : int
+        +AddCarteInMain(Carte carte) : void
+        +AddCarteInMain(string carte) : void
+        +AddCarteInDeck(Carte carte) : void
+        +AddCarteInDeck(string carte) : void
+        +GetCarteInMainAt(int i, ListeDeCartes cartes) : Carte
+        +GetCarteInDeckAt(int i, ListeDeCartes cartes) : Carte
+        +DeleteCarteInMain(Carte carte) : void
+        +DeleteCarteInMainAt(int i) : void
+        +DeleteCarteInDeck(Carte carte) : void
+        +DeleteCarteInDeckAt(int i) : void
+        +PutCarteInDeckFromMainAt(int i) : void
+        +Pioche() : void
     }
     note right of Joueur::Pseudo
         Le pseudo est considéré comme unique
@@ -177,18 +177,18 @@ package CatRoyale{
         +IdCartes : string[]
         +ListeIdCartes()
         +Length() : int
-        +getCarteAt(int i, ListeDeCartes cartes) : Carte
-        +getIdAt(int i) : string
-        +setCarteAt(int i, Carte carte) : void
-        +setIdAt(int i, string carte) : void
-        +removeCarteAt(int i, ListeDeCartes cartes) : Carte
-        +removeIdAt(int i) : string
-        +getIndexOf(Carte carte) : int
-        +getIndexOf(string carte) : int
-        +insertCarteAt(int i, Carte carte) : void
-        +insertIdAt(int i, string carte) : void
-        +appendCarte(Carte carte) : void
-        +appendId(string carte) : void
+        +GetCarteAt(int i, ListeDeCartes cartes) : Carte
+        +GetIdAt(int i) : string
+        +SetCarteAt(int i, Carte carte) : void
+        +SetIdAt(int i, string carte) : void
+        +RemoveCarteAt(int i, ListeDeCartes cartes) : Carte
+        +RemoveIdAt(int i) : string
+        +GetIndexOf(Carte carte) : int
+        +GetIndexOf(string carte) : int
+        +InsertCarteAt(int i, Carte carte) : void
+        +InsertIdAt(int i, string carte) : void
+        +AppendCarte(Carte carte) : void
+        +AppendId(string carte) : void
     }
     note right of ListeIdCartes::IdCartes
         Les string représentent le nom de la carte
@@ -200,12 +200,12 @@ package CatRoyale{
         +ListeDeCartes()
         +Length() : int
         +GetCarteByName(string name) : Carte
-        +getCarteAt(int i) : Carte
-        +setCarteAt(int i, Carte carte) : void
-        +removeCarteAt(int i) : Carte
-        +getIndexOf(Carte carte) : int
-        +insertCarteAt(int i, Carte carte) : void
-        +appendCarte(Carte carte) : void
+        +GetCarteAt(int i) : Carte
+        +SetCarteAt(int i, Carte carte) : void
+        +RemoveCarteAt(int i) : Carte
+        +GetIndexOf(Carte carte) : int
+        +InsertCarteAt(int i, Carte carte) : void
+        +AppendCarte(Carte carte) : void
     }
     
     class Carte {
@@ -219,8 +219,8 @@ package CatRoyale{
         +Rarete : TypeRarete
         '+Carte(int vie, int degat, int cout, string nom, string image, TypeDeCarte type, TypeRarete rarete, string spriteInvocation)
         +Carte()
-        +generateInvocation() : Invocation
-        +toString() : string        
+        +GenerateInvocation() : Invocation
+        +ToString() : string        
     }
     
     class TypeDeCarte <<enum>> {
@@ -246,9 +246,8 @@ package CatRoyale{
         +PeutAttaquer : bool
         +Invocation(int vie, int degat, string image)
         +Invocation()
-        +getVie() : int
-        +takeDamage(int degat) : bool
-        +takeVie(int vie) : bool
+        +TakeDamage(int degat) : bool
+        +TakeVie(int vie) : bool
     }
     note right of Invocation::PseudoInvocateur
         PseudoInvocateur est utilisé pour la serialization

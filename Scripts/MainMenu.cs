@@ -5,7 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
-namespace TestProjet.Scripts;
+
+namespace CatRoyale.Scripts;
 
 public class MainMenu
 {
@@ -24,7 +25,6 @@ public class MainMenu
     private Rectangle boutonCharger = new Rectangle(x, y+offsety, boutonLargeur, boutonHauteur);
     private Rectangle boutonQuitter;
     
-    
     private MouseState EtatActuelSouris;
     private MouseState EtatPrecSouris;
 
@@ -40,14 +40,13 @@ public class MainMenu
         fileSave.Clear();
         rectSave.Clear();
         
-        //ajoute les fichiers sauvegardes dans Filesave
+        //ajoute les fichiers sauvegardes dans filesave
         //doc ici https://learn.microsoft.com/fr-fr/dotnet/api/system.io.directory.getfiles?view=net-8.0
-        // utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
+        //utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
         fileSave.AddRange(Directory.GetFiles(CatRoyal.savePath));
-        //
+        
         int Y = 250;
         int num = 0;
-
         foreach (string fichier in fileSave)
         {
             Rectangle zone = new Rectangle(300, Y+num*40, 400, 35);
@@ -60,7 +59,6 @@ public class MainMenu
     {
         bool ClicGauche = EtatActuelSouris.LeftButton == ButtonState.Pressed &&
                           EtatPrecSouris.LeftButton == ButtonState.Released;
-        //Console.WriteLine(EtatActuelSouris);
         int mx = EtatActuelSouris.X;
         int my = EtatActuelSouris.Y;
         select = -1;
@@ -74,9 +72,6 @@ public class MainMenu
                 {
                     // utilisation de l'ia generative + la doc pour la comprehension/utilisation de System.IO
                     String nom = Path.GetFileName(fileSave[i]);
-                    // 
-                    
-                    Console.WriteLine("Chargement de " + nom);
 
                     CatRoyal.LoadGame(nom);
                     CatRoyal.SetMenu(EtatMenu.INGAME);
@@ -90,8 +85,6 @@ public class MainMenu
                     }
                 }
             }
-
-            
         }
         else
         {
@@ -99,32 +92,25 @@ public class MainMenu
             {
                 select = 0;
             }
-        
             if (boutonCharger.Contains(mx, my))
             {
-           
                 select = 1;
             }
         }
-        
         if (boutonQuitter.Contains(mx, my))
         {
             select = 2;
         }
-
         if (ClicGauche)
         {
             switch (select)
             {
                 case 0:
-                    Console.WriteLine("START");
                     CatRoyal.LoadGame(CatRoyal.defaultSaveFileName);
                     CatRoyal.jeuChat.InitTurn();
                     CatRoyal.SetMenu(EtatMenu.INGAME);
-                    
                     break;
                 case 1:
-                    Console.WriteLine("CHARGER");
                     ChargerListe();
                     charger=true;
                     
@@ -134,18 +120,15 @@ public class MainMenu
                 case 2:
                     if (!charger)
                     {
-                        Console.WriteLine("Quitter");
                         CatRoyal.Quitter();  
                     }
                     else
                     {
                         charger=false; 
                     }
-                    
                     break;
             }
         }
-
     }
 
     public void LoadContent(ContentManager content)
@@ -158,7 +141,6 @@ public class MainMenu
         boutonquitter= content.Load<Texture2D>("textures/map/boutonquitter");
         boutonquitter2= content.Load<Texture2D>("textures/map/boutonquitter2");
         cadrestat= content.Load<Texture2D>("textures/map/cadrestat");
-        
         font = content.Load<SpriteFont>("font");
     }
 
@@ -167,19 +149,16 @@ public class MainMenu
         EtatActuelSouris = Mouse.GetState();
         ClicBouton();
         EtatPrecSouris = EtatActuelSouris;
-
     }
 
     public void Draw(GraphicsDevice graphics, SpriteBatch spriteBatch)
     {
-        
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width , graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
         
         //affiche tout les noms
         if (charger)
         {
-            
             Rectangle cadrestatRect = new Rectangle(graphics.Viewport.Width/2-300,  graphics.Viewport.Height/2-200, 600, 400);
             
             spriteBatch.Draw(cadrestat, cadrestatRect, Color.White);
@@ -205,8 +184,5 @@ public class MainMenu
             spriteBatch.Draw(select == 1 ? boutoncharger2:boutoncharger, boutonCharger, Color.White);
             spriteBatch.Draw(select == 2 ?boutonquitter2:boutonquitter, boutonQuitter, Color.White);
         }
-       
-        
     }
-    
 }

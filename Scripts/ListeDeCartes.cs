@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 [XmlType("ListeDeCartes")]
 public class ListeDeCartes

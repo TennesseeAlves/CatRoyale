@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 public enum EtatMenu { MENUMAIN, INGAME, ENDGAME }
 public class CatRoyal : Game
 {
-    
-    
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
@@ -26,7 +24,6 @@ public class CatRoyal : Game
 
     public CatRoyal()
     {
-    
          //creation de l'objet pour gerer la fenetre
         _graphics = new GraphicsDeviceManager(this);
         
@@ -37,9 +34,7 @@ public class CatRoyal : Game
         Window.Title = "Cat Royale";
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        
     }
-    
     
     protected override void Initialize()
     {
@@ -55,7 +50,6 @@ public class CatRoyal : Game
         menuMain.LoadContent(Content);
         menuInGame.LoadContent(Content, GraphicsDevice);
         menuEnd.LoadContent(Content);
-  
     }
 
     protected override void Update(GameTime gameTime)
@@ -75,11 +69,8 @@ public class CatRoyal : Game
             case EtatMenu.ENDGAME:
                 menuEnd.Update();
                 break;
-                
         }
-        
         base.Update(gameTime);
-        
     }
 
     protected override void Draw(GameTime gameTime)
@@ -114,10 +105,6 @@ public class CatRoyal : Game
         quitter = true;
     }
     
-    
-    
-    
-    
     public static void SaveGame(string FileName)
     {
         XMLManager<Jeu> manager = new XMLManager<Jeu>();
@@ -126,7 +113,6 @@ public class CatRoyal : Game
     
     public static void LoadGame(string FileName)
     {
-        //on charge la partie
         XMLManager<Jeu> manager = new XMLManager<Jeu>();
         jeuChat = (Jeu)manager.Load(savePath+FileName);
         jeuChat.Plateau.InitAfterLoad();

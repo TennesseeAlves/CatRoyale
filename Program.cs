@@ -1,2 +1,2 @@
-﻿using var game = new TestProjet.Scripts.CatRoyal();
+﻿using var game = new CatRoyale.Scripts.CatRoyal();
 game.Run();

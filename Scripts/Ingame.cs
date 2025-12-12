@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Microsoft.Xna.Framework.Content;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 public enum ClicPhase {
     INITIAL,
@@ -24,7 +24,6 @@ public class InGame
     private Texture2D _background, _case, cadre, cadre2, boutonquitter, boutonquitter2;
     private Texture2D jauge, contourBarMana;
     
-
     private KeyboardState _previousKeyboardState;
     private MouseState _previousMouseState;
 
@@ -62,12 +61,9 @@ public class InGame
         }
     }
 
-    private void DrawCarte(Rectangle dest, Color tint, String image, int degrees,
-        SpriteEffects spriteEffect, ContentManager content, SpriteBatch spriteBatch)
+    private void DrawCarte(Rectangle dest, Color tint, String image, int degrees, SpriteEffects spriteEffect, ContentManager content, SpriteBatch spriteBatch)
     {
-
         Texture2D texture = content.Load<Texture2D>(image);
-
         spriteBatch.Draw(
             texture,
             dest,
@@ -82,11 +78,9 @@ public class InGame
     
     private void DrawInfoGene(SpriteBatch spriteBatch, String text)
     {
-        
         Rectangle cadreRect = new Rectangle(760, 480, 260, 150);
         spriteBatch.Draw(cadre2, cadreRect, Color.White);
         spriteBatch.DrawString(_font, text, new Vector2(790, 520), Color.Red);
-        
     }
 
     private void DrawAllCarte(
@@ -94,7 +88,7 @@ public class InGame
         int x, // point de départ en X
         int y, // Y normal des cartes
         int espaceCarte, // écart entre les cartes
-        int selectionY, // Y quand la carte est "levée"
+        int selectionY, // Y pour la carte séléctionnée
         int direction, // 1 = vers la droite, -1 = vers la gauche
         ContentManager content,
         SpriteBatch spriteBatch
@@ -121,22 +115,16 @@ public class InGame
                     {
                         tint = Color.Yellow;
                     }
-
                     if (!CatRoyal.jeuChat.PeutSelectionnerCarte(cartenum))
                     {
                         tint = Color.Red;
                         DrawInfoGene(spriteBatch, "Mana trop faible !");
-          
                     }
-                    
-                    
                 }
-
                 _zonesCartes.Add(new CarteCliquable(dest, cartenum));
                 SpriteEffects spriteEffects = (joueur == CatRoyal.jeuChat.Joueur2)
                     ? SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically
                     : SpriteEffects.None;
-
                 DrawCarte(dest, tint, image, 0, spriteEffects, content, spriteBatch);
             }
             else
@@ -146,8 +134,6 @@ public class InGame
                     : SpriteEffects.None;
                 DrawCarte(dest, Color.White, _carteBaseImage, 0, spriteEffects, content, spriteBatch);
             }
-
-
         }
     }
 
@@ -171,21 +157,17 @@ public class InGame
         int hauteur = 17;
 
         Rectangle backRect = new Rectangle(x-10, y, largeur, hauteur);
-
         Color c1, c2;
         if (invocation.PseudoInvocateur == CatRoyal.jeuChat.Joueur1.Pseudo)
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
-     
         }
         else
         {
             c1 = Color.Red;
             c2 = Color.LightSalmon;
-
         }
-
         
         spriteBatch.Draw(jauge, backRect, c1);
 
@@ -193,8 +175,7 @@ public class InGame
         Rectangle manaRect = new Rectangle(x-10, y, manaH, hauteur);
         spriteBatch.Draw(jauge, manaRect, c2);
         
-        spriteBatch.DrawString(_font, invocation.Vie + "" , new Vector2(x+2, y-5),
-            Color.Black);
+        spriteBatch.DrawString(_font, invocation.Vie + "" , new Vector2(x+2, y-5), Color.Black);
     }
 
     private void DrawMana(Joueur joueur, int x, int y, SpriteBatch spriteBatch)
@@ -206,25 +187,20 @@ public class InGame
         int hauteur = 170;
 
         Rectangle backRect = new Rectangle(x+10, y+25, largeur-20, hauteur-50);
-
         Color c1, c2;
   
         if (joueur == CatRoyal.jeuChat.Joueur1)
         {
             c1 = Color.DarkBlue;
             c2 = Color.CornflowerBlue;
-
         }
         else
         {
             c1 = Color.Maroon;
             c2 = Color.IndianRed;
         }
-        
-        
         spriteBatch.Draw(jauge, backRect, c1);
 
-        // IA generative //
         int manaH = (int)(backRect.Height * (float)mana / maxMana);
 
         Rectangle manaRect = new Rectangle(
@@ -233,22 +209,17 @@ public class InGame
             backRect.Width,
             manaH
         );
-        // IA generative //
-        
         spriteBatch.Draw(jauge, manaRect, c2);
         
-        spriteBatch.DrawString(_font, joueur.Jauge + "/" +Joueur.MAXJAUGE , new Vector2(x, y-25),
-            Color.Black);
+        spriteBatch.DrawString(_font, joueur.Jauge + "/" +Joueur.MAXJAUGE , new Vector2(x, y-25), Color.Black);
         
         Rectangle contourManaRect = new Rectangle(x, y, largeur, hauteur);
         spriteBatch.Draw(contourBarMana, contourManaRect, Color.White);
-        
     }
 
 
     public void LoadContent(ContentManager content, GraphicsDevice graphics)
     {
-
         _background = content.Load<Texture2D>("textures/map/background");
         cadre = content.Load<Texture2D>("textures/map/cadre");
         cadre2 = content.Load<Texture2D>("textures/map/cadre2");
@@ -268,36 +239,27 @@ public class InGame
 
     public void Update()
     {
-
         KeyboardState keyboardState = Keyboard.GetState();
         if (keyboardState.IsKeyDown(Keys.Escape))
         {
             CatRoyal.SaveGame(CatRoyal.autoSaveFileName);
             CatRoyal.Quitter();
         }
-        
         //on gère les inputs
         Clic();
         CatRoyal.jeuChat.Transition(keyboardState, _previousKeyboardState, phaseSouris);
-        
         //puis, si victoire
-        
         if (CatRoyal.jeuChat.Victory())
         {
             //alors finir la partie
             CatRoyal.jeuChat.JoueurActuel.WinStreak += 1;
             CatRoyal.SetMenu(EtatMenu.ENDGAME);
-            Console.WriteLine("-------------------------GAGNÉ--------------------------------");
-            
         }
-
-
         _previousKeyboardState = keyboardState;
     }
 
     public void Draw(GraphicsDevice graphics, ContentManager content, SpriteBatch spriteBatch)
     {
-
         graphics.Clear(Color.CornflowerBlue);
         _zonesCartes.Clear();
         _zonesCase.Clear();
@@ -305,8 +267,6 @@ public class InGame
         Rectangle destbackground = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
         spriteBatch.Draw(_background, destbackground, Color.White);
         
-       
-
         //draw du plateau
         int taillel = CatRoyal.jeuChat.Plateau.Longueur() * taillecase;
         int tailleh = CatRoyal.jeuChat.Plateau.Largeur() * taillecase;
@@ -324,21 +284,13 @@ public class InGame
                 
                 Rectangle destcase = new Rectangle(caseX, caseY, taillecase, taillecase);
                 _zonesCase.Add(new CaseCliquable(destcase, i, j));
-                bool selection =
-                    (i == CatRoyal.jeuChat.CaseI && j == CatRoyal.jeuChat.CaseJ) ||
-                    (i == CatRoyal.jeuChat.LastCaseI && j == CatRoyal.jeuChat.LastCaseJ);
+                bool selection = (i == CatRoyal.jeuChat.CaseI && j == CatRoyal.jeuChat.CaseJ) ||
+                                 (i == CatRoyal.jeuChat.LastCaseI && j == CatRoyal.jeuChat.LastCaseJ);
 
                 Color tint = selection ? Color.Cyan : Color.White;
-                //Console.WriteLine();
-                
-                if (CatRoyal.jeuChat.Phase == EtatAutomate.SELECTION_CASE_CARTE)
+                if (CatRoyal.jeuChat.Phase == EtatAutomate.SELECTION_CASE_CARTE && !CatRoyal.jeuChat.PeutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
                 {
-                    if (!CatRoyal.jeuChat.PeutInvoquer(CatRoyal.jeuChat.CarteI, j, i))
-                    {
-                        //Console.WriteLine(j+" "+i);
-                        //Console.WriteLine(CatRoyal.jeuChat.CarteI);
                         tint = Color.Gray;
-                    }
                 }
                 
                 if (selection)
@@ -357,7 +309,6 @@ public class InGame
                             }
                             break;
                         case EtatAutomate.SELECTION_CASE_SOURCE:
-                            
                             tint = Color.Red;
                             Invocation invocAt = null;
                             
@@ -366,11 +317,7 @@ public class InGame
                             {
                                 invocAt = CatRoyal.jeuChat.Plateau.GetEntityAt(j, i);
                                 tint = Color.DeepSkyBlue;
-                            }
-                            
-                            
-                            if (invocAt != null)
-                            {
+                                
                                 if (!invocAt.PeutBouger)
                                 {
                                     DrawInfoGene(spriteBatch, "Impossible de\n bouger cette\ninvocation !");
@@ -382,7 +329,7 @@ public class InGame
                                 }
                                 
                                 //si l invocation peut attaquer ou bouger et appartient au joueur rester en affichage bleu
-                                if ((!invocAt.PeutBouger && !invocAt.PeutAttaquer) ||
+                                if (!invocAt.PeutBouger && !invocAt.PeutAttaquer ||
                                     invocAt.PseudoInvocateur != CatRoyal.jeuChat.JoueurActuel.Pseudo)  
                                 {
                                     DrawInfoGene(spriteBatch, "Impossible de\nbouger/attaquer\navec cette invocation");
@@ -395,11 +342,8 @@ public class InGame
                             {
                                 DrawInfoCarte(CatRoyal.jeuChat.CartesExistantes.GetCarteByName(invocAt.Nom), spriteBatch);
                             }
-
                             break;
                         case EtatAutomate.SELECTION_CASE_CIBLE:
-                 
-                            
                             if (j == CatRoyal.jeuChat.LastCaseJ && i == CatRoyal.jeuChat.LastCaseI)
                             {
                                 tint = Color.MediumSeaGreen;
@@ -409,11 +353,8 @@ public class InGame
                             {
                                 tint = Color.Red;
                             }
-                            //Console.WriteLine(j+" "+i);
-                            //Console.WriteLine(CatRoyal.jeuChat.getLastCaseJ()+" "+CatRoyal.jeuChat.getLastCaseI());
                             
-                            bool go = CatRoyal.jeuChat.PeutAttaquerOuDeplacer(CatRoyal.jeuChat.LastCaseJ, CatRoyal.jeuChat.LastCaseI, j, i);
-                            if (go)
+                            if (CatRoyal.jeuChat.PeutAttaquerOuDeplacer(CatRoyal.jeuChat.LastCaseJ, CatRoyal.jeuChat.LastCaseI, j, i))
                             {
                                 tint = Color.DeepSkyBlue;
                                 if (!CatRoyal.jeuChat.Plateau.IsEmpty(j, i))
@@ -427,7 +368,6 @@ public class InGame
                             {
                                 DrawInfoGene(spriteBatch, "Impossible de cibler\n cette case");
                             }
-                            
                             break;
                     }
                 }
@@ -436,14 +376,10 @@ public class InGame
 
                 // draw des invocations
                 Rectangle destpion = new Rectangle(caseX, caseY - 18, 55, 70);
-
                 if (!CatRoyal.jeuChat.Plateau.IsEmpty(j, i))
                 {
                     Invocation entite = CatRoyal.jeuChat.Plateau.GetEntityAt(j, i);
-
                     String ImageEntite = entite.Image;
-                    
-                    
                     SpriteEffects spriteEffect =
                         (!CatRoyal.jeuChat.Plateau.IsTower(entite) && entite.PseudoInvocateur == CatRoyal.jeuChat.Joueur2.Pseudo)
                             ? SpriteEffects.FlipHorizontally
@@ -453,13 +389,9 @@ public class InGame
                     DrawVie(entite, caseX+13, caseY+30, spriteBatch);
                 }
             }
-            
-
-
         }
         
         //afficher cartes joueurs
-
         DrawAllCarte(
             CatRoyal.jeuChat.Joueur1,
             plateauX,
@@ -470,8 +402,6 @@ public class InGame
             content,
             spriteBatch
         );
-
-
         DrawAllCarte(
             CatRoyal.jeuChat.Joueur2,
             plateauX + 9 * taillecase,
@@ -483,13 +413,12 @@ public class InGame
             spriteBatch
         );
     
-        //Afficher la jauge de mana
+        //afficher la jauge de mana
         DrawMana(CatRoyal.jeuChat.Joueur1, 180, manaY, spriteBatch);
         DrawMana(CatRoyal.jeuChat.Joueur2, 795, manaY, spriteBatch);
         
         //afficher quitter 
         spriteBatch.Draw(survolQuitter? boutonquitter2 : boutonquitter, boutonQuitter, Color.White);
-        
     }
 
     private void Clic()
@@ -586,8 +515,6 @@ public class InGame
                 return;
             }
         }
-
         _previousMouseState = ms;
     }
-
 }

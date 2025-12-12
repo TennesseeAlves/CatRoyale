@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Input;
 using System.Xml.Serialization;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 /* Ce qu'on aurait aimer ajouter si on avait plus de temps:
  *      -entrer les pseudo et créer un deck sans le charger

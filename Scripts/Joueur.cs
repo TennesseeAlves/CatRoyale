@@ -1,7 +1,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 [XmlType("Joueur")]
 public class Joueur
@@ -26,6 +26,7 @@ public class Joueur
         Main = new ListeIdCartes();
         Deck = new ListeIdCartes();
     }
+    
     //constructeur vide pour le XMLSerializer
     public Joueur(){}
     

@@ -1,6 +1,5 @@
 using System.Xml.Serialization;
-using System;
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 [XmlType("Invocation")]
 public class Invocation

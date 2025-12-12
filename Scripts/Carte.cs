@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace TestProjet.Scripts;
+namespace CatRoyale.Scripts;
 
 public enum TypeDeCarte
 {
@@ -44,14 +44,12 @@ public class Carte
         Cout = cout;
         Type = type;
         Rarete = rarete;
-        
     }
     //contructeur vide pour le XMLSerializer
     public Carte() { }
 
     public Invocation GenerateInvocation()
     {
-        
         return new Invocation(Vie, Degat, Nom, SpriteInvocation);
     }
 
@@ -86,7 +84,6 @@ public class Carte
                        "Type: "+Type+"\n" +
                        "Rareté: "+Rarete+"\n";
         }
-
         return "";
     }
 }
